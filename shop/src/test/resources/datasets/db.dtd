@@ -1,0 +1,95 @@
+<!ELEMENT dataset (
+    adresse*,
+    artikel*,
+    bestellposition*,
+    bestellung*,
+    bestellung_versand*,
+    hibernate_sequence*,
+    kreditkarte*,
+    kunde*,
+    versand*)>
+
+<!ELEMENT adresse EMPTY>
+<!ATTLIST adresse
+    ad_id CDATA #REQUIRED
+    plz CDATA #REQUIRED
+    ort CDATA #REQUIRED
+    strasse CDATA #IMPLIED
+    hausnummer CDATA #IMPLIED
+    kunde_fk CDATA #REQUIRED
+    erzeugt CDATA #REQUIRED
+    aktualisiert CDATA #REQUIRED
+>
+
+<!ELEMENT artikel EMPTY>
+<!ATTLIST artikel
+    a_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    preis CDATA #REQUIRED
+    groesse CDATA #IMPLIED
+    erzeugt CDATA #REQUIRED
+    aktualisiert CDATA #REQUIRED
+>
+
+<!ELEMENT bestellposition EMPTY>
+<!ATTLIST bestellposition
+    bp_id CDATA #REQUIRED
+    bestellung_fk CDATA #REQUIRED
+    artikel_fk CDATA #REQUIRED
+    anzahl CDATA #REQUIRED
+>
+
+<!ELEMENT bestellung EMPTY>
+<!ATTLIST bestellung
+    b_id CDATA #REQUIRED
+    kunde_fk CDATA #REQUIRED
+    erzeugt CDATA #REQUIRED
+    aktualisiert CDATA #REQUIRED
+    status CDATA #IMPLIED
+>
+
+<!ELEMENT bestellung_versand EMPTY>
+<!ATTLIST bestellung_versand
+    bestellung_fk CDATA #REQUIRED
+    versand_fk CDATA #REQUIRED
+>
+
+<!ELEMENT hibernate_sequence EMPTY>
+<!ATTLIST hibernate_sequence
+    next_val CDATA #REQUIRED
+>
+
+<!ELEMENT kreditkarte EMPTY>
+<!ATTLIST kreditkarte
+    kr_id CDATA #REQUIRED
+    kreditkartennr CDATA #REQUIRED
+    anbieter CDATA #REQUIRED
+    sicherheitscode CDATA #REQUIRED
+    gueltigbis CDATA #REQUIRED
+    kunde_fk CDATA #REQUIRED
+    erzeugt CDATA #REQUIRED
+    aktualisiert CDATA #REQUIRED
+>
+
+<!ELEMENT kunde EMPTY>
+<!ATTLIST kunde
+    k_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    vorname CDATA #REQUIRED
+    geschlecht CDATA #IMPLIED
+    newsletter CDATA #REQUIRED
+    email CDATA #REQUIRED
+    passwort CDATA #REQUIRED
+    erzeugt CDATA #REQUIRED
+    aktualisiert CDATA #REQUIRED
+>
+
+<!ELEMENT versand EMPTY>
+<!ATTLIST versand
+    v_id CDATA #REQUIRED
+    versandart CDATA #REQUIRED
+    versandkosten CDATA #IMPLIED
+    erzeugt CDATA #REQUIRED
+    aktualisiert CDATA #REQUIRED
+>
+
