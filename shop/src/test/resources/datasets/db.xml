@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <!DOCTYPE dataset SYSTEM "db.dtd">
 <dataset>
-  <adresse ad_id="200" plz="76133" ort="Karlsruhe" strasse="MoltkestraÃ?e" hausnummer="31" kunde_fk="100" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <adresse ad_id="201" plz="76133" ort="Karlsruhe" strasse="MoltkestraÃ?e" hausnummer="32" kunde_fk="101" erzeugt="2006-08-02 00:00:00.0" aktualisiert="2006-08-02 00:00:00.0"/>
-  <adresse ad_id="202" plz="76133" ort="Karlsruhe" strasse="MoltkestraÃ?e" hausnummer="33" kunde_fk="102" erzeugt="2006-08-03 00:00:00.0" aktualisiert="2006-08-03 00:00:00.0"/>
-  <adresse ad_id="203" plz="76133" ort="Karlsruhe" strasse="MoltkestraÃ?e" hausnummer="34" kunde_fk="103" erzeugt="2006-08-04 00:00:00.0" aktualisiert="2006-08-04 00:00:00.0"/>
-  <adresse ad_id="204" plz="76133" ort="Karlsruhe" strasse="MoltkestraÃ?e" hausnummer="35" kunde_fk="104" erzeugt="2006-08-05 00:00:00.0" aktualisiert="2006-08-05 00:00:00.0"/>
+  <adresse ad_id="200" plz="76133" ort="Karlsruhe" strasse="Moltkestrasse" hausnummer="31" kunde_fk="100" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
+  <adresse ad_id="201" plz="76133" ort="Karlsruhe" strasse="Moltkestrasse" hausnummer="32" kunde_fk="101" erzeugt="2006-08-02 00:00:00.0" aktualisiert="2006-08-02 00:00:00.0"/>
+  <adresse ad_id="202" plz="76133" ort="Karlsruhe" strasse="Moltkestrasse" hausnummer="33" kunde_fk="102" erzeugt="2006-08-03 00:00:00.0" aktualisiert="2006-08-03 00:00:00.0"/>
+  <adresse ad_id="203" plz="76133" ort="Karlsruhe" strasse="Moltkestrasse" hausnummer="34" kunde_fk="103" erzeugt="2006-08-04 00:00:00.0" aktualisiert="2006-08-04 00:00:00.0"/>
+  <adresse ad_id="204" plz="76133" ort="Karlsruhe" strasse="Moltkestrasse" hausnummer="35" kunde_fk="104" erzeugt="2006-08-05 00:00:00.0" aktualisiert="2006-08-05 00:00:00.0"/>
   <artikel a_id="300" name="Hose" preis="80.0" groesse="M" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
   <artikel a_id="301" name="Schuhe" preis="10.0" groesse="XL" erzeugt="2006-08-02 00:00:00.0" aktualisiert="2006-08-02 00:00:00.0"/>
   <artikel a_id="302" name="Pullover" preis="300.0" groesse="L" erzeugt="2006-08-03 00:00:00.0" aktualisiert="2006-08-03 00:00:00.0"/>
