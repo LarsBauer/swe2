@@ -2,6 +2,7 @@ package de.shop.temp;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
@@ -14,6 +15,8 @@ import java.sql.Timestamp;
 public class Adresse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="ad_id")
 	private BigInteger adId;
 
