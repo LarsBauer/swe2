@@ -1,5 +1,6 @@
 package de.shop.temp;
 
+
 import java.io.Serializable;
 import javax.persistence.*;
 
