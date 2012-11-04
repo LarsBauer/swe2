@@ -1,14 +1,10 @@
-package de.shop.temp;
+package de.shop.artikelverwaltung.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 
-/**
- * The persistent class for the artikel database table.
- * 
- */
 @Entity
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1L;

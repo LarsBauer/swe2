@@ -1,4 +1,6 @@
-package de.shop.temp;
+//package de.shop.temp;
+package de.shop.bestellverwaltung.domain;
+
 
 import java.io.Serializable;
 import javax.persistence.*;

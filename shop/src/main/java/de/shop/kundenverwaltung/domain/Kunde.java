@@ -1,4 +1,5 @@
-package de.shop.temp;
+//package de.shop.temp;
+package de.shop.kundenverwaltung.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
