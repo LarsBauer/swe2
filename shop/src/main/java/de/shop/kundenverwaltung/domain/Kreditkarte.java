@@ -2,8 +2,7 @@ package de.shop.kundenverwaltung.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -16,41 +15,49 @@ public class Kreditkarte implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="kr_id")
-	private String krId;
+	@Column(name="kr_id", unique=true, nullable=false, updatable=false)
+	private String id;
 
-	private Timestamp aktualisiert;
+	@Column(nullable=false)
+	private Date aktualisiert;
 
+	@Column(nullable=false)
 	private String anbieter;
 
-	private Timestamp erzeugt;
+	@Column(nullable=false)
+	private Date erzeugt;
 
+	@Column(nullable=false)
 	private String gueltigbis;
 
+	@Column(length=16, nullable=false)
 	private String kreditkartennr;
 
-	@Column(name="kunde_fk")
-	private BigInteger kundeFk;
+	@ManyToOne
+	@JoinColumn(name="kunde_fk", nullable=false)
+	private Kunde kunde;
 
+	@Column(length=3, nullable=false)
 	private String sicherheitscode;
 
 	public Kreditkarte() {
+		super();
 	}
 
-	public String getKrId() {
-		return this.krId;
+	public String getId() {
+		return this.id;
 	}
 
-	public void setKrId(String krId) {
-		this.krId = krId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public Timestamp getAktualisiert() {
-		return this.aktualisiert;
+	public Date getAktualisiert() {
+		return (Date)this.aktualisiert.clone();
 	}
 
-	public void setAktualisiert(Timestamp aktualisiert) {
-		this.aktualisiert = aktualisiert;
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = (Date)aktualisiert.clone();
 	}
 
 	public String getAnbieter() {
@@ -61,12 +68,12 @@ public class Kreditkarte implements Serializable {
 		this.anbieter = anbieter;
 	}
 
-	public Timestamp getErzeugt() {
-		return this.erzeugt;
+	public Date getErzeugt() {
+		return (Date)this.erzeugt.clone();
 	}
 
-	public void setErzeugt(Timestamp erzeugt) {
-		this.erzeugt = erzeugt;
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = (Date)erzeugt.clone();
 	}
 
 	public String getGueltigbis() {
@@ -85,12 +92,12 @@ public class Kreditkarte implements Serializable {
 		this.kreditkartennr = kreditkartennr;
 	}
 
-	public BigInteger getKundeFk() {
-		return this.kundeFk;
+	public Kunde getKunde() {
+		return this.kunde;
 	}
 
-	public void setKundeFk(BigInteger kundeFk) {
-		this.kundeFk = kundeFk;
+	public void setKunde(Kunde kunde) {
+		this.kunde = kunde;
 	}
 
 	public String getSicherheitscode() {

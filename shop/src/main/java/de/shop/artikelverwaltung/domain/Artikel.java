@@ -3,6 +3,7 @@ package de.shop.artikelverwaltung.domain;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -15,44 +16,49 @@ public class Artikel implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="a_id")
-	private String aId;
+	@Column(name="a_id", unique=true, nullable=false, updatable=false)
+	private Long id;
 
-	private Timestamp aktualisiert;
+	@Column(nullable=false)
+	private Date aktualisiert;
 
-	private Timestamp erzeugt;
+	@Column(nullable=false)
+	private Date erzeugt;
 
+	@Column(name="groesse", length=3, nullable=false)
 	private String groesse;
 
+	@Column(name="name", length=32, nullable=false)
 	private String name;
 
 	private double preis;
 
 	public Artikel() {
+		super();
 	}
 
-	public String getAId() {
-		return this.aId;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setAId(String aId) {
-		this.aId = aId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public Timestamp getAktualisiert() {
-		return this.aktualisiert;
+	public Date getAktualisiert() {
+		return (Date)this.aktualisiert.clone();
 	}
 
-	public void setAktualisiert(Timestamp aktualisiert) {
-		this.aktualisiert = aktualisiert;
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = (Date)aktualisiert.clone();
 	}
 
-	public Timestamp getErzeugt() {
-		return this.erzeugt;
+	public Date getErzeugt() {
+		return (Date)this.erzeugt.clone();
 	}
 
 	public void setErzeugt(Timestamp erzeugt) {
-		this.erzeugt = erzeugt;
+		this.erzeugt = (Date)erzeugt.clone();
 	}
 
 	public String getGroesse() {

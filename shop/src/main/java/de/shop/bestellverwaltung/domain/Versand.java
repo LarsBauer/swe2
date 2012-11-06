@@ -2,8 +2,8 @@ package de.shop.bestellverwaltung.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.math.BigInteger;
-import java.sql.Timestamp;
+
+import java.util.Date;
 
 
 /**
@@ -14,42 +14,48 @@ import java.sql.Timestamp;
 public class Versand implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Timestamp aktualisiert;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="v_id", unique=true, nullable=false, updatable=false)
+	private Long id;
+	
+	@Column(nullable=false)
+	private Date aktualisiert;
 
-	private Timestamp erzeugt;
+	@Column(nullable=false)
+	private Date erzeugt;
 
-	@Column(name="v_id")
-	private BigInteger vId;
-
+	@Column(nullable=false)
 	private String versandart;
 
 	private double versandkosten;
 
 	public Versand() {
+		super();
 	}
 
-	public Timestamp getAktualisiert() {
-		return this.aktualisiert;
+	public Date getAktualisiert() {
+		return (Date)this.aktualisiert.clone();
 	}
 
-	public void setAktualisiert(Timestamp aktualisiert) {
-		this.aktualisiert = aktualisiert;
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = (Date)aktualisiert.clone();
 	}
 
-	public Timestamp getErzeugt() {
-		return this.erzeugt;
+	public Date getErzeugt() {
+		return (Date)this.erzeugt.clone();
 	}
 
-	public void setErzeugt(Timestamp erzeugt) {
-		this.erzeugt = erzeugt;
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = (Date)erzeugt.clone();
 	}
 
-	public BigInteger getVId() {
-		return this.vId;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setVId(BigInteger vId) {
-		this.vId = vId;
+	public void setVId(Long id) {
+		this.id = id;
 	}
 
 	public String getVersandart() {

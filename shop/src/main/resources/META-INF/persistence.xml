@@ -6,23 +6,16 @@
              version="2.0">
 	<persistence-unit name="de.shop.PU">
 		<jta-data-source>java:jboss/datasources/ShopDS</jta-data-source>
-		<class>de.shop.temp.Adresse</class>
-		<class>de.shop.temp.Artikel</class>
-		<class>de.shop.temp.Bestellposition</class>
-		<class>de.shop.temp.Bestellung</class>
-		<class>de.shop.temp.Kreditkarte</class>
-		<class>de.shop.temp.Kunde</class>
-		<class>de.shop.temp.Versand</class>
 		
 		<!-- Caching von Objekten mit @Cacheable -->
-		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		<!--
+		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		-->
 
 		<!-- Umschalten fuer Hibernate Console -->
-		<!--
+		
 		<shared-cache-mode>NONE</shared-cache-mode>
-		-->
+		
 		
 		<properties>
 			<!-- http://docs.jboss.org/hibernate/orm/4.1/manual/en-US/html/ch03.html -->

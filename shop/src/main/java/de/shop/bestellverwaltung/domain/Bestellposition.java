@@ -2,8 +2,10 @@ package de.shop.bestellverwaltung.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.math.BigInteger;
-import java.sql.Timestamp;
+
+import de.shop.artikelverwaltung.domain.Artikel;
+
+import java.util.Date;
 
 
 /**
@@ -16,38 +18,44 @@ public class Bestellposition implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="bp_id")
-	private String bpId;
+	@Column(name="bp_id", unique=true, nullable=false, updatable=false)
+	private Long id;
 
-	private Timestamp aktualisiert;
+	@Column(nullable=false)
+	private Date aktualisiert;
 
+	@Column(nullable=false)
 	private short anzahl;
 
-	@Column(name="artikel_fk")
-	private BigInteger artikelFk;
+	@ManyToOne(optional=false)
+	@JoinColumn(name="artikel_fk", nullable=false)
+	private Artikel artikel;
 
-	@Column(name="bestellung_fk")
-	private BigInteger bestellungFk;
+	@OneToOne(optional=false)
+	@JoinColumn(name="bestellung_fk", updatable=false, insertable=false)
+	private Bestellung bestellung;
 
-	private Timestamp erzeugt;
+	@Column(nullable=false)
+	private Date erzeugt;
 
 	public Bestellposition() {
+		super();
 	}
 
-	public String getBpId() {
-		return this.bpId;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setBpId(String bpId) {
-		this.bpId = bpId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public Timestamp getAktualisiert() {
-		return this.aktualisiert;
+	public Date getAktualisiert() {
+		return (Date)this.aktualisiert.clone();
 	}
 
-	public void setAktualisiert(Timestamp aktualisiert) {
-		this.aktualisiert = aktualisiert;
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = (Date)aktualisiert.clone();
 	}
 
 	public short getAnzahl() {
@@ -58,28 +66,28 @@ public class Bestellposition implements Serializable {
 		this.anzahl = anzahl;
 	}
 
-	public BigInteger getArtikelFk() {
-		return this.artikelFk;
+	public Artikel getArtikel() {
+		return this.artikel;
 	}
 
-	public void setArtikelFk(BigInteger artikelFk) {
-		this.artikelFk = artikelFk;
+	public void setArtikel(Artikel artikel) {
+		this.artikel = artikel;
 	}
 
-	public BigInteger getBestellungFk() {
-		return this.bestellungFk;
+	public Bestellung getBestellung() {
+		return this.bestellung;
 	}
 
-	public void setBestellungFk(BigInteger bestellungFk) {
-		this.bestellungFk = bestellungFk;
+	public void setBestellung(Bestellung bestellung) {
+		this.bestellung = bestellung;
 	}
 
-	public Timestamp getErzeugt() {
-		return this.erzeugt;
+	public Date getErzeugt() {
+		return (Date)this.erzeugt.clone();
 	}
 
-	public void setErzeugt(Timestamp erzeugt) {
-		this.erzeugt = erzeugt;
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = (Date)erzeugt.clone();
 	}
 
 }

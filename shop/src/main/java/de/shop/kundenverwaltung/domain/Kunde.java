@@ -2,7 +2,12 @@ package de.shop.kundenverwaltung.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.sql.Timestamp;
+
+import de.shop.bestellverwaltung.domain.Bestellung;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -15,42 +20,54 @@ public class Kunde implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="k_id")
-	private String kId;
+	@Column(name="k_id", unique=true, nullable=false, updatable=false)
+	private Long id;
 
-	private Timestamp aktualisiert;
+	@Column(nullable=false)
+	private Date aktualisiert;
 
+	@Column(unique=true, nullable=false)
 	private String email;
 
-	private Timestamp erzeugt;
+	@Column(nullable=false)
+	private Date erzeugt;
 
+	@Column
 	private int geschlecht;
 
+	@Column(nullable=false)
 	private String name;
 
-	private byte newsletter;
+	private boolean newsletter;
 
+	@Column(nullable=false)
 	private String passwort;
 
+	@Column(nullable=false)
 	private String vorname;
+	
+	@OneToMany
+	@JoinColumn(name = "kunde_fk", nullable = false)
+	private List<Bestellung> bestellungen;
 
 	public Kunde() {
+		super();
 	}
 
-	public String getKId() {
-		return this.kId;
+	public Long getIdd() {
+		return this.id;
 	}
 
-	public void setKId(String kId) {
-		this.kId = kId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public Timestamp getAktualisiert() {
-		return this.aktualisiert;
+	public Date getAktualisiert() {
+		return (Date)this.aktualisiert.clone();
 	}
 
-	public void setAktualisiert(Timestamp aktualisiert) {
-		this.aktualisiert = aktualisiert;
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = (Date)aktualisiert.clone();
 	}
 
 	public String getEmail() {
@@ -61,12 +78,12 @@ public class Kunde implements Serializable {
 		this.email = email;
 	}
 
-	public Timestamp getErzeugt() {
-		return this.erzeugt;
+	public Date getErzeugt() {
+		return (Date)this.erzeugt.clone();
 	}
 
-	public void setErzeugt(Timestamp erzeugt) {
-		this.erzeugt = erzeugt;
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = (Date)erzeugt.clone();
 	}
 
 	public int getGeschlecht() {
@@ -85,11 +102,11 @@ public class Kunde implements Serializable {
 		this.name = name;
 	}
 
-	public byte getNewsletter() {
+	public boolean getNewsletter() {
 		return this.newsletter;
 	}
 
-	public void setNewsletter(byte newsletter) {
+	public void setNewsletter(boolean newsletter) {
 		this.newsletter = newsletter;
 	}
 
@@ -107,6 +124,27 @@ public class Kunde implements Serializable {
 
 	public void setVorname(String vorname) {
 		this.vorname = vorname;
+	}
+	
+	public List<Bestellung> getBestellungen() {
+		if (bestellungen == null) {
+			return null;
+		}
+		
+		return Collections.unmodifiableList(bestellungen);
+	}
+	
+	public void setBestellungen(List<Bestellung> bestellungen) {
+		if (this.bestellungen == null) {
+			this.bestellungen = bestellungen;
+			return;
+		}
+		
+		// Wiederverwendung der vorhandenen Collection
+		this.bestellungen.clear();
+		if (bestellungen != null) {
+			this.bestellungen.addAll(bestellungen);
+		}
 	}
 
 }

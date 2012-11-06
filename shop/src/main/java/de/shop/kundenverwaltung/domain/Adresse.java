@@ -2,8 +2,8 @@ package de.shop.kundenverwaltung.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.math.BigInteger;
-import java.sql.Timestamp;
+
+import java.util.Date;
 
 
 /**
@@ -14,49 +14,59 @@ import java.sql.Timestamp;
 public class Adresse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="ad_id")
-	private BigInteger adId;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="ad_id", unique=true, nullable=false, updatable=false)
+	private Long id;
 
-	private Timestamp aktualisiert;
+	@Column(nullable=false)
+	private Date aktualisiert;
 
-	private Timestamp erzeugt;
+	@Column(nullable=false)
+	private Date erzeugt;
 
+	@Column(nullable=false)
 	private String hausnummer;
 
-	@Column(name="kunde_fk")
-	private BigInteger kundeFk;
+	@OneToOne
+	@JoinColumn(name="kunde_fk", nullable=false)
+	private Kunde kunde;
 
+	@Column(nullable=false)
 	private String ort;
 
+	@Column(length=5, nullable=false)
 	private String plz;
 
+	@Column(nullable=false)
 	private String strasse;
 
 	public Adresse() {
+		super();
 	}
 
-	public BigInteger getAdId() {
-		return this.adId;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setAdId(BigInteger adId) {
-		this.adId = adId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public Timestamp getAktualisiert() {
-		return this.aktualisiert;
+	public Date getAktualisiert() {
+		return (Date)this.aktualisiert.clone();
 	}
 
-	public void setAktualisiert(Timestamp aktualisiert) {
-		this.aktualisiert = aktualisiert;
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = (Date)aktualisiert.clone();
 	}
 
-	public Timestamp getErzeugt() {
-		return this.erzeugt;
+	public Date getErzeugt() {
+		return (Date)this.erzeugt.clone();
 	}
 
-	public void setErzeugt(Timestamp erzeugt) {
-		this.erzeugt = erzeugt;
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = (Date)erzeugt.clone();
 	}
 
 	public String getHausnummer() {
@@ -67,12 +77,12 @@ public class Adresse implements Serializable {
 		this.hausnummer = hausnummer;
 	}
 
-	public BigInteger getKundeFk() {
-		return this.kundeFk;
+	public Kunde getKunde() {
+		return this.kunde;
 	}
 
-	public void setKundeFk(BigInteger kundeFk) {
-		this.kundeFk = kundeFk;
+	public void setKunde(Kunde kunde) {
+		this.kunde = kunde;
 	}
 
 	public String getOrt() {
