@@ -36,11 +36,11 @@
   <hibernate_sequence next_val="5000"/>
   <kreditkarte kr_id="1" kreditkartennr="1234567890123" anbieter="Visa" sicherheitscode="167" gueltigbis="05/13" kunde_fk="100" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
   <kreditkarte kr_id="2" kreditkartennr="098765432172" anbieter="Mastercard" sicherheitscode="156" gueltigbis="09/16" kunde_fk="101" erzeugt="2006-08-02 00:00:00.0" aktualisiert="2006-08-02 00:00:00.0"/>
-  <kunde k_id="100" name="Alpha" vorname="Adrian" geschlecht="0" newsletter="true" email="1@hska.de" passwort="100" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <kunde k_id="101" name="Alpha" vorname="Alfred" geschlecht="0" newsletter="true" email="k2@hska.de" passwort="101" erzeugt="2006-08-02 00:00:00.0" aktualisiert="2006-08-02 00:00:00.0"/>
+  <kunde k_id="100" name="Alpha" vorname="Adrian" geschlecht="m" newsletter="true" email="1@hska.de" passwort="100" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
+  <kunde k_id="101" name="Alpha" vorname="Alfred" geschlecht="m" newsletter="true" email="k2@hska.de" passwort="101" erzeugt="2006-08-02 00:00:00.0" aktualisiert="2006-08-02 00:00:00.0"/>
   <kunde k_id="102" name="Alpha" vorname="Anton" newsletter="false" email="k3@hska.de" passwort="102" erzeugt="2006-08-03 00:00:00.0" aktualisiert="2006-08-03 00:00:00.0"/>
   <kunde k_id="103" name="Delta" vorname="Dirk" newsletter="true" email="k4@hska.de" passwort="103" erzeugt="2006-08-04 00:00:00.0" aktualisiert="2006-08-04 00:00:00.0"/>
-  <kunde k_id="104" name="Epsilon" vorname="Emil" geschlecht="0" newsletter="false" email="k5@hska.de" passwort="104" erzeugt="2006-08-05 00:00:00.0" aktualisiert="2006-08-05 00:00:00.0"/>
+  <kunde k_id="104" name="Epsilon" vorname="Emilie" geschlecht="w" newsletter="false" email="k5@hska.de" passwort="104" erzeugt="2006-08-05 00:00:00.0" aktualisiert="2006-08-05 00:00:00.0"/>
   <versand v_id="600" versandart="Paket" versandkosten="6.9" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>
   <versand v_id="601" versandart="Päckchen" versandkosten="4.5" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>
   <versand v_id="602" versandart="Warensendung" versandkosten="1.65" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>

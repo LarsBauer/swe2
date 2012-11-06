@@ -11,7 +11,7 @@ CREATE TABLE kunde(
 	k_id BIGINT NOT NULL PRIMARY KEY,
 	name NVARCHAR(32) NOT NULL,
 	vorname NVARCHAR(32) NOT NULL,
-	geschlecht INTEGER,
+	geschlecht CHAR(1),
 	newsletter TINYINT(1) NOT NULL,
 	email NVARCHAR(128) NOT NULL,
 	passwort NVARCHAR(32) NOT NULL,

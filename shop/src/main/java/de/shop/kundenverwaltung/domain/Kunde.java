@@ -32,8 +32,8 @@ public class Kunde implements Serializable {
 	@Column(nullable=false)
 	private Date erzeugt;
 
-	@Column
-	private int geschlecht;
+	@Column(length=1)
+	private String geschlecht;
 
 	@Column(nullable=false)
 	private String name;
@@ -86,11 +86,11 @@ public class Kunde implements Serializable {
 		this.erzeugt = (Date)erzeugt.clone();
 	}
 
-	public int getGeschlecht() {
+	public String getGeschlecht() {
 		return this.geschlecht;
 	}
 
-	public void setGeschlecht(int geschlecht) {
+	public void setGeschlecht(String geschlecht) {
 		this.geschlecht = geschlecht;
 	}
 
