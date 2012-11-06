@@ -1,10 +1,7 @@
-//package de.shop.temp;
 package de.shop.bestellverwaltung.domain;
-
 
 import java.io.Serializable;
 import javax.persistence.*;
-
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
@@ -21,8 +18,6 @@ public class Versand implements Serializable {
 
 	private Timestamp erzeugt;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="v_id")
 	private BigInteger vId;
 

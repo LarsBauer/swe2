@@ -1,10 +1,9 @@
-//package de.shop.temp;
 package de.shop.bestellverwaltung.domain;
-
 
 import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 
 
 /**
@@ -20,6 +19,8 @@ public class Bestellposition implements Serializable {
 	@Column(name="bp_id")
 	private String bpId;
 
+	private Timestamp aktualisiert;
+
 	private short anzahl;
 
 	@Column(name="artikel_fk")
@@ -27,6 +28,8 @@ public class Bestellposition implements Serializable {
 
 	@Column(name="bestellung_fk")
 	private BigInteger bestellungFk;
+
+	private Timestamp erzeugt;
 
 	public Bestellposition() {
 	}
@@ -37,6 +40,14 @@ public class Bestellposition implements Serializable {
 
 	public void setBpId(String bpId) {
 		this.bpId = bpId;
+	}
+
+	public Timestamp getAktualisiert() {
+		return this.aktualisiert;
+	}
+
+	public void setAktualisiert(Timestamp aktualisiert) {
+		this.aktualisiert = aktualisiert;
 	}
 
 	public short getAnzahl() {
@@ -61,6 +72,14 @@ public class Bestellposition implements Serializable {
 
 	public void setBestellungFk(BigInteger bestellungFk) {
 		this.bestellungFk = bestellungFk;
+	}
+
+	public Timestamp getErzeugt() {
+		return this.erzeugt;
+	}
+
+	public void setErzeugt(Timestamp erzeugt) {
+		this.erzeugt = erzeugt;
 	}
 
 }
