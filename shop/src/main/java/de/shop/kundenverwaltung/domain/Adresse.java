@@ -108,5 +108,11 @@ public class Adresse implements Serializable {
 	public void setStrasse(String strasse) {
 		this.strasse = strasse;
 	}
+	
+	@Override
+	public String toString() {
+		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort + ", strasse=" + strasse + ", hausnummer=" + hausnummer
+		       + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + ']';
+	}
 
 }

@@ -128,5 +128,13 @@ public class Bestellung implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	@Override
+	public String toString() {
+		final Long kundeId = kunde == null ? null : kunde.getId();
+		return "Bestellung [id=" + id + ", kundeId=" + kundeId
+		       + ", erzeugt=" + erzeugt
+		       + ", aktualisiert=" + aktualisiert + ']';
+	}
 
 }

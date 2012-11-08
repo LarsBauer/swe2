@@ -73,5 +73,12 @@ public class Versand implements Serializable {
 	public void setVersandkosten(double versandkosten) {
 		this.versandkosten = versandkosten;
 	}
+	
+	@Override
+	public String toString() {
+		return "Lieferung [id=" + id + ", versandart=" + versandart + ", versandkosten=" + versandkosten
+				+ ", erzeugt=" + erzeugt 
+				+ ", aktualisiert=" + aktualisiert + ']';
+	}
 
 }

@@ -89,5 +89,13 @@ public class Bestellposition implements Serializable {
 	public void setErzeugt(Date erzeugt) {
 		this.erzeugt = (Date)erzeugt.clone();
 	}
+	
+	@Override
+	public String toString() {
+		final Long artikelId = artikel == null ? null : artikel.getId();
+		return "Bestellposition [id=" + id + ", artikel=" + artikelId
+			   + ", anzahl=" + anzahl + ", erzeugt=" + erzeugt +
+			   ", aktualisiert=" + aktualisiert + "]";
+	}
 
 }

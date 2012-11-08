@@ -107,5 +107,13 @@ public class Kreditkarte implements Serializable {
 	public void setSicherheitscode(String sicherheitscode) {
 		this.sicherheitscode = sicherheitscode;
 	}
+	
+	@Override
+	public String toString() {
+		return "Kreditkarte [id=" + id + ", inhaber=" + (kunde.getVorname() + " " + kunde.getName())
+		       + ", anbieter=" + anbieter + ", kreditkartennummer=" + kreditkartennr
+		       + ", sicherheitscode=" + sicherheitscode + ", gueltig bis=" + gueltigbis
+		       + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
+	}
 
 }

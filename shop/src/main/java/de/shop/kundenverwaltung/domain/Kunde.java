@@ -54,7 +54,7 @@ public class Kunde implements Serializable {
 		super();
 	}
 
-	public Long getIdd() {
+	public Long getId() {
 		return this.id;
 	}
 
@@ -145,6 +145,15 @@ public class Kunde implements Serializable {
 		if (bestellungen != null) {
 			this.bestellungen.addAll(bestellungen);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Kunde [id=" + id
+			   + ", nachname=" + name + ", vorname=" + vorname
+			   + ", geschlecht=" + geschlecht + ", email=" + email 
+			   + ", newsletter=" + newsletter + ", password=" + passwort
+			   + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
 	}
 
 }

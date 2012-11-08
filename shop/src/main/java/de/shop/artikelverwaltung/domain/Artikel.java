@@ -84,5 +84,13 @@ public class Artikel implements Serializable {
 	public void setPreis(double preis) {
 		this.preis = preis;
 	}
+	
+	@Override
+	public String toString() {
+		return "Artikel [id=" + id + ", name=" + name
+		       + ", preis=" + preis + ", groesse=" +groesse
+		       + ", erzeugt=" + erzeugt
+			   + ", aktualisiert=" + aktualisiert + "]";
+	}
 
 }
