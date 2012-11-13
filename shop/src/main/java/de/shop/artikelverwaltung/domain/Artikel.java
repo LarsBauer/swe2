@@ -11,8 +11,31 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name = "Artikel")
+@NamedQueries({
+	@NamedQuery(name = Artikel.FIND_ARTIKEL_BY_NAME,
+		query = "SELECT      a"
+				+ " FROM     Artikel a"
+				+ " WHERE    a.name LIKE :" + Artikel.PARAM_NAME
+				+ " ORDER BY a.id ASC"),
+	
+	@NamedQuery(name = Artikel.FIND_ARTIKEL_MAX_PREIS,
+		query = "SELECT		 a"
+				+ " FROM 	Artikel a"
+				+ " WHERE	a.preis LIKE :" + Artikel.PARAM_PREIS
+				+ " ORDER BY a.id ASC"),	
+})
+
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String PREFIX = "Artikel.";
+	public static final String FIND_ARTIKEL_BY_NAME = PREFIX + "findArtikelByName";
+	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
+
+	public static final String PARAM_NAME = "name";
+	public static final String PARAM_PREIS = "preis";
+	
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
