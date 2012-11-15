@@ -13,6 +13,8 @@ import java.util.Date;
 @Entity
 public class Adresse implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	public static final int PLZ_LENGTH_MAX = 5;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -35,7 +37,7 @@ public class Adresse implements Serializable {
 	@Column(nullable=false)
 	private String ort;
 
-	@Column(length=5, nullable=false)
+	@Column(length=PLZ_LENGTH_MAX, nullable=false)
 	private String plz;
 
 	@Column(nullable=false)

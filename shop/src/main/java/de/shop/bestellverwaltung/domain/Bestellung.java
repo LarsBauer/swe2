@@ -20,8 +20,26 @@ import java.util.List;
  * 
  */
 @Entity
+	@Table(name = "bestellung")
+	@NamedQueries({
+		@NamedQuery(name  = Bestellung.FIND_BESTELLUNGEN_BY_KUNDE,
+					query = "SELECT b"
+			            + " FROM   Bestellung b"
+						+ " WHERE  b.kunde.id = :" + Bestellung.PARAM_KUNDEID),
+   		@NamedQuery(name  = Bestellung.FIND_KUNDE_BY_ID,
+ 			    	query = "SELECT b.kunde"
+                        + " FROM   Bestellung b"
+  			            + " WHERE  b.id = :" + Bestellung.PARAM_ID)
+})
 public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String PREFIX = "Bestellung.";
+	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX + "findBestellungenByKunde";
+	public static final String FIND_KUNDE_BY_ID = PREFIX + "findBestellungKundeById";
+	
+	public static final String PARAM_KUNDEID = "kundeId";
+	public static final String PARAM_ID = "id";
 
 	
 	@Id
@@ -137,4 +155,46 @@ public class Bestellung implements Serializable {
 		       + ", aktualisiert=" + aktualisiert + ']';
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
+		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Bestellung other = (Bestellung) obj;
+		
+		if (kunde == null) {
+			if (other.kunde != null) {
+				return false;
+			}
+		}
+		else if (!kunde.equals(other.kunde)) {
+			return false;
+		}
+		
+		if (erzeugt == null) {
+			if (other.erzeugt != null) {
+				return false;
+			}
+		}
+		else if (!erzeugt.equals(other.erzeugt)) {
+			return false;
+		}
+		
+		return true;
+	}
 }

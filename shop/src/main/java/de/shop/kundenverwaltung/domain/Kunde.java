@@ -15,8 +15,40 @@ import java.util.List;
  * 
  */
 @Entity
+/*
+@Table(name="kunde")
+	@NamedQueries({
+		@NamedQuery(name  = Kunde.FIND_KUNDEN,
+                	query = "SELECT k"
+                			+ " FROM   Kunde k"),
+        @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME,
+                    query = "SELECT k"
+                    		+ " FROM   AbstractKunde k"
+            	       		+ " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+        @NamedQuery(name  = Kunde.FIND_KUNDE_BY_EMAIL,
+                    query = "SELECT DISTINCT k"
+        		            + " FROM   AbstractKunde k"
+        		            + " WHERE  k.email = :" + Kunde.PARAM_KUNDE_EMAIL),
+        @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_PLZ,
+                    query = "SELECT k"
+                    		+ " FROM  AbstractKunde k"
+                    		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ),
+	})
+	*/
+                    		
 public class Kunde implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String PREFIX = "Kunde.";
+	public static final String FIND_KUNDEN = PREFIX + "findKunden";
+	public static final String FIND_KUNDEN_BY_NACHNAME = PREFIX + "findKundenByNachname";
+	public static final String FIND_KUNDE_BY_EMAIL = PREFIX + "findKundeByEmail";
+	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
+	
+	public static final String PARAM_KUNDE_ID = "kundeId";
+	public static final String PARAM_KUNDE_NACHNAME = "nachname";
+	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
+	public static final String PARAM_KUNDE_EMAIL = "email";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -49,6 +81,7 @@ public class Kunde implements Serializable {
 	@OneToMany
 	@JoinColumn(name = "kunde_fk", nullable = false)
 	private List<Bestellung> bestellungen;
+	
 
 	public Kunde() {
 		super();
@@ -154,6 +187,39 @@ public class Kunde implements Serializable {
 			   + ", geschlecht=" + geschlecht + ", email=" + email 
 			   + ", newsletter=" + newsletter + ", password=" + passwort
 			   + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Kunde other = (Kunde) obj;
+		
+		if (email == null) {
+			if (other.email != null) {
+				return false;
+			}
+		}
+		else if (!email.equals(other.email)) {
+			return false;
+		}
+		
+		return true;
 	}
 
 }

@@ -97,5 +97,53 @@ public class Bestellposition implements Serializable {
 			   + ", anzahl=" + anzahl + ", erzeugt=" + erzeugt +
 			   ", aktualisiert=" + aktualisiert + "]";
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + anzahl;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((artikel == null) ? 0 : artikel.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Bestellposition other = (Bestellposition) obj;
+		
+		// Bei persistenten Bestellpositionen koennen zu verschiedenen Bestellungen gehoeren
+		// und deshalb den gleichen Artikel (s.u.) referenzieren, deshalb wird Id hier beruecksichtigt
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		}
+		else if (!id.equals(other.id)) {
+			return false;
+		}
+
+		// Wenn eine neue Bestellung angelegt wird, dann wird jeder zu bestellende Artikel
+		// genau 1x referenziert (nicht zu verwechseln mit der "anzahl")
+		if (artikel == null) {
+			if (other.artikel != null) {
+				return false;
+			}
+		}
+		else if (!artikel.equals(other.artikel)) {
+			return false;
+		}
+		
+		return true;
+	}
 
 }

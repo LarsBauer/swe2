@@ -29,6 +29,9 @@ import java.util.Date;
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private static final int NAME_LENGTH_MAX = 32;
+	private static final int GROESSE_LENGTH_MAX = 3;
+	
 	private static final String PREFIX = "Artikel.";
 	public static final String FIND_ARTIKEL_BY_NAME = PREFIX + "findArtikelByName";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
@@ -48,10 +51,10 @@ public class Artikel implements Serializable {
 	@Column(nullable=false)
 	private Date erzeugt;
 
-	@Column(name="groesse", length=3, nullable=false)
+	@Column(name="groesse", length=GROESSE_LENGTH_MAX, nullable=false)
 	private String groesse;
 
-	@Column(name="name", length=32, nullable=false)
+	@Column(name="name", length=NAME_LENGTH_MAX, nullable=false)
 	private String name;
 
 	private double preis;
@@ -114,6 +117,47 @@ public class Artikel implements Serializable {
 		       + ", preis=" + preis + ", groesse=" +groesse
 		       + ", erzeugt=" + erzeugt
 			   + ", aktualisiert=" + aktualisiert + "]";
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((name == null) ? 0 : name.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(preis);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Artikel other = (Artikel) obj;
+		
+		
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		}
+		else if (!name.equals(other.name)) {
+			return false;
+		}
+		
+		if (Double.doubleToLongBits(preis) != Double.doubleToLongBits(other.preis)) {
+			return false;
+		}
+		return true;
 	}
 
 }
