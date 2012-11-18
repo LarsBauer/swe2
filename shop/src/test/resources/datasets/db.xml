@@ -11,7 +11,7 @@
   <artikel a_id="302" name="Pullover" preis="300.0" groesse="L" erzeugt="2006-08-03 00:00:00.0" aktualisiert="2006-08-03 00:00:00.0"/>
   <artikel a_id="303" name="T-Shirt" preis="150.0" groesse="L" erzeugt="2006-08-04 00:00:00.0" aktualisiert="2006-08-04 00:00:00.0"/>
   <artikel a_id="304" name="Socken" preis="60.0" groesse="S" erzeugt="2006-08-05 00:00:00.0" aktualisiert="2006-08-05 00:00:00.0"/>
-  <artikel a_id="305" name="Unterwäsche" preis="500.0" groesse="XS" erzeugt="2006-08-06 00:00:00.0" aktualisiert="2006-08-06 00:00:00.0"/>
+  <artikel a_id="305" name="UnterwÃ¤sche" preis="500.0" groesse="XS" erzeugt="2006-08-06 00:00:00.0" aktualisiert="2006-08-06 00:00:00.0"/>
   <artikel a_id="306" name="Hut" preis="600.0" groesse="M" erzeugt="2006-08-07 00:00:00.0" aktualisiert="2006-08-07 00:00:00.0"/>
   <bestellposition bp_id="500" bestellung_fk="400" artikel_fk="300" anzahl="1"/>
   <bestellposition bp_id="501" bestellung_fk="400" artikel_fk="301" anzahl="4"/>
@@ -42,7 +42,7 @@
   <kunde k_id="103" name="Delta" vorname="Dirk" newsletter="true" email="k4@hska.de" passwort="103" erzeugt="2006-08-04 00:00:00.0" aktualisiert="2006-08-04 00:00:00.0"/>
   <kunde k_id="104" name="Epsilon" vorname="Emilie" geschlecht="w" newsletter="false" email="k5@hska.de" passwort="104" erzeugt="2006-08-05 00:00:00.0" aktualisiert="2006-08-05 00:00:00.0"/>
   <versand v_id="600" versandart="Paket" versandkosten="6.9" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>
-  <versand v_id="601" versandart="Päckchen" versandkosten="4.5" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>
+  <versand v_id="601" versandart="PÃ¤ckchen" versandkosten="4.5" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>
   <versand v_id="602" versandart="Warensendung" versandkosten="1.65" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>
   <versand v_id="603" versandart="Einschreiben" versandkosten="2.9" erzeugt="2012-10-22 17:32:00.0" aktualisiert="2012-10-22 17:32:00.0"/>
 </dataset>
