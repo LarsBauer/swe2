@@ -45,7 +45,7 @@ CREATE TABLE bestellposition(
 	bp_id BIGINT NOT NULL PRIMARY KEY,
 	bestellung_fk BIGINT NOT NULL REFERENCES bestellung(b_id),
 	artikel_fk BIGINT NOT NULL REFERENCES artikel(a_id),
-	anzahl SMALLINT NOT NULL,
+	anzahl SMALLINT NOT NULL
 );
 
 	DROP TABLE IF EXISTS artikel;

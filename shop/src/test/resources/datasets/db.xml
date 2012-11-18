@@ -13,15 +13,15 @@
   <artikel a_id="304" name="Socken" preis="60.0" groesse="S" erzeugt="2006-08-05 00:00:00.0" aktualisiert="2006-08-05 00:00:00.0"/>
   <artikel a_id="305" name="Unterwäsche" preis="500.0" groesse="XS" erzeugt="2006-08-06 00:00:00.0" aktualisiert="2006-08-06 00:00:00.0"/>
   <artikel a_id="306" name="Hut" preis="600.0" groesse="M" erzeugt="2006-08-07 00:00:00.0" aktualisiert="2006-08-07 00:00:00.0"/>
-  <bestellposition bp_id="500" bestellung_fk="400" artikel_fk="300" anzahl="1" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="501" bestellung_fk="400" artikel_fk="301" anzahl="4" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="502" bestellung_fk="401" artikel_fk="302" anzahl="5" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="503" bestellung_fk="402" artikel_fk="303" anzahl="3" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="504" bestellung_fk="402" artikel_fk="304" anzahl="2" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="505" bestellung_fk="403" artikel_fk="305" anzahl="1" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="506" bestellung_fk="404" artikel_fk="300" anzahl="5" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="507" bestellung_fk="404" artikel_fk="301" anzahl="2" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
-  <bestellposition bp_id="508" bestellung_fk="404" artikel_fk="302" anzahl="8" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0"/>
+  <bestellposition bp_id="500" bestellung_fk="400" artikel_fk="300" anzahl="1"/>
+  <bestellposition bp_id="501" bestellung_fk="400" artikel_fk="301" anzahl="4"/>
+  <bestellposition bp_id="502" bestellung_fk="401" artikel_fk="302" anzahl="5"/>
+  <bestellposition bp_id="503" bestellung_fk="402" artikel_fk="303" anzahl="3"/>
+  <bestellposition bp_id="504" bestellung_fk="402" artikel_fk="304" anzahl="2"/>
+  <bestellposition bp_id="505" bestellung_fk="403" artikel_fk="305" anzahl="1"/>
+  <bestellposition bp_id="506" bestellung_fk="404" artikel_fk="300" anzahl="5"/>
+  <bestellposition bp_id="507" bestellung_fk="404" artikel_fk="301" anzahl="2"/>
+  <bestellposition bp_id="508" bestellung_fk="404" artikel_fk="302" anzahl="8"/>
   <bestellung b_id="400" kunde_fk="100" erzeugt="2006-08-01 00:00:00.0" aktualisiert="2006-08-01 00:00:00.0" status="in Bearbeitung"/>
   <bestellung b_id="401" kunde_fk="100" erzeugt="2006-08-02 00:00:00.0" aktualisiert="2006-08-02 00:00:00.0" status="versendet"/>
   <bestellung b_id="402" kunde_fk="101" erzeugt="2006-08-03 00:00:00.0" aktualisiert="2006-08-03 00:00:00.0" status="versendet"/>

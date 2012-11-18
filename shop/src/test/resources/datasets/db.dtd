@@ -37,8 +37,6 @@
     bestellung_fk CDATA #REQUIRED
     artikel_fk CDATA #REQUIRED
     anzahl CDATA #REQUIRED
-    erzeugt CDATA #REQUIRED
-    aktualisiert CDATA #REQUIRED
 >
 
 <!ELEMENT bestellung EMPTY>
