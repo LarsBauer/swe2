@@ -1,10 +1,21 @@
 package de.shop.kundenverwaltung.domain;
 
-import java.io.Serializable;
-import javax.persistence.*;
 
+import static de.shop.util.Constants.KEINE_ID;
+import static javax.persistence.TemporalType.TIMESTAMP;
+
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
 
 /**
  * The persistent class for the adresse database table.
@@ -17,14 +28,16 @@ public class Adresse implements Serializable {
 	public static final int PLZ_LENGTH_MAX = 5;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue()
 	@Column(name="ad_id", unique=true, nullable=false, updatable=false)
-	private Long id;
+	private Long id=KEINE_ID;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
 	@Column(nullable=false)
@@ -45,6 +58,17 @@ public class Adresse implements Serializable {
 
 	public Adresse() {
 		super();
+	}
+	
+	@PrePersist
+	private void prePersist() {
+		erzeugt = new Date();
+		aktualisiert = new Date();
+	}
+	
+	@PreUpdate
+	private void preUpdate() {
+		aktualisiert = new Date();
 	}
 
 	public Long getId() {

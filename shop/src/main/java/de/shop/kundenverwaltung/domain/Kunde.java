@@ -1,13 +1,31 @@
 package de.shop.kundenverwaltung.domain;
 
+
+import static de.shop.util.Constants.KEINE_ID;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.io.Serializable;
-import javax.persistence.*;
-
-import de.shop.bestellverwaltung.domain.Bestellung;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.validation.Valid;
+import de.shop.bestellverwaltung.domain.Bestellung;
 
 
 /**
@@ -15,7 +33,6 @@ import java.util.List;
  * 
  */
 @Entity
-/*
 @Table(name="kunde")
 	@NamedQueries({
 		@NamedQuery(name  = Kunde.FIND_KUNDEN,
@@ -23,18 +40,20 @@ import java.util.List;
                 			+ " FROM   Kunde k"),
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME,
                     query = "SELECT k"
-                    		+ " FROM   AbstractKunde k"
-            	       		+ " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+                    		+ " FROM   Kunde k"
+            	       		+ " WHERE  UPPER(k.name) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
         @NamedQuery(name  = Kunde.FIND_KUNDE_BY_EMAIL,
                     query = "SELECT DISTINCT k"
-        		            + " FROM   AbstractKunde k"
+        		            + " FROM   Kunde k"
         		            + " WHERE  k.email = :" + Kunde.PARAM_KUNDE_EMAIL),
+        
+        /*	            
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_PLZ,
                     query = "SELECT k"
-                    		+ " FROM  AbstractKunde k"
-                    		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ),
+                    		+ " FROM  Kunde k"
+                    		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ)
+        */
 	})
-	*/
                     		
 public class Kunde implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -51,17 +70,19 @@ public class Kunde implements Serializable {
 	public static final String PARAM_KUNDE_EMAIL = "email";
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue()
 	@Column(name="k_id", unique=true, nullable=false, updatable=false)
-	private Long id;
+	private Long id=KEINE_ID;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
 	@Column(unique=true, nullable=false)
 	private String email;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
 	@Column(length=1)
@@ -81,6 +102,21 @@ public class Kunde implements Serializable {
 	@OneToMany
 	@JoinColumn(name = "kunde_fk", nullable = false)
 	private List<Bestellung> bestellungen;
+	
+	@OneToOne(cascade = { PERSIST, REMOVE }, mappedBy = "kunde")
+	@Valid
+	private Adresse adresse;
+	
+	@PrePersist
+	protected void prePersist() {
+		erzeugt = new Date();
+		aktualisiert = new Date();
+	}
+	
+	@PreUpdate
+	protected void preUpdate() {
+		aktualisiert = new Date();
+	}
 	
 
 	public Kunde() {
@@ -159,6 +195,13 @@ public class Kunde implements Serializable {
 		this.vorname = vorname;
 	}
 	
+	public Adresse getAdresse() {
+		return adresse;
+	}
+	public void setAdresse(Adresse adresse) {
+		this.adresse = adresse;
+	}
+	
 	public List<Bestellung> getBestellungen() {
 		if (bestellungen == null) {
 			return null;
@@ -178,6 +221,14 @@ public class Kunde implements Serializable {
 		if (bestellungen != null) {
 			this.bestellungen.addAll(bestellungen);
 		}
+	}
+	
+	public Kunde addBestellung(Bestellung bestellung) {
+		if (bestellungen == null) {
+			bestellungen = new ArrayList<>();
+		}
+		bestellungen.add(bestellung);
+		return this;
 	}
 	
 	@Override

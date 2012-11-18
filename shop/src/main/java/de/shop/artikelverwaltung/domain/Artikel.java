@@ -1,10 +1,19 @@
 package de.shop.artikelverwaltung.domain;
 
+
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.io.Serializable;
-import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  * The persistent class for the artikel database table.
@@ -22,7 +31,7 @@ import java.util.Date;
 	@NamedQuery(name = Artikel.FIND_ARTIKEL_MAX_PREIS,
 		query = "SELECT		 a"
 				+ " FROM 	Artikel a"
-				+ " WHERE	a.preis LIKE :" + Artikel.PARAM_PREIS
+				+ " WHERE	a.preis < :" + Artikel.PARAM_PREIS
 				+ " ORDER BY a.id ASC"),	
 })
 
@@ -41,14 +50,16 @@ public class Artikel implements Serializable {
 	
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue()
 	@Column(name="a_id", unique=true, nullable=false, updatable=false)
 	private Long id;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
 	@Column(name="groesse", length=GROESSE_LENGTH_MAX, nullable=false)
@@ -83,7 +94,7 @@ public class Artikel implements Serializable {
 		return (Date)this.erzeugt.clone();
 	}
 
-	public void setErzeugt(Timestamp erzeugt) {
+	public void setErzeugt(Date erzeugt) {
 		this.erzeugt = (Date)erzeugt.clone();
 	}
 

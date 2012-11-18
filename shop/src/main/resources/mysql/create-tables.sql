@@ -46,8 +46,6 @@ CREATE TABLE bestellposition(
 	bestellung_fk BIGINT NOT NULL REFERENCES bestellung(b_id),
 	artikel_fk BIGINT NOT NULL REFERENCES artikel(a_id),
 	anzahl SMALLINT NOT NULL,
-	erzeugt TIMESTAMP NOT NULL,
-	aktualisiert TIMESTAMP NOT NULL
 );
 
 	DROP TABLE IF EXISTS artikel;

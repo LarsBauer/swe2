@@ -1,11 +1,15 @@
 package de.shop.bestellverwaltung.domain;
 
+import static de.shop.util.Constants.KEINE_ID;
 import java.io.Serializable;
-import javax.persistence.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import de.shop.artikelverwaltung.domain.Artikel;
-
-import java.util.Date;
 
 
 /**
@@ -17,12 +21,9 @@ public class Bestellposition implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue()
 	@Column(name="bp_id", unique=true, nullable=false, updatable=false)
-	private Long id;
-
-	@Column(nullable=false)
-	private Date aktualisiert;
+	private Long id = KEINE_ID;
 
 	@Column(nullable=false)
 	private short anzahl;
@@ -31,15 +32,21 @@ public class Bestellposition implements Serializable {
 	@JoinColumn(name="artikel_fk", nullable=false)
 	private Artikel artikel;
 
-	@OneToOne(optional=false)
-	@JoinColumn(name="bestellung_fk", updatable=false, insertable=false)
-	private Bestellung bestellung;
-
-	@Column(nullable=false)
-	private Date erzeugt;
 
 	public Bestellposition() {
 		super();
+	}
+	
+	public Bestellposition(Artikel artikel) {
+		super();
+		this.artikel = artikel;
+		this.anzahl = 1;
+	}
+	
+	public Bestellposition(Artikel artikel, short anzahl) {
+		super();
+		this.artikel = artikel;
+		this.anzahl = anzahl;
 	}
 
 	public Long getId() {
@@ -48,14 +55,6 @@ public class Bestellposition implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Date getAktualisiert() {
-		return (Date)this.aktualisiert.clone();
-	}
-
-	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date)aktualisiert.clone();
 	}
 
 	public short getAnzahl() {
@@ -73,29 +72,12 @@ public class Bestellposition implements Serializable {
 	public void setArtikel(Artikel artikel) {
 		this.artikel = artikel;
 	}
-
-	public Bestellung getBestellung() {
-		return this.bestellung;
-	}
-
-	public void setBestellung(Bestellung bestellung) {
-		this.bestellung = bestellung;
-	}
-
-	public Date getErzeugt() {
-		return (Date)this.erzeugt.clone();
-	}
-
-	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date)erzeugt.clone();
-	}
 	
 	@Override
 	public String toString() {
 		final Long artikelId = artikel == null ? null : artikel.getId();
 		return "Bestellposition [id=" + id + ", artikel=" + artikelId
-			   + ", anzahl=" + anzahl + ", erzeugt=" + erzeugt +
-			   ", aktualisiert=" + aktualisiert + "]";
+			   + ", anzahl=" + anzahl + "]";
 	}
 	
 	@Override

@@ -1,19 +1,33 @@
 package de.shop.bestellverwaltung.domain;
 
 
+import static de.shop.util.Constants.KEINE_ID;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import de.shop.kundenverwaltung.domain.Kunde;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import de.shop.kundenverwaltung.domain.Kunde;
 
 /**
  * The persistent class for the bestellung database table.
@@ -43,14 +57,16 @@ public class Bestellung implements Serializable {
 
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue()
 	@Column(name="b_id", unique=true, nullable=false, updatable=false)
-	private Long id;
+	private Long id=KEINE_ID;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
 	@Column(nullable=false)
+	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
 	@ManyToOne(optional=false)
@@ -72,6 +88,22 @@ public class Bestellung implements Serializable {
 
 	public Bestellung() {
 		super();
+	}
+	
+	public Bestellung(List<Bestellposition> bestellpositionen) {
+		super();
+		this.bestellpositionen = bestellpositionen;
+	}
+	
+	@PrePersist
+	private void prePersist() {
+		erzeugt = new Date();
+		aktualisiert = new Date();
+	}
+	
+	@PreUpdate
+	private void preUpdate() {
+		aktualisiert = new Date();
 	}
 
 	public Long getId() {
@@ -97,6 +129,14 @@ public class Bestellung implements Serializable {
 		if (bestellpositionen != null) {
 			this.bestellpositionen.addAll(bestellpositionen);
 		}
+	}
+	
+	public Bestellung addBestellposition(Bestellposition bestellposition) {
+		if (bestellpositionen == null) {
+			bestellpositionen = new ArrayList<>();
+		}
+		bestellpositionen.add(bestellposition);
+		return this;
 	}
 	
 	public List<Versand> getVersand() {
