@@ -24,10 +24,11 @@ import de.shop.kundenverwaltung.domain.Kunde;
 @Entity
 @Table(name = "Artikel")
 @NamedQueries({
-	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_NAME,
-            query = "SELECT a"
-            		+ " FROM   Artikel a"
-    	       		+ " WHERE  UPPER(a.name) = UPPER(:" + Artikel.PARAM_NAME + ")"),
+	@NamedQuery(name = Artikel.FIND_ARTIKEL_BY_NAME,
+			query = "SELECT      a"
+					+ " FROM     Artikel a"
+					+ " WHERE    a.name LIKE :" + Artikel.PARAM_NAME
+					+ " ORDER BY a.id ASC"),
 	
 	@NamedQuery(name = Artikel.FIND_ARTIKEL_MAX_PREIS,
 		query = "SELECT		 a"
