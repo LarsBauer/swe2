@@ -123,6 +123,7 @@ public class KundeTest extends AbstractDomainTest {
 		assertThat(kunden.isEmpty(), is(true));
 	}
 	
+
 	@Test
 	public void createKunde() {
 		// Given
@@ -131,6 +132,8 @@ public class KundeTest extends AbstractDomainTest {
 		kunde.setVorname(VORNAME_NEU);
 		kunde.setEmail(EMAIL_NEU);
 		kunde.setPasswort(PASSWORT_NEU);
+		kunde.setNewsletter(true);
+		kunde.setGeschlecht(GESCHLECHT_NEU);
 		
 		final Adresse adresse = new Adresse();
 		adresse.setPlz(PLZ_NEU);
@@ -140,8 +143,7 @@ public class KundeTest extends AbstractDomainTest {
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
 		
-		kunde.setNewsletter(true);
-		kunde.setGeschlecht(GESCHLECHT_NEU);
+		
 		
 		// When
 		try {
@@ -175,18 +177,26 @@ public class KundeTest extends AbstractDomainTest {
 		assertThat(kunde.getName(), is(NACHNAME_NEU));
 	}
 	
+
 	@Ignore
 	@Test
 	public void createKundeOhneAdresse() throws HeuristicMixedException, HeuristicRollbackException,
 	                                                  SystemException {
 		// Given
+		final String vorname = VORNAME_NEU;
 		final String nachname = NACHNAME_NEU;
 		final String email = EMAIL_NEU;
+		final String passwort = PASSWORT_NEU;
+		final String geschlecht = GESCHLECHT_NEU;
 		
 		// When
 		final Kunde kunde = new Kunde();
 		kunde.setName(nachname);
 		kunde.setEmail(email);
+		kunde.setVorname(vorname);
+		kunde.setGeschlecht(geschlecht);
+		kunde.setNewsletter(true);
+		kunde.setPasswort(passwort);
 		getEntityManager().persist(kunde);
 		
 		// Then

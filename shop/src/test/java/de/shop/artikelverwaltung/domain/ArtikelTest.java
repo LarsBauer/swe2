@@ -31,12 +31,11 @@ import de.shop.artikelverwaltung.domain.*;
 
 @RunWith(Arquillian.class)
 public class ArtikelTest extends AbstractDomainTest {
+	private static final String NAME_VORHANDEN = "Hose";
+	private static final String NAME_NICHT_VORHANDEN = "Nicht";
+
 	private static final Double PREIS_MAX = 500.0;
-	private static final String NAME = "Hose";
-	private static final Long ID=Long.valueOf(300);
 	private static final String GROESSE = "S";
-	private static final Date ERZEUGT = new Date(2006,8,1,00,00,00);
-	private static final Date AKTUALISIERT = new Date(2006,8,1,00,00,00);
 	private static final Double PREIS = 10.0;
 	
 
@@ -46,9 +45,9 @@ public class ArtikelTest extends AbstractDomainTest {
 	}
 	
 	@Test
-	public void findArtikelByName(){
+	public void findArtikelByNameVorhanden(){
 		// Given
-		final String name = NAME;
+		final String name = NAME_VORHANDEN;
 		
 		// When
 		final TypedQuery<Artikel> query =
@@ -64,6 +63,20 @@ public class ArtikelTest extends AbstractDomainTest {
 		}
 	}
 	
+	@Test
+	public void findArtikelByNameNichtVorhanden(){
+		//Given
+		final String name = NAME_NICHT_VORHANDEN;
+		
+		//When
+		final TypedQuery<Artikel> query = getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME, Artikel.class);
+		query.setParameter(Artikel.PARAM_NAME, name);
+		final List<Artikel> artikel = query.getResultList();
+		
+		//Then
+		assertThat(artikel.isEmpty(), is(true));
+	}
+		
 	@Test
 	public void findArtikelMaxPreis(){
 
@@ -83,19 +96,15 @@ public class ArtikelTest extends AbstractDomainTest {
 		}
 	
 	}
-	
+
 	
 	@Test
 	public void CreateArtikel(){
 		//Given
 		Artikel artikel = new Artikel();
 		artikel.setPreis(PREIS);
-		artikel.setName(NAME);
-		artikel.setId(ID);
+		artikel.setName(NAME_VORHANDEN);
 		artikel.setGroesse(GROESSE);
-		artikel.setErzeugt(ERZEUGT);
-		artikel.setAktualisiert(AKTUALISIERT);
-		
 
 		// Then
 				
@@ -103,12 +112,43 @@ public class ArtikelTest extends AbstractDomainTest {
 		final TypedQuery<Artikel> query =
 				                        getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME,
 				                                                            Artikel.class);
-		query.setParameter(Artikel.PARAM_NAME, NAME);
+		query.setParameter(Artikel.PARAM_NAME, NAME_VORHANDEN);
 		final List<Artikel> dieartikel = query.getResultList();
 				
 		// Ueberpruefung des ausgelesenen Objekts
 		artikel = (Artikel) dieartikel.get(0);
 		assertThat(artikel.getId().longValue() > 0, is(true));
-		assertThat(artikel.getName(), is(NAME));	
+		assertThat(artikel.getName(), is(NAME_VORHANDEN));	
 	}
+	
+	@Test
+	public void createArtikelOhneGroesse() throws HeuristicMixedException, HeuristicRollbackException,
+														SystemException {
+	// Given
+	final Double preis = PREIS;
+	final String name = NAME_VORHANDEN;
+	
+	// When
+	final Artikel artikel = new Artikel();
+	artikel.setPreis(preis);
+	artikel.setName(name);
+	getEntityManager().persist(artikel);
+	
+	// Then
+	try {
+		getUserTransaction().commit();
+	}
+	catch (RollbackException e) {
+		final PersistenceException cause = (PersistenceException) e.getCause();
+		final ConstraintViolationException cause2 = (ConstraintViolationException) cause.getCause();
+		final Set<ConstraintViolation<?>> violations = cause2.getConstraintViolations();
+		for (ConstraintViolation<?> v : violations) {
+			final String msg = v.getMessage();
+			if (msg.contains("Ein Artikel muss eine Groesse haben")) {
+				return;
+			}
+		}
+	}
+}
+
 }
