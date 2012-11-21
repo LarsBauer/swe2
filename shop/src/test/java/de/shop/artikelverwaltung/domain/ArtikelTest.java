@@ -36,6 +36,7 @@ public class ArtikelTest extends AbstractDomainTest {
 	private static final String NAME_NICHT_VORHANDEN = "Nicht";
 
 	private static final Double PREIS_MAX = 500.0;
+	private static final Double PREIS_MAX_NICHT_VORHANDEN = 5.0;
 	private static final String GROESSE = "S";
 	private static final Double PREIS = 10.0;
 	
@@ -86,7 +87,7 @@ public class ArtikelTest extends AbstractDomainTest {
 		
 		//When
 		final TypedQuery<Artikel> query = getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_MAX_PREIS, Artikel.class);
-		query.setParameter(Artikel.PARAM_PREIS, preismax);
+		query.setParameter(Artikel.PARAM_PREIS_MAX, preismax);
 		final List<Artikel> dieartikel = query.getResultList();
 		
 		//Then
@@ -96,6 +97,20 @@ public class ArtikelTest extends AbstractDomainTest {
 		
 		}
 	
+	}
+	
+	@Test
+	public void findArtikelByPreisNichtVorhanden(){
+		//Given
+		final Double preismaxnichtvorhanden = PREIS_MAX_NICHT_VORHANDEN;
+		
+		//When
+		final TypedQuery<Artikel> query = getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_MAX_PREIS, Artikel.class);
+		query.setParameter(Artikel.PARAM_PREIS_MAX, preismaxnichtvorhanden);
+		final List<Artikel> artikel = query.getResultList();
+		
+		//Then
+		assertThat(artikel.isEmpty(), is(true));
 	}
 
 	

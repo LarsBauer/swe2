@@ -33,7 +33,7 @@ import de.shop.kundenverwaltung.domain.Kunde;
 	@NamedQuery(name = Artikel.FIND_ARTIKEL_MAX_PREIS,
 		query = "SELECT		 a"
 				+ " FROM 	Artikel a"
-				+ " WHERE	a.preis < :" + Artikel.PARAM_PREIS
+				+ " WHERE	a.preis < :" + Artikel.PARAM_PREIS_MAX
 				+ " ORDER BY a.id ASC"),	
 })
 
@@ -48,7 +48,7 @@ public class Artikel implements Serializable {
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
 
 	public static final String PARAM_NAME = "name";
-	public static final String PARAM_PREIS = "preis";
+	public static final String PARAM_PREIS_MAX = "preis";
 	
 
 	@Id
