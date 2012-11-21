@@ -29,6 +29,7 @@ import de.shop.util.AbstractDomainTest;
 import de.shop.artikelverwaltung.domain.*;
 
 
+
 @RunWith(Arquillian.class)
 public class ArtikelTest extends AbstractDomainTest {
 	private static final String NAME_VORHANDEN = "Hose";

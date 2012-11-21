@@ -65,7 +65,7 @@ public class Kunde implements Serializable {
 	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
 	
 	public static final String PARAM_KUNDE_ID = "kundeId";
-	public static final String PARAM_KUNDE_NACHNAME = "nachname";
+	public static final String PARAM_KUNDE_NACHNAME = "name";
 	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
 	public static final String PARAM_KUNDE_EMAIL = "email";
 

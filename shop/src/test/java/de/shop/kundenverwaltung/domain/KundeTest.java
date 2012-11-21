@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import de.shop.util.AbstractDomainTest;
 
 
+
 @RunWith(Arquillian.class)
 public class KundeTest extends AbstractDomainTest {
 	private static final String NACHNAME_VORHANDEN = "Alpha";
@@ -171,14 +172,13 @@ public class KundeTest extends AbstractDomainTest {
 		final List<Kunde> kunden = query.getResultList();
 		
 		// Ueberpruefung des ausgelesenen Objekts
-		assertThat(kunden.size(), is(1));
 		kunde = (Kunde) kunden.get(0);
 		assertThat(kunde.getId().longValue() > 0, is(true));
 		assertThat(kunde.getName(), is(NACHNAME_NEU));
 	}
 	
 
-	@Ignore
+	
 	@Test
 	public void createKundeOhneAdresse() throws HeuristicMixedException, HeuristicRollbackException,
 	                                                  SystemException {
