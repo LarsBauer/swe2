@@ -4,12 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
-import java.util.Date;
 
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.transaction.HeuristicMixedException;
@@ -20,13 +17,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.AbstractDomainTest;
-import de.shop.artikelverwaltung.domain.*;
 
 
 
