@@ -22,14 +22,14 @@ public class Bestellposition implements Serializable {
 
 	@Id
 	@GeneratedValue()
-	@Column(name="bp_id", unique=true, nullable=false, updatable=false)
+	@Column(name = "bp_id", unique = true, nullable = false, updatable = false)
 	private Long id = KEINE_ID;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private short anzahl;
 
-	@ManyToOne(optional=false)
-	@JoinColumn(name="artikel_fk", nullable=false)
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "artikel_fk", nullable = false)
 	private Artikel artikel;
 
 

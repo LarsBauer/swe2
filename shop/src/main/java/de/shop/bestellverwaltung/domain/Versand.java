@@ -32,18 +32,18 @@ public class Versand implements Serializable {
 
 	@Id
 	@GeneratedValue()
-	@Column(name="v_id", unique=true, nullable=false, updatable=false)
+	@Column(name = "v_id", unique = true, nullable = false, updatable = false)
 	private Long id;
 	
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String versandart;
 
 	private double versandkosten;

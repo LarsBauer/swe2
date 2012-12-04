@@ -58,19 +58,19 @@ public class Bestellung implements Serializable {
 	
 	@Id
 	@GeneratedValue()
-	@Column(name="b_id", unique=true, nullable=false, updatable=false)
-	private Long id=KEINE_ID;
+	@Column(name = "b_id", unique = true, nullable = false, updatable = false)
+	private Long id = KEINE_ID;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
-	@ManyToOne(optional=false)
-	@JoinColumn(name="kunde_fk", nullable=false, insertable=false, updatable=false)
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
 	private Kunde kunde;
 	
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
@@ -83,7 +83,7 @@ public class Bestellung implements Serializable {
 			                 inverseJoinColumns = @JoinColumn(name = "versand_fk"))
 	private List<Versand> versand;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String status;
 
 	public Bestellung() {
@@ -156,19 +156,19 @@ public class Bestellung implements Serializable {
 	}
 
 	public Date getAktualisiert() {
-		return (Date)this.aktualisiert.clone();
+		return (Date) this.aktualisiert.clone();
 	}
 
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date)aktualisiert.clone();
+		this.aktualisiert = (Date) aktualisiert.clone();
 	}
 
 	public Date getErzeugt() {
-		return (Date)this.erzeugt.clone();
+		return (Date) this.erzeugt.clone();
 	}
 
 	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date)erzeugt.clone();
+		this.erzeugt = (Date) erzeugt.clone();
 	}
 
 	public Kunde getKunde() {

@@ -71,32 +71,32 @@ public class Kunde implements Serializable {
 
 	@Id
 	@GeneratedValue()
-	@Column(name="k_id", unique=true, nullable=false, updatable=false)
-	private Long id=KEINE_ID;
+	@Column(name = "k_id", unique = true, nullable = false, updatable = false)
+	private Long id = KEINE_ID;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
-	@Column(unique=true, nullable=false)
+	@Column(unique = true, nullable = false)
 	private String email;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
-	@Column(length=1)
+	@Column(length = 1)
 	private String geschlecht;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String name;
 
 	private boolean newsletter;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String passwort;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String vorname;
 	
 	@OneToMany
@@ -132,11 +132,11 @@ public class Kunde implements Serializable {
 	}
 
 	public Date getAktualisiert() {
-		return (Date)this.aktualisiert.clone();
+		return (Date) this.aktualisiert.clone();
 	}
 
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date)aktualisiert.clone();
+		this.aktualisiert = (Date) aktualisiert.clone();
 	}
 
 	public String getEmail() {
@@ -148,11 +148,11 @@ public class Kunde implements Serializable {
 	}
 
 	public Date getErzeugt() {
-		return (Date)this.erzeugt.clone();
+		return (Date) this.erzeugt.clone();
 	}
 
 	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date)erzeugt.clone();
+		this.erzeugt = (Date) erzeugt.clone();
 	}
 
 	public String getGeschlecht() {
