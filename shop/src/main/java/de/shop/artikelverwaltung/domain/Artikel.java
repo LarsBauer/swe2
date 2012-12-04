@@ -15,8 +15,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
-import de.shop.kundenverwaltung.domain.Kunde;
-
 /**
  * The persistent class for the artikel database table.
  * 
@@ -53,21 +51,21 @@ public class Artikel implements Serializable {
 
 	@Id
 	@GeneratedValue()
-	@Column(name="a_id", unique=true, nullable=false, updatable=false)
+	@Column(name = "a_id", unique = true, nullable = false, updatable = false)
 	private Long id;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
-	@Column(name="groesse", length=GROESSE_LENGTH_MAX, nullable=false)
+	@Column(name = "groesse", length = GROESSE_LENGTH_MAX, nullable = false)
 	private String groesse;
 
-	@Column(name="name", length=NAME_LENGTH_MAX, nullable=false)
+	@Column(name = "name", length = NAME_LENGTH_MAX, nullable = false)
 	private String name;
 
 	private double preis;
@@ -85,19 +83,19 @@ public class Artikel implements Serializable {
 	}
 
 	public Date getAktualisiert() {
-		return (Date)this.aktualisiert.clone();
+		return (Date) this.aktualisiert.clone();
 	}
 
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date)aktualisiert.clone();
+		this.aktualisiert = (Date) aktualisiert.clone();
 	}
 
 	public Date getErzeugt() {
-		return (Date)this.erzeugt.clone();
+		return (Date) this.erzeugt.clone();
 	}
 
 	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date)erzeugt.clone();
+		this.erzeugt = (Date) erzeugt.clone();
 	}
 
 	public String getGroesse() {
@@ -127,7 +125,7 @@ public class Artikel implements Serializable {
 	@Override
 	public String toString() {
 		return "Artikel [id=" + id + ", name=" + name
-		       + ", preis=" + preis + ", groesse=" +groesse
+		       + ", preis=" + preis + ", groesse=" + groesse
 		       + ", erzeugt=" + erzeugt
 			   + ", aktualisiert=" + aktualisiert + "]";
 	}

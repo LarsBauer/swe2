@@ -29,31 +29,31 @@ public class Adresse implements Serializable {
 
 	@Id
 	@GeneratedValue()
-	@Column(name="ad_id", unique=true, nullable=false, updatable=false)
-	private Long id=KEINE_ID;
+	@Column(name = "ad_id", unique = true, nullable = false, updatable = false)
+	private Long id = KEINE_ID;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date aktualisiert;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date erzeugt;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String hausnummer;
 
 	@OneToOne
-	@JoinColumn(name="kunde_fk", nullable=false)
+	@JoinColumn(name = "kunde_fk", nullable = false)
 	private Kunde kunde;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String ort;
 
-	@Column(length=PLZ_LENGTH_MAX, nullable=false)
+	@Column(length = PLZ_LENGTH_MAX, nullable = false)
 	private String plz;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String strasse;
 
 	public Adresse() {
@@ -80,19 +80,19 @@ public class Adresse implements Serializable {
 	}
 
 	public Date getAktualisiert() {
-		return (Date)this.aktualisiert.clone();
+		return (Date) this.aktualisiert.clone();
 	}
 
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date)aktualisiert.clone();
+		this.aktualisiert = (Date) aktualisiert.clone();
 	}
 
 	public Date getErzeugt() {
-		return (Date)this.erzeugt.clone();
+		return (Date) this.erzeugt.clone();
 	}
 
 	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date)erzeugt.clone();
+		this.erzeugt = (Date) erzeugt.clone();
 	}
 
 	public String getHausnummer() {
@@ -137,8 +137,9 @@ public class Adresse implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort + ", strasse=" + strasse + ", hausnummer=" + hausnummer
-		       + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + ']';
+		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort 
+				+ ", strasse=" + strasse + ", hausnummer=" + hausnummer 
+				+ ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + ']';
 	}
 
 }

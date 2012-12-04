@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.transaction.HeuristicMixedException;
@@ -68,13 +67,14 @@ public class BestellungTest extends AbstractDomainTest {
 
 		
 		// Then
-		final TypedQuery<Bestellung> query = getEntityManager().createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDE, Bestellung.class);
+		final TypedQuery<Bestellung> query = 
+				getEntityManager().createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDE, Bestellung.class);
 		
 		query.setParameter(Bestellung.PARAM_KUNDEID, id);
 		final List<Bestellung> bestellungen = query.getResultList();
 		
 		assertThat(bestellungen.size(), is(1));
-		Bestellung bestellung = (Bestellung)bestellungen.get(0);
+		Bestellung bestellung = (Bestellung) bestellungen.get(0);
 		assertThat(bestellung.getKunde(), is(kunde));
 	}
 	
@@ -118,7 +118,8 @@ public class BestellungTest extends AbstractDomainTest {
 
 		
 		// Then
-		final TypedQuery<Bestellung> query = getEntityManager().createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDE, Bestellung.class);
+		final TypedQuery<Bestellung> query = 
+				getEntityManager().createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDE, Bestellung.class);
 		
 		query.setParameter(Bestellung.PARAM_KUNDEID, id);
 		final List<Bestellung> bestellungen = query.getResultList();
@@ -203,7 +204,8 @@ public class BestellungTest extends AbstractDomainTest {
 	
 	@Ignore
 	@Test
-	public void CreatBestellungOhneKunde() throws HeuristicMixedException, HeuristicRollbackException, SystemException { 
+	public void CreatBestellungOhneKunde() 
+			throws HeuristicMixedException, HeuristicRollbackException, SystemException { 
 		// Given
 		final Long v_id = V_ID_VORHANDEN;
 		final Long bp_id = BP_ID_VORHANDEN;

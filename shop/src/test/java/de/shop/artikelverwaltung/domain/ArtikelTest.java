@@ -41,14 +41,13 @@ public class ArtikelTest extends AbstractDomainTest {
 	}
 	
 	@Test
-	public void findArtikelByNameVorhanden(){
+	public void findArtikelByNameVorhanden() {
 		// Given
 		final String name = NAME_VORHANDEN;
 		
 		// When
-		final TypedQuery<Artikel> query =
-				                        getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME,
-				                                                            Artikel.class);
+		final TypedQuery<Artikel> query = 
+				getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME, Artikel.class);
 		query.setParameter(Artikel.PARAM_NAME, name);
 		final List<Artikel> dieartikel = query.getResultList();
 		
@@ -60,12 +59,13 @@ public class ArtikelTest extends AbstractDomainTest {
 	}
 	
 	@Test
-	public void findArtikelByNameNichtVorhanden(){
+	public void findArtikelByNameNichtVorhanden() {
 		//Given
 		final String name = NAME_NICHT_VORHANDEN;
 		
 		//When
-		final TypedQuery<Artikel> query = getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME, Artikel.class);
+		final TypedQuery<Artikel> query = 
+				getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME, Artikel.class);
 		query.setParameter(Artikel.PARAM_NAME, name);
 		final List<Artikel> artikel = query.getResultList();
 		
@@ -74,13 +74,14 @@ public class ArtikelTest extends AbstractDomainTest {
 	}
 		
 	@Test
-	public void findArtikelMaxPreis(){
+	public void findArtikelMaxPreis() {
 
 		//Given
 		final Double preismax = PREIS_MAX;
 		
 		//When
-		final TypedQuery<Artikel> query = getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_MAX_PREIS, Artikel.class);
+		final TypedQuery<Artikel> query = 
+				getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_MAX_PREIS, Artikel.class);
 		query.setParameter(Artikel.PARAM_PREIS_MAX, preismax);
 		final List<Artikel> dieartikel = query.getResultList();
 		
@@ -94,12 +95,13 @@ public class ArtikelTest extends AbstractDomainTest {
 	}
 	
 	@Test
-	public void findArtikelByPreisNichtVorhanden(){
+	public void findArtikelByPreisNichtVorhanden() {
 		//Given
 		final Double preismaxnichtvorhanden = PREIS_MAX_NICHT_VORHANDEN;
 		
 		//When
-		final TypedQuery<Artikel> query = getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_MAX_PREIS, Artikel.class);
+		final TypedQuery<Artikel> query = 
+				getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_MAX_PREIS, Artikel.class);
 		query.setParameter(Artikel.PARAM_PREIS_MAX, preismaxnichtvorhanden);
 		final List<Artikel> artikel = query.getResultList();
 		
@@ -109,7 +111,7 @@ public class ArtikelTest extends AbstractDomainTest {
 
 	
 	@Test
-	public void CreateArtikel(){
+	public void CreateArtikel() {
 		//Given
 		Artikel artikel = new Artikel();
 		artikel.setPreis(PREIS);
@@ -119,9 +121,8 @@ public class ArtikelTest extends AbstractDomainTest {
 		// Then
 				
 		// Den abgespeicherten Artikel ueber eine Named Query ermitteln
-		final TypedQuery<Artikel> query =
-				                        getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME,
-				                                                            Artikel.class);
+		final TypedQuery<Artikel> query = 
+				getEntityManager().createNamedQuery(Artikel.FIND_ARTIKEL_BY_NAME, Artikel.class);
 		query.setParameter(Artikel.PARAM_NAME, NAME_VORHANDEN);
 		final List<Artikel> dieartikel = query.getResultList();
 				
@@ -132,8 +133,8 @@ public class ArtikelTest extends AbstractDomainTest {
 	}
 	
 	@Test
-	public void createArtikelOhneGroesse() throws HeuristicMixedException, HeuristicRollbackException,
-														SystemException {
+	public void createArtikelOhneGroesse() 
+			throws HeuristicMixedException, HeuristicRollbackException, SystemException {
 	// Given
 	final Double preis = PREIS;
 	final String name = NAME_VORHANDEN;

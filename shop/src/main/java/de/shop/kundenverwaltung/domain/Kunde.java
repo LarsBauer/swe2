@@ -33,7 +33,7 @@ import de.shop.bestellverwaltung.domain.Bestellung;
  * 
  */
 @Entity
-@Table(name="kunde")
+@Table(name = "kunde")
 	@NamedQueries({
 		@NamedQuery(name  = Kunde.FIND_KUNDEN,
                 	query = "SELECT k"

@@ -69,26 +69,26 @@ public class Versand implements Serializable {
 	}
 
 	public Date getAktualisiert() {
-		return (Date)this.aktualisiert.clone();
+		return (Date) this.aktualisiert.clone();
 	}
 
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date)aktualisiert.clone();
+		this.aktualisiert = (Date) aktualisiert.clone();
 	}
 
 	public Date getErzeugt() {
-		return (Date)this.erzeugt.clone();
+		return (Date) this.erzeugt.clone();
 	}
 
 	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date)erzeugt.clone();
+		this.erzeugt = (Date) erzeugt.clone();
 	}
 
 	public Long getId() {
 		return this.id;
 	}
 
-	public void setVId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
