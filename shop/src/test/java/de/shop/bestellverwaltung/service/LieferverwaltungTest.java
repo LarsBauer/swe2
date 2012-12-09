@@ -48,14 +48,14 @@ public class LieferverwaltungTest extends AbstractTest {
 	@Test
 	public void findVersandVorhanden() {
 		// Given
-		final String id = ID_VORHANDEN.toString();
+		final Long id = ID_VORHANDEN;
 		
 		// When
 		final Collection<Versand> versand = bv.findVersand(id);
 		
 		// Then
 		assertThat(versand.isEmpty(), is(false));
-		final String idPraefix = id.substring(0, id.length() - 2);  // '%' ausblenden
+		final String idPraefix = id.toString().substring(0, id.toString().length() - 2);  // '%' ausblenden
 		for (Versand v : versand) {
 			assertThat(v.getId().toString().startsWith(idPraefix), is(true));
 	
@@ -73,7 +73,7 @@ public class LieferverwaltungTest extends AbstractTest {
 	@Test
 	public void findVersandNichtVorhanden() {
 		// Given
-		final String id = ID_NICHT_VORHANDEN.toString();
+		final Long id = ID_NICHT_VORHANDEN;
 
 		// When
 		final List<Versand> versand = bv.findVersand(id);
@@ -123,7 +123,7 @@ public class LieferverwaltungTest extends AbstractTest {
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void createLieferung2() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
+	public void createVersand2() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
 	                                      SystemException, NotSupportedException {
 		// Given
 		final Long bestellungId2a = BESTELLUNG_ID2A_VORHANDEN;

@@ -35,7 +35,7 @@ import de.shop.util.PreExistingGroup;
 	@NamedQuery(name  = Versand.FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN,
                 query = "SELECT v"
                 	    + " FROM Versand v LEFT JOIN FETCH v.bestellungen"
-			            + " WHERE v.v_id LIKE :" + Versand.PARAM_VERSAND_ID)
+			            + " WHERE v.id LIKE :" + Versand.PARAM_VERSAND_ID)
 })
 public class Versand implements Serializable {
 	private static final long serialVersionUID = 1L;

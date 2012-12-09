@@ -166,7 +166,7 @@ public class BestellverwaltungImpl implements Serializable, Bestellverwaltung {
 	 */
 
 	@Override
-	public List<Versand> findVersand(String id) {
+	public List<Versand> findVersand(Long id) {
 		final List<Versand> versand =
 				              versandDao.find(Versand.FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN,
                                                 with(Versand.PARAM_VERSAND_ID, id).build());

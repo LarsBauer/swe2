@@ -58,8 +58,8 @@ public abstract class BestellverwaltungMitGeschenkverpackung implements Bestellv
 	*/
 
 	@Override
-	public List<Versand> findVersand(String nr) {
-		return bestellverwaltung.findVersand(nr);
+	public List<Versand> findVersand(Long id) {
+		return bestellverwaltung.findVersand(id);
 	}
 
 	

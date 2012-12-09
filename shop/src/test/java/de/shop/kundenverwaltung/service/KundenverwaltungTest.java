@@ -22,6 +22,7 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -354,6 +355,7 @@ public class KundenverwaltungTest extends AbstractTest {
 	
 	/**
 	 */
+	@Ignore
 	@Test
 	public void createKundeFalschesPassword() {
 		// Given

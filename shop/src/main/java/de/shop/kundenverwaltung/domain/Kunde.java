@@ -67,19 +67,16 @@ import de.shop.util.IdGroup;
         					+ " FROM Kunde k LEFT JOIN FETCH k.bestellungen"),
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
                     query = "SELECT DISTINCT k"
-        		            + " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
-        		            + " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+        		            + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
+        		            + " WHERE  UPPER(k.name) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
         @NamedQuery(name  = Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
         		    query = "SELECT DISTINCT k"
-        			          + " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
-        			           + " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),
-        
-        /*	            
+        			         + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
+        			         + " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),	            
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_PLZ,
                     query = "SELECT k"
                     		+ " FROM  Kunde k"
                     		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ)
-        */
 	})
                     		
 @ScriptAssert(lang = "javascript",

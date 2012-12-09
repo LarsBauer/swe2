@@ -36,7 +36,7 @@ public interface Bestellverwaltung {
 	*/
 	/**
 	 */
-	List<Versand> findVersand(String nr);
+	List<Versand> findVersand(Long id);
 
 	/**
 	 */
