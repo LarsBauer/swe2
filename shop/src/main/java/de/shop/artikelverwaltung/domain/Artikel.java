@@ -1,6 +1,8 @@
 package de.shop.artikelverwaltung.domain;
 
 
+import static de.shop.util.Constants.KEINE_ID;
+import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
@@ -14,6 +16,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
+import de.shop.util.IdGroup;
 
 /**
  * The persistent class for the artikel database table.
@@ -22,6 +28,11 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "Artikel")
 @NamedQueries({
+	@NamedQuery(name  = Artikel.FIND_VERFUEGBARE_ARTIKEL,
+        	query = "SELECT      a"
+        	        + " FROM     Artikel a"
+                    + " ORDER BY a.id ASC"),
+                    
 	@NamedQuery(name = Artikel.FIND_ARTIKEL_BY_NAME,
 			query = "SELECT      a"
 					+ " FROM     Artikel a"
@@ -42,6 +53,7 @@ public class Artikel implements Serializable {
 	private static final int GROESSE_LENGTH_MAX = 3;
 	
 	private static final String PREFIX = "Artikel.";
+	public static final String FIND_VERFUEGBARE_ARTIKEL = PREFIX + "findVerfuegbareArtikel";
 	public static final String FIND_ARTIKEL_BY_NAME = PREFIX + "findArtikelByName";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
 
@@ -52,7 +64,8 @@ public class Artikel implements Serializable {
 	@Id
 	@GeneratedValue()
 	@Column(name = "a_id", unique = true, nullable = false, updatable = false)
-	private Long id;
+	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
+	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
@@ -66,6 +79,7 @@ public class Artikel implements Serializable {
 	private String groesse;
 
 	@Column(name = "name", length = NAME_LENGTH_MAX, nullable = false)
+	@Size(max = NAME_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
 	private String name;
 
 	private double preis;

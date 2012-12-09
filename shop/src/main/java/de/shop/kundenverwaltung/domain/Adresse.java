@@ -2,6 +2,7 @@ package de.shop.kundenverwaltung.domain;
 
 
 import static de.shop.util.Constants.KEINE_ID;
+import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
@@ -16,6 +17,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import de.shop.util.IdGroup;
+
 
 /**
  * The persistent class for the adresse database table.
@@ -26,10 +34,16 @@ public class Adresse implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public static final int PLZ_LENGTH_MAX = 5;
+	public static final int ORT_LENGTH_MIN = 2;
+	public static final int ORT_LENGTH_MAX = 32;
+	public static final int STRASSE_LENGTH_MIN = 2;
+	public static final int STRASSE_LENGTH_MAX = 32;
+	public static final int HAUSNR_LENGTH_MAX = 4;
 
 	@Id
 	@GeneratedValue()
 	@Column(name = "ad_id", unique = true, nullable = false, updatable = false)
+	@Min(value = MIN_ID, message = "{kundenverwaltung.adresse.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
@@ -41,19 +55,27 @@ public class Adresse implements Serializable {
 	private Date erzeugt;
 
 	@Column(nullable = false)
+	@Size(max = HAUSNR_LENGTH_MAX, message = "{kundenverwaltung.adresse.hausnr.length}")
 	private String hausnummer;
 
 	@OneToOne
 	@JoinColumn(name = "kunde_fk", nullable = false)
+	@NotNull(message = "{kundenverwaltung.adresse.kunde.notNull}")
 	private Kunde kunde;
 
 	@Column(nullable = false)
+	@NotNull(message = "{kundenverwaltung.adresse.ort.notNull}")
+	@Size(min = ORT_LENGTH_MIN, max = ORT_LENGTH_MAX, message = "{kundenverwaltung.adresse.ort.length}")
 	private String ort;
 
 	@Column(length = PLZ_LENGTH_MAX, nullable = false)
+	@NotNull(message = "{kundenverwaltung.adresse.plz.notNull}")
+	@Pattern(regexp = "\\d{5}", message = "{kundenverwaltung.adresse.plz}")
 	private String plz;
 
 	@Column(nullable = false)
+	@NotNull(message = "{kundenverwaltung.adresse.strasse.notNull}")
+	@Size(min = STRASSE_LENGTH_MIN, max = STRASSE_LENGTH_MAX, message = "{kundenverwaltung.adresse.strasse.length}")
 	private String strasse;
 
 	public Adresse() {

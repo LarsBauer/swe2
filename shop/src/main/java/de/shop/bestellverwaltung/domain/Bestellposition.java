@@ -1,5 +1,6 @@
 package de.shop.bestellverwaltung.domain;
 
+
 import static de.shop.util.Constants.KEINE_ID;
 import java.io.Serializable;
 
@@ -9,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import de.shop.artikelverwaltung.domain.Artikel;
 
 
@@ -19,6 +23,7 @@ import de.shop.artikelverwaltung.domain.Artikel;
 @Entity
 public class Bestellposition implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final int ANZAHL_MIN = 1;
 
 	@Id
 	@GeneratedValue()
@@ -26,10 +31,12 @@ public class Bestellposition implements Serializable {
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
+	@Min(value = ANZAHL_MIN, message = "{bestellverwaltung.bestellposition.anzahl.min}")
 	private short anzahl;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "artikel_fk", nullable = false)
+	@NotNull(message = "{bestellverwaltung.bestellposition.artikel.notNull}")
 	private Artikel artikel;
 
 

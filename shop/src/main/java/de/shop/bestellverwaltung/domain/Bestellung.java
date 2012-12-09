@@ -2,6 +2,7 @@ package de.shop.bestellverwaltung.domain;
 
 
 import static de.shop.util.Constants.KEINE_ID;
+import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -27,7 +28,15 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.util.IdGroup;
+import de.shop.util.PreExistingGroup;
 
 /**
  * The persistent class for the bestellung database table.
@@ -43,13 +52,19 @@ import de.shop.kundenverwaltung.domain.Kunde;
    		@NamedQuery(name  = Bestellung.FIND_KUNDE_BY_ID,
  			    	query = "SELECT b.kunde"
                         + " FROM   Bestellung b"
-  			            + " WHERE  b.id = :" + Bestellung.PARAM_ID)
+  			            + " WHERE  b.id = :" + Bestellung.PARAM_ID),
+	   	@NamedQuery(name  = Bestellung.FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN,
+	   				query = "SELECT DISTINCT b"
+	   					+ " FROM   Bestellung b LEFT JOIN FETCH b.lieferungen"
+	   					+ " WHERE  b.id = :" + Bestellung.PARAM_ID),
 })
 public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String PREFIX = "Bestellung.";
 	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX + "findBestellungenByKunde";
+	public static final String FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN =
+            PREFIX + "findBestellungenByIdFetchLieferungen";
 	public static final String FIND_KUNDE_BY_ID = PREFIX + "findBestellungKundeById";
 	
 	public static final String PARAM_KUNDEID = "kundeId";
@@ -59,6 +74,7 @@ public class Bestellung implements Serializable {
 	@Id
 	@GeneratedValue()
 	@Column(name = "b_id", unique = true, nullable = false, updatable = false)
+	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
@@ -71,10 +87,13 @@ public class Bestellung implements Serializable {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
+	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}", groups = PreExistingGroup.class)
 	private Kunde kunde;
 	
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
 	@JoinColumn(name = "bestellung_fk", nullable = false)
+	@NotEmpty(message = "{bestellverwaltung.bestellung.bestellpositionen.notEmpty}")
+	@Valid
 	private List<Bestellposition> bestellpositionen;
 	
 	@ManyToMany
@@ -154,6 +173,11 @@ public class Bestellung implements Serializable {
 			this.versand.addAll(versand);
 		}
 	}
+	
+	public void addVersand(Versand versand_neu) {
+		versand.add(versand_neu);
+	}
+	
 
 	public Date getAktualisiert() {
 		return (Date) this.aktualisiert.clone();

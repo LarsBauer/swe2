@@ -13,8 +13,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.validation.Valid;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -27,8 +30,20 @@ import de.shop.util.PreExistingGroup;
  * 
  */
 @Entity
+@Table(name = "lieferung")
+@NamedQueries({
+	@NamedQuery(name  = Versand.FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN,
+                query = "SELECT v"
+                	    + " FROM Versand v LEFT JOIN FETCH v.bestellungen"
+			            + " WHERE v.v_id LIKE :" + Versand.PARAM_VERSAND_ID)
+})
 public class Versand implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String PREFIX = "Versand.";
+	public static final String FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN =
+		                       PREFIX + "findVersandByIdFetchBestellungen";
+	public static final String PARAM_VERSAND_ID = "id";
 
 	@Id
 	@GeneratedValue()

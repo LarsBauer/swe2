@@ -2,6 +2,7 @@ package de.shop.kundenverwaltung.domain;
 
 
 import static de.shop.util.Constants.KEINE_ID;
+import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.TIMESTAMP;
@@ -20,12 +21,23 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.ScriptAssert;
+
 import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.util.IdGroup;
 
 
 /**
@@ -38,6 +50,10 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 		@NamedQuery(name  = Kunde.FIND_KUNDEN,
                 	query = "SELECT k"
                 			+ " FROM   Kunde k"),
+        @NamedQuery(name  = Kunde.FIND_KUNDEN_ORDER_BY_ID,
+            		query = "SELECT   k"
+            		        + " FROM  Kunde k"
+            		        + " ORDER BY k.id"),
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME,
                     query = "SELECT k"
                     		+ " FROM   Kunde k"
@@ -46,6 +62,17 @@ import de.shop.bestellverwaltung.domain.Bestellung;
                     query = "SELECT DISTINCT k"
         		            + " FROM   Kunde k"
         		            + " WHERE  k.email = :" + Kunde.PARAM_KUNDE_EMAIL),
+        @NamedQuery(name  = Kunde.FIND_KUNDEN_FETCH_BESTELLUNGEN,
+        			query = "SELECT  DISTINCT k"
+        					+ " FROM Kunde k LEFT JOIN FETCH k.bestellungen"),
+        @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
+                    query = "SELECT DISTINCT k"
+        		            + " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
+        		            + " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+        @NamedQuery(name  = Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
+        		    query = "SELECT DISTINCT k"
+        			          + " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
+        			           + " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),
         
         /*	            
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_PLZ,
@@ -55,11 +82,30 @@ import de.shop.bestellverwaltung.domain.Bestellung;
         */
 	})
                     		
+@ScriptAssert(lang = "javascript",
+			script = "(_this.password == null && _this.passwordWdh == null)"
+						+ "|| (_this.password != null && _this.password.equals(_this.passwordWdh))",
+			message = "{kundenverwaltung.kunde.password.notEqual}",
+			groups = PasswordGroup.class)
 public class Kunde implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
+	public static final int NACHNAME_LENGTH_MIN = 2;
+	public static final int NACHNAME_LENGTH_MAX = 32;
+	public static final int VORNAME_LENGTH_MAX = 32;
+	public static final int EMAIL_LENGTH_MAX = 128;
+	public static final int DETAILS_LENGTH_MAX = 128 * 1024;
+	public static final int PASSWORD_LENGTH_MAX = 256;
+	
 	private static final String PREFIX = "Kunde.";
 	public static final String FIND_KUNDEN = PREFIX + "findKunden";
+	public static final String FIND_KUNDEN_ORDER_BY_ID = PREFIX + "findKundenOrderById";
+	public static final String FIND_KUNDEN_FETCH_BESTELLUNGEN = PREFIX + "findKundenFetchBestellungen";
+	public static final String FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN =
+            PREFIX + "findKundenByNachnameFetchBestellungen";
+	public static final String FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN =
+            PREFIX + "findKundeByIdFetchBestellungen";
 	public static final String FIND_KUNDEN_BY_NACHNAME = PREFIX + "findKundenByNachname";
 	public static final String FIND_KUNDE_BY_EMAIL = PREFIX + "findKundeByEmail";
 	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
@@ -72,6 +118,7 @@ public class Kunde implements Serializable {
 	@Id
 	@GeneratedValue()
 	@Column(name = "k_id", unique = true, nullable = false, updatable = false)
+	@Min(value = MIN_ID, message = "{kundenverwaltung.kunde.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
@@ -79,6 +126,7 @@ public class Kunde implements Serializable {
 	private Date aktualisiert;
 
 	@Column(unique = true, nullable = false)
+	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
 	private String email;
 
 	@Column(nullable = false)
@@ -89,14 +137,22 @@ public class Kunde implements Serializable {
 	private String geschlecht;
 
 	@Column(nullable = false)
+	@NotNull(message = "{kundenverwaltung.kunde.nachname.notNull}")
+	@Size(min = NACHNAME_LENGTH_MIN, max = NACHNAME_LENGTH_MAX,
+	      message = "{kundenverwaltung.kunde.nachname.length}")
+	@Pattern(regexp = NAME_PATTERN, message = "{kundenverwaltung.kunde.nachname.pattern}")
 	private String name;
 
 	private boolean newsletter;
 
-	@Column(nullable = false)
+	@Column(length = PASSWORD_LENGTH_MAX, nullable = false)
 	private String passwort;
+	
+	@Transient
+	private String passwortWdh;
 
 	@Column(nullable = false)
+	@Size(max = VORNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.vorname.length}")
 	private String vorname;
 	
 	@OneToMany
@@ -105,6 +161,7 @@ public class Kunde implements Serializable {
 	
 	@OneToOne(cascade = { PERSIST, REMOVE }, mappedBy = "kunde")
 	@Valid
+	@NotNull(message = "{kundenverwaltung.kunde.adresse.notNull}")
 	private Adresse adresse;
 	
 	@PrePersist
@@ -116,6 +173,11 @@ public class Kunde implements Serializable {
 	@PreUpdate
 	protected void preUpdate() {
 		aktualisiert = new Date();
+	}
+	
+	@PostLoad
+	protected void postLoad() {
+		passwortWdh = passwort;
 	}
 	
 
@@ -186,6 +248,15 @@ public class Kunde implements Serializable {
 	public void setPasswort(String passwort) {
 		this.passwort = passwort;
 	}
+	
+	public String getPasswortWdh() {
+		return passwortWdh;
+	}
+
+	public void setPasswortWdh(String passwortWdh) {
+		this.passwortWdh = passwortWdh;
+	}
+
 
 	public String getVorname() {
 		return this.vorname;
@@ -236,7 +307,7 @@ public class Kunde implements Serializable {
 		return "Kunde [id=" + id
 			   + ", nachname=" + name + ", vorname=" + vorname
 			   + ", geschlecht=" + geschlecht + ", email=" + email 
-			   + ", newsletter=" + newsletter + ", password=" + passwort
+			   + ", newsletter=" + newsletter + ", passwort=" + passwort + ", passwortwdh =" + passwortWdh
 			   + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
 	}
 	
