@@ -33,7 +33,7 @@ public class BestellungDao extends AbstractDao<Bestellung, Long> {
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
 		final CriteriaQuery<Bestellung> criteriaQuery  = builder.createQuery(Bestellung.class);
 		final Root<Bestellung> b = criteriaQuery.from(Bestellung.class);
-		b.fetch("lieferungen", JoinType.LEFT);
+		b.fetch("versand", JoinType.LEFT);
 		
 		// Die Vergleichen mit "=" als Liste aufbauen
 		final Path<Long> idPath = b.get("id");

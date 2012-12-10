@@ -30,7 +30,7 @@ import de.shop.util.PreExistingGroup;
  * 
  */
 @Entity
-@Table(name = "lieferung")
+@Table(name = "versand")
 @NamedQueries({
 	@NamedQuery(name  = Versand.FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN,
                 query = "SELECT v"

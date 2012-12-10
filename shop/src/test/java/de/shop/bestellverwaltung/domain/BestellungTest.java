@@ -201,7 +201,6 @@ public class BestellungTest extends AbstractDomainTest {
 		
 	}
 	
-	
 	@Ignore
 	@Test
 	public void CreatBestellungOhneKunde() 

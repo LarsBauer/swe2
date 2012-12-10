@@ -355,7 +355,6 @@ public class KundenverwaltungTest extends AbstractTest {
 	
 	/**
 	 */
-	@Ignore
 	@Test
 	public void createKundeFalschesPassword() {
 		// Given
@@ -385,7 +384,7 @@ public class KundenverwaltungTest extends AbstractTest {
 
 		// Then
 		thrown.expect(KundeValidationException.class);
-		thrown.expectMessage("kundenverwaltung.kunde.password.notEqual");
+		thrown.expectMessage("Ungueltiger Kunde:");
 		kv.createKunde(neuerKunde, LOCALE);
 	}
 	
