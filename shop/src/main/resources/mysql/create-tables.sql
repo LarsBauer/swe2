@@ -58,20 +58,7 @@ CREATE TABLE artikel (
 	aktualisiert TIMESTAMP NOT NULL
 );
 
-	DROP TABLE IF EXISTS kreditkarte;
-CREATE TABLE kreditkarte(
-	kr_id BIGINT NOT NULL PRIMARY KEY,
-	kreditkartennr NVARCHAR(16) NOT NULL,
-	anbieter NVARCHAR(32) NOT NULL,
-	sicherheitscode CHAR(3) NOT NULL,
-	gueltigbis NVARCHAR(5) NOT NULL,
-	kunde_fk BIGINT NOT NULL REFERENCES kunde(k_id),
-	erzeugt TIMESTAMP NOT NULL,
-	aktualisiert TIMESTAMP NOT NULL
-
-);
-
-DROP TABLE IF EXISTS bestellung_versand;
+	DROP TABLE IF EXISTS bestellung_versand;
 CREATE TABLE bestellung_versand(
 	bestellung_fk BIGINT NOT NULL REFERENCES bestellung(b_id),
 	versand_fk BIGINT NOT NULL REFERENCES versand(v_id),
