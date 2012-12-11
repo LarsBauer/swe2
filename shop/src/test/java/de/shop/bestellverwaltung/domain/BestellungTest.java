@@ -57,7 +57,7 @@ public class BestellungTest extends AbstractDomainTest {
 	
 	
 	@Test
-	public void FindBestellungByKundeVorhanden() {
+	public void findBestellungByKundeVorhanden() {
 		// Given
 		final Long id = K_ID_VORHANDEN;
 
@@ -80,7 +80,7 @@ public class BestellungTest extends AbstractDomainTest {
 	
 
 	@Test
-	public void FindeKundeByIdVorhanden() {
+	public void findeKundeByIdVorhanden() {
 		// Given
 		final Long id = B_ID_VORHANDEN;
 		
@@ -94,7 +94,7 @@ public class BestellungTest extends AbstractDomainTest {
 	
 
 	@Test
-	public void FindKundeByIdNichtVorhanden() {
+	public void findKundeByIdNichtVorhanden() {
 		// Given
 		final Long id = B_ID_NICHT_VORHANDEN;
 		
@@ -108,7 +108,7 @@ public class BestellungTest extends AbstractDomainTest {
 	
 
 	@Test
-	public void FindBestellungByKundeNichtVorhanden() {
+	public void findBestellungByKundeNichtVorhanden() {
 		// Given
 		final Long id = K_ID_NICHT_VORHANDEN;
 
@@ -131,10 +131,10 @@ public class BestellungTest extends AbstractDomainTest {
 	
 
 	@Test
-	public void CreateBestellung() {
+	public void createBestellung() {
 		// Given
-		final Long v_id = V_ID_VORHANDEN;
-		final Long bp_id = BP_ID_VORHANDEN;
+		final Long vid = V_ID_VORHANDEN;
+		final Long bpid = BP_ID_VORHANDEN;
 		
 		Kunde kunde = new Kunde();
 		kunde.setName(NACHNAME_NEU);
@@ -169,10 +169,10 @@ public class BestellungTest extends AbstractDomainTest {
 		
 		
 		final List<Versand> versand = new ArrayList<Versand>();
-		versand.add(getEntityManager().find(Versand.class, v_id));
+		versand.add(getEntityManager().find(Versand.class, vid));
 		
 		final List<Bestellposition> bestellpositionen = new ArrayList<Bestellposition>();
-		bestellpositionen.add(getEntityManager().find(Bestellposition.class, bp_id));
+		bestellpositionen.add(getEntityManager().find(Bestellposition.class, bpid));
 		
 		Bestellung bestellung = new Bestellung();
 		bestellung.setKunde(kunde);
@@ -203,17 +203,17 @@ public class BestellungTest extends AbstractDomainTest {
 	
 	@Ignore
 	@Test
-	public void CreatBestellungOhneKunde() 
+	public void creatBestellungOhneKunde() 
 			throws HeuristicMixedException, HeuristicRollbackException, SystemException { 
 		// Given
-		final Long v_id = V_ID_VORHANDEN;
-		final Long bp_id = BP_ID_VORHANDEN;
+		final Long vid = V_ID_VORHANDEN;
+		final Long bpid = BP_ID_VORHANDEN;
 		
 		final List<Versand> versand = new ArrayList<Versand>();
-		versand.add(getEntityManager().find(Versand.class, v_id));
+		versand.add(getEntityManager().find(Versand.class, vid));
 		
 		final List<Bestellposition> bestellpositionen = new ArrayList<Bestellposition>();
-		bestellpositionen.add(getEntityManager().find(Bestellposition.class, bp_id));
+		bestellpositionen.add(getEntityManager().find(Bestellposition.class, bpid));
 		
 		// When
 		Bestellung bestellung = new Bestellung();

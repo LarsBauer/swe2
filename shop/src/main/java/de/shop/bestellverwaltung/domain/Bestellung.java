@@ -174,8 +174,8 @@ public class Bestellung implements Serializable {
 		}
 	}
 	
-	public void addVersand(Versand versand_neu) {
-		versand.add(versand_neu);
+	public void addVersand(Versand versandneu) {
+		versand.add(versandneu);
 	}
 	
 
