@@ -111,7 +111,7 @@ public class ArtikelTest extends AbstractDomainTest {
 
 	
 	@Test
-	public void CreateArtikel() {
+	public void createArtikel() {
 		//Given
 		Artikel artikel = new Artikel();
 		artikel.setPreis(PREIS);
