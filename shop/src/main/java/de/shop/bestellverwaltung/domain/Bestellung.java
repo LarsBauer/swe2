@@ -158,6 +158,21 @@ public class Bestellung implements Serializable {
 		aktualisiert = new Date();
 	}
 
+	public URI getKundeUri() {
+		return kundeUri;
+	}
+	
+	public void setKundeUri(URI kundeUri) {
+		this.kundeUri = kundeUri;
+	}
+	
+	public URI getVersandUri() {
+		return versandUri;
+	}
+	public void setVersandUri(URI versandUri) {
+		this.versandUri = versandUri;
+	}
+	
 	public Long getId() {
 		return this.id;
 	}
