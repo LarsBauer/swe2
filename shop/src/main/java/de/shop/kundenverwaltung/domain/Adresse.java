@@ -3,10 +3,14 @@ package de.shop.kundenverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
+import static java.util.logging.Level.FINER;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import static javax.xml.bind.annotation.XmlAccessType.FIELD;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,13 +18,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import de.shop.util.IdGroup;
 
@@ -30,8 +40,11 @@ import de.shop.util.IdGroup;
  * 
  */
 @Entity
+@Table(name = "adresse")
+@XmlAccessorType(FIELD)
 public class Adresse implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 	
 	public static final int PLZ_LENGTH_MAX = 5;
 	public static final int ORT_LENGTH_MIN = 2;
@@ -44,14 +57,17 @@ public class Adresse implements Serializable {
 	@GeneratedValue()
 	@Column(name = "ad_id", unique = true, nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{kundenverwaltung.adresse.id.min}", groups = IdGroup.class)
+	@XmlAttribute
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date aktualisiert;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date erzeugt;
 
 	@Column(nullable = false)
@@ -61,21 +77,25 @@ public class Adresse implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "kunde_fk", nullable = false)
 	@NotNull(message = "{kundenverwaltung.adresse.kunde.notNull}")
+	@XmlTransient
 	private Kunde kunde;
 
 	@Column(nullable = false)
 	@NotNull(message = "{kundenverwaltung.adresse.ort.notNull}")
 	@Size(min = ORT_LENGTH_MIN, max = ORT_LENGTH_MAX, message = "{kundenverwaltung.adresse.ort.length}")
+	@XmlElement(required = true)
 	private String ort;
 
 	@Column(length = PLZ_LENGTH_MAX, nullable = false)
 	@NotNull(message = "{kundenverwaltung.adresse.plz.notNull}")
 	@Pattern(regexp = "\\d{5}", message = "{kundenverwaltung.adresse.plz}")
+	@XmlElement(required = true)
 	private String plz;
 
 	@Column(nullable = false)
 	@NotNull(message = "{kundenverwaltung.adresse.strasse.notNull}")
 	@Size(min = STRASSE_LENGTH_MIN, max = STRASSE_LENGTH_MAX, message = "{kundenverwaltung.adresse.strasse.length}")
+	@XmlElement(required = true)
 	private String strasse;
 
 	public Adresse() {
@@ -86,6 +106,11 @@ public class Adresse implements Serializable {
 	private void prePersist() {
 		erzeugt = new Date();
 		aktualisiert = new Date();
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.log(FINER, "Neue Adresse mit ID={0}", id);
 	}
 	
 	@PreUpdate

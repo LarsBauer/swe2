@@ -3,15 +3,20 @@ package de.shop.kundenverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
+import static java.util.logging.Level.FINER;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,6 +27,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -32,7 +38,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.ScriptAssert;
 
@@ -84,8 +93,11 @@ import de.shop.util.IdGroup;
 						+ "|| (_this.password != null && _this.password.equals(_this.passwordWdh))",
 			message = "{kundenverwaltung.kunde.password.notEqual}",
 			groups = PasswordGroup.class)
+
+@XmlRootElement
 public class Kunde implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 	
 	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
 	public static final int NACHNAME_LENGTH_MIN = 2;
@@ -116,21 +128,26 @@ public class Kunde implements Serializable {
 	@GeneratedValue()
 	@Column(name = "k_id", unique = true, nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{kundenverwaltung.kunde.id.min}", groups = IdGroup.class)
+	@XmlAttribute
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date aktualisiert;
 
 	@Column(unique = true, nullable = false)
 	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
+	//@XmlTransient
 	private String email;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date erzeugt;
 
 	@Column(length = 1)
+	@XmlElement
 	private String geschlecht;
 
 	@Column(nullable = false)
@@ -138,6 +155,7 @@ public class Kunde implements Serializable {
 	@Size(min = NACHNAME_LENGTH_MIN, max = NACHNAME_LENGTH_MAX,
 	      message = "{kundenverwaltung.kunde.nachname.length}")
 	@Pattern(regexp = NAME_PATTERN, message = "{kundenverwaltung.kunde.nachname.pattern}")
+	@XmlElement(required = true)
 	private String name;
 
 	private boolean newsletter;
@@ -154,17 +172,28 @@ public class Kunde implements Serializable {
 	
 	@OneToMany
 	@JoinColumn(name = "kunde_fk", nullable = false)
+	@XmlTransient
 	private List<Bestellung> bestellungen;
+	
+	@Transient
+	@XmlElement(name = "bestellungen")
+	private URI bestellungenUri;
 	
 	@OneToOne(cascade = { PERSIST, REMOVE }, mappedBy = "kunde")
 	@Valid
 	@NotNull(message = "{kundenverwaltung.kunde.adresse.notNull}")
+	@XmlElement(required = true)
 	private Adresse adresse;
 	
 	@PrePersist
 	protected void prePersist() {
 		erzeugt = new Date();
 		aktualisiert = new Date();
+	}
+	
+	@PostPersist
+	protected void postPersist() {
+		LOGGER.log(FINER, "Neuer Kunde mit ID={0}", id);
 	}
 	
 	@PreUpdate
@@ -297,6 +326,13 @@ public class Kunde implements Serializable {
 		}
 		bestellungen.add(bestellung);
 		return this;
+	}
+	
+	public URI getBestellungenUri() {
+		return bestellungenUri;
+	}
+	public void setBestellungenUri(URI bestellungenUri) {
+		this.bestellungenUri = bestellungenUri;
 	}
 	
 	@Override
