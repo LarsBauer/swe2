@@ -1,13 +1,18 @@
 package de.shop.bestellverwaltung.domain;
 
+import static java.util.logging.Level.FINER;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,11 +20,19 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.PreExistingGroup;
@@ -37,8 +50,10 @@ import de.shop.util.PreExistingGroup;
                 	    + " FROM Versand v LEFT JOIN FETCH v.bestellungen"
 			            + " WHERE v.id LIKE :" + Versand.PARAM_VERSAND_ID)
 })
+@XmlRootElement
 public class Versand implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 	
 	private static final String PREFIX = "Versand.";
 	public static final String FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN =
@@ -48,17 +63,21 @@ public class Versand implements Serializable {
 	@Id
 	@GeneratedValue()
 	@Column(name = "v_id", unique = true, nullable = false, updatable = false)
+	@XmlAttribute
 	private Long id;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date aktualisiert;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date erzeugt;
 
 	@Column(nullable = false)
+	@XmlElement
 	private String versandart;
 
 	private double versandkosten;
@@ -66,7 +85,13 @@ public class Versand implements Serializable {
 	@ManyToMany(mappedBy = "versand", cascade = { PERSIST, MERGE })
 	@NotEmpty(message = "{bestellverwaltung.lieferung.bestellungen.notEmpty}", groups = PreExistingGroup.class)
 	@Valid
+	@XmlTransient
 	private List<Bestellung> bestellungen;
+	
+	@Transient
+	@XmlElementWrapper(name = "bestellungen", required = true)
+	@XmlElement(name = "bestellung", required = true)
+	private List<URI> bestellungenUris;
 
 	public Versand() {
 		super();
@@ -76,6 +101,11 @@ public class Versand implements Serializable {
 	protected void prePersist() {
 		erzeugt = new Date();
 		aktualisiert = new Date();
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.log(FINER, "Neuer Versand mit ID={0}", id);
 	}
 	
 	@PreUpdate

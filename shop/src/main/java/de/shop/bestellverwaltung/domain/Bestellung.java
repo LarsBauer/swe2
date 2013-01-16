@@ -3,16 +3,21 @@ package de.shop.bestellverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
+import static java.util.logging.Level.FINER;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,13 +29,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -58,8 +70,10 @@ import de.shop.util.PreExistingGroup;
 	   					+ " FROM   Bestellung b LEFT JOIN FETCH b.versand"
 	   					+ " WHERE  b.id = :" + Bestellung.PARAM_ID),
 })
+@XmlRootElement
 public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 	
 	private static final String PREFIX = "Bestellung.";
 	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX + "findBestellungenByKunde";
@@ -75,32 +89,46 @@ public class Bestellung implements Serializable {
 	@GeneratedValue()
 	@Column(name = "b_id", unique = true, nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
+	@XmlAttribute
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date aktualisiert;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	private Date erzeugt;
+	
+	@Transient
+	@XmlElement(name = "kunde", required = true)
+	private URI kundeUri;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
 	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}", groups = PreExistingGroup.class)
+	@XmlTransient
 	private Kunde kunde;
 	
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
 	@JoinColumn(name = "bestellung_fk", nullable = false)
 	@NotEmpty(message = "{bestellverwaltung.bestellung.bestellpositionen.notEmpty}")
 	@Valid
+	@XmlElementWrapper(name="bestellposition",required = true)
+	@XmlElement(name="bestellposition", required = true)
 	private List<Bestellposition> bestellpositionen;
 	
 	@ManyToMany
 	@JoinTable(name = "bestellung_versand",
 			   joinColumns = @JoinColumn(name = "bestellung_fk"),
 			                 inverseJoinColumns = @JoinColumn(name = "versand_fk"))
+	@XmlTransient
 	private List<Versand> versand;
+	
+	@Transient
+	@XmlElement(name = "versand")
+	private URI versandUri;
 
 	@Column(nullable = false)
 	private String status;
@@ -118,6 +146,11 @@ public class Bestellung implements Serializable {
 	private void prePersist() {
 		erzeugt = new Date();
 		aktualisiert = new Date();
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.log(FINER, "Neue Bestellung mit ID={0}", id);
 	}
 	
 	@PreUpdate
