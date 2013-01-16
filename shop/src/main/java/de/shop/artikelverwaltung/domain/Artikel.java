@@ -1,12 +1,14 @@
 package de.shop.artikelverwaltung.domain;
 
-
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
+import static java.util.logging.Level.FINER;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,13 +16,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import de.shop.util.IdGroup;
-
 /**
  * The persistent class for the artikel database table.
  * 
@@ -45,9 +51,10 @@ import de.shop.util.IdGroup;
 				+ " WHERE	a.preis < :" + Artikel.PARAM_PREIS_MAX
 				+ " ORDER BY a.id ASC"),	
 })
-
+@XmlRootElement
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 	
 	private static final int NAME_LENGTH_MAX = 32;
 	private static final int GROESSE_LENGTH_MAX = 3;
@@ -65,29 +72,42 @@ public class Artikel implements Serializable {
 	@GeneratedValue()
 	@Column(name = "a_id", unique = true, nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
+	@XmlAttribute
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date aktualisiert;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@XmlTransient
 	private Date erzeugt;
 
 	@Column(name = "groesse", length = GROESSE_LENGTH_MAX, nullable = false)
+	@XmlElement
 	private String groesse;
 
 	@Column(name = "name", length = NAME_LENGTH_MAX, nullable = false)
 	@Size(max = NAME_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
+	@XmlElement
 	private String name;
 
+	@XmlElement
 	private double preis;
 
+	
+	
 	public Artikel() {
 		super();
 	}
 
+	@PostPersist
+	private void postPersist() {
+		LOGGER.log(FINER, "Neuer Artikel mit ID={0}", id);
+	}
+	
 	public Long getId() {
 		return this.id;
 	}
