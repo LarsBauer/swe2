@@ -2,7 +2,12 @@ package de.shop.bestellverwaltung.domain;
 
 
 import static de.shop.util.Constants.KEINE_ID;
+import static java.util.logging.Level.FINER;
+
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.net.URI;
+import java.util.logging.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +15,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostPersist;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 
@@ -21,23 +33,33 @@ import de.shop.artikelverwaltung.domain.Artikel;
  * 
  */
 @Entity
+@Table(name = "bestellposition")
+@XmlRootElement
 public class Bestellposition implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final int ANZAHL_MIN = 1;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
 	@Id
 	@GeneratedValue()
 	@Column(name = "bp_id", unique = true, nullable = false, updatable = false)
+	@XmlAttribute 
 	private Long id = KEINE_ID;
 
 	@Column(nullable = false)
 	@Min(value = ANZAHL_MIN, message = "{bestellverwaltung.bestellposition.anzahl.min}")
+	@XmlElement
 	private short anzahl;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "artikel_fk", nullable = false)
 	@NotNull(message = "{bestellverwaltung.bestellposition.artikel.notNull}")
+	@XmlTransient
 	private Artikel artikel;
+	
+	@Transient
+	@XmlElement(name = "artikel", required = true)
+	private URI artikelUri;
 
 
 	public Bestellposition() {
@@ -54,6 +76,11 @@ public class Bestellposition implements Serializable {
 		super();
 		this.artikel = artikel;
 		this.anzahl = anzahl;
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.log(FINER, "Neue Bestellposition mit ID={0}", id);
 	}
 
 	public Long getId() {
@@ -78,6 +105,14 @@ public class Bestellposition implements Serializable {
 
 	public void setArtikel(Artikel artikel) {
 		this.artikel = artikel;
+	}
+	
+	public URI getArtikelUri() {
+		return artikelUri;
+	}
+	
+	public void setArtikelUri(URI artikelUri) {
+		this.artikelUri = artikelUri;
 	}
 	
 	@Override
