@@ -214,6 +214,14 @@ public class Kunde implements Serializable {
 	public Long getId() {
 		return this.id;
 	}
+	
+	public void setValues(Kunde k) {
+		name = k.name;
+		vorname = k.vorname;
+		email = k.email;
+		passwort = k.passwort;
+		passwortWdh = k.passwort;
+	}
 
 	public void setId(Long id) {
 		this.id = id;
