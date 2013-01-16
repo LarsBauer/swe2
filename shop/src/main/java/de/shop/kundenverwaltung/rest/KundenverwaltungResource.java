@@ -9,7 +9,6 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -46,8 +45,6 @@ import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.service.Kundenverwaltung;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
-import de.shop.util.RestLongWrapper;
-import de.shop.util.RestStringWrapper;
 
 
 @Path("/kunden")
