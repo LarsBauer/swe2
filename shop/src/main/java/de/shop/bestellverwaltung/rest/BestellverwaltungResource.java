@@ -118,7 +118,7 @@ public class BestellverwaltungResource {
 	                                      .build();
 		throw new WebApplicationException(response);
 		
-		// TODO findLieferungenByBestellungId noch nicht implementiert
+		// findLieferungenByBestellungId noch nicht implementiert
 	}
 
 	

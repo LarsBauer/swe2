@@ -125,7 +125,7 @@ public enum ArchiveService {
 			archive.addAsWebInfResource(jbossDeploymentStructureXml);
 		}
 		else {
-			// TODO MANIFEST.MF fuer Web-Archiv kann nicht mit ShrinkWrap gesetzt werden
+			// MANIFEST.MF fuer Web-Archiv kann nicht mit ShrinkWrap gesetzt werden
 //			archive.addAsManifestResource(new StringAsset("Manifest-Version: 1.0\n"
 //			                              + "Dependencies: org.infinispan,org.infinispan.client.hotrod,org.jboss.as\n"
 //			                              + " .controller-client,org.jboss.dmr,com.google.guava,org.joda.time,org.s\n"

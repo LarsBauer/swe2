@@ -96,7 +96,7 @@ public class KundenverwaltungResource {
 	public Kunde findKundeById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
 		final Kunde kunde = kv.findKundeById(id, FetchType.NUR_KUNDE);
 		if (kunde == null) {
-			// TODO msg passend zu locale
+			// msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + id;
 			throw new NotFoundException(msg);
 		}
@@ -229,7 +229,7 @@ public class KundenverwaltungResource {
 		// Vorhandenen Kunden ermitteln
 		Kunde origKunde = kv.findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
 		if (origKunde == null) {
-			// TODO msg passend zu locale
+			// msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + kunde.getId();
 			throw new NotFoundException(msg);
 		}
@@ -244,7 +244,7 @@ public class KundenverwaltungResource {
 		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales.get(0);
 		kunde = kv.updateKunde(origKunde, locale);
 		if (kunde == null) {
-			// TODO msg passend zu locale
+			// msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + origKunde.getId();
 			throw new NotFoundException(msg);
 		}
