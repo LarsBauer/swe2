@@ -1,22 +1,29 @@
 package de.shop.artikelverwaltung.service;
 
 import static de.shop.util.AbstractDao.QueryParameter.with;
+import static de.shop.util.Constants.KEINE_ID;
 import static java.util.logging.Level.FINER;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
 
 import com.google.common.base.Strings;
 
 import de.shop.artikelverwaltung.dao.ArtikelDao;
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.util.Log;
+import de.shop.util.ValidationService;
 
 @Log
 public class Artikelverwaltung implements Serializable {
@@ -25,6 +32,9 @@ public class Artikelverwaltung implements Serializable {
 	
 	@Inject
 	private ArtikelDao dao;
+	
+	@Inject
+	private ValidationService validationService;
 	
 	@PostConstruct
 	private void postConstruct() {
@@ -81,4 +91,28 @@ public class Artikelverwaltung implements Serializable {
 				                                    with(Artikel.PARAM_PREIS_MAX, preis).build());
 		return artikelListe;
 	}
+	
+	public Artikel createArtikel(Artikel artikel, Locale locale) {
+		if (artikel == null) {
+			return artikel;
+		}
+		
+		validateArtikel(artikel, locale, Default.class);
+		
+		artikel.setId(KEINE_ID);
+		artikel = dao.create(artikel);
+		
+		return artikel;
+	}
+	
+	private void validateArtikel(Artikel artikel, Locale locale, Class<?>... groups) {
+		// Werden alle Constraints beim Einfuegen gewahrt?
+		final Validator validator = validationService.getValidator(locale);
+		
+		final Set<ConstraintViolation<Artikel>> violations = validator.validate(artikel, groups);
+		if (!violations.isEmpty()) {
+			throw new ArtikelValidationException(artikel, violations);
+		}
+	}
+	
 }

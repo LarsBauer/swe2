@@ -1,6 +1,7 @@
 package de.shop.bestellverwaltung.domain;
 
 import static java.util.logging.Level.FINER;
+import static de.shop.util.Constants.KEINE_ID;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.TemporalType.TIMESTAMP;
@@ -64,7 +65,7 @@ public class Versand implements Serializable {
 	@GeneratedValue()
 	@Column(name = "v_id", unique = true, nullable = false, updatable = false)
 	@XmlAttribute
-	private Long id;
+	private Long id = KEINE_ID;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)

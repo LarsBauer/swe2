@@ -318,7 +318,7 @@ public class KundenverwaltungTest extends AbstractTest {
 		neuerKunde.setAdresse(k.getAdresse());
 		neuerKunde.setGeschlecht(k.getGeschlecht());
 		neuerKunde.setVorname(k.getVorname());
-		neuerKunde.setNewsletter(k.getNewsletter());
+		neuerKunde.setNewsletter(k.isNewsletter());
 		
 		// Then
 		thrown.expect(EmailExistsException.class);

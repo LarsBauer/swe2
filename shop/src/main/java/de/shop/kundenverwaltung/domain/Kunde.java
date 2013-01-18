@@ -267,7 +267,7 @@ public class Kunde implements Serializable {
 		this.name = name;
 	}
 
-	public boolean getNewsletter() {
+	public boolean isNewsletter() {
 		return this.newsletter;
 	}
 

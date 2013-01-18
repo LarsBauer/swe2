@@ -121,7 +121,7 @@ public class BestellungTest extends AbstractDomainTest {
 		final TypedQuery<Bestellung> query = 
 				getEntityManager().createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDE, Bestellung.class);
 		
-		query.setParameter(Bestellung.PARAM_KUNDEID, id);
+		query.setParameter(Bestellung.PARAM_KUNDEID, kunde.getId());
 		final List<Bestellung> bestellungen = query.getResultList();
 		
 		assertThat(bestellungen.size(), is(0));

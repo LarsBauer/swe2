@@ -46,7 +46,7 @@ public class Bestellposition implements Serializable {
 	@XmlAttribute 
 	private Long id = KEINE_ID;
 
-	@Column(nullable = false)
+	@Column(name = "anzahl", nullable = false)
 	@Min(value = ANZAHL_MIN, message = "{bestellverwaltung.bestellposition.anzahl.min}")
 	@XmlElement
 	private short anzahl;

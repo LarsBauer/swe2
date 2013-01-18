@@ -115,8 +115,8 @@ public class Bestellung implements Serializable {
 	@JoinColumn(name = "bestellung_fk", nullable = false)
 	@NotEmpty(message = "{bestellverwaltung.bestellung.bestellpositionen.notEmpty}")
 	@Valid
-	@XmlElementWrapper(name="bestellposition",required = true)
-	@XmlElement(name="bestellposition", required = true)
+	@XmlElementWrapper(name = "bestellposition", required = true)
+	@XmlElement(name = "bestellposition", required = true)
 	private List<Bestellposition> bestellpositionen;
 	
 	@ManyToMany
