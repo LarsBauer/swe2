@@ -107,7 +107,6 @@ public class KundenverwaltungResource {
 		return kunde;
 	}
 	
-
 	/**
 	 * Mit der URL /kunden werden alle Kunden ermittelt oder
 	 * mit kundenverwaltung/kunden?nachname=... diejenigen mit einem bestimmten Nachnamen.
@@ -144,32 +143,6 @@ public class KundenverwaltungResource {
 		return kunden;
 	}
 	
-	/*
-	@GET
-	@Path("/prefix/id/{id:[1-9][0-9]*}")
-	public Collection<RestLongWrapper> findIdsByPrefix(@PathParam("id") String idPrefix, @Context UriInfo uriInfo) {
-		final Collection<Long> ids = kv.findIdsByPrefix(idPrefix);
-		final Collection<RestLongWrapper> result = new ArrayList<>(ids.size());
-		for (Long id : ids) {
-			result.add(new RestLongWrapper(id));
-		}
-		return result;
-	}
-	
-	
-	@GET
-	@Path("/prefix/nachname/{nachname}")
-	public Collection<RestStringWrapper> findNachnamenByPrefix(@PathParam("nachname") String nachnamePrefix,
-			                                                   @Context UriInfo uriInfo) {
-		final Collection<String> nachnamen = kv.findNachnamenByPrefix(nachnamePrefix);
-		final Collection<RestStringWrapper> wrapperColl = new ArrayList<>(nachnamen.size());
-		for (String n : nachnamen) {
-			wrapperColl.add(new RestStringWrapper(n));
-		}
-		return wrapperColl;
-	}
-*/
-	
 	/**
 	 * Mit der URL /kunden/{id}/bestellungen die Bestellungen zu eine Kunden ermitteln
 	 * @param kundeId ID des Kunden
@@ -193,7 +166,6 @@ public class KundenverwaltungResource {
 		return bestellungen;
 	}
 	
-
 	/**
 	 * Mit der URL /kunden einen Privatkunden per POST anlegen.
 	 * @param kunde neuer Kunde
@@ -249,7 +221,6 @@ public class KundenverwaltungResource {
 			throw new NotFoundException(msg);
 		}
 	}
-	
 	
 	/**
 	 * Mit der URL /kunden{id} einen Kunden per DELETE l&ouml;schen

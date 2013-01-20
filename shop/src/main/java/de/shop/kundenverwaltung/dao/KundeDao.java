@@ -95,11 +95,6 @@ public class KundeDao extends AbstractDao<Kunde, Long> {
 	}
 	
 	public void fetchLieferungen(List<Kunde> kunden) {
-		// Fetch-Join als Criteria Query:
-		//       SELECT b
-		//       FROM   Bestellung b
-		//              LEFT JOIN FETCH b.lieferungen
-		//       WHERE  b.id = ? OR b.id = ? ...
 		
 		final EntityManager em = getEntityManager();
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
@@ -166,17 +161,8 @@ public class KundeDao extends AbstractDao<Kunde, Long> {
 		final Join<Bestellung, Bestellposition> bp = b.join(Bestellung_.bestellpositionen);
 		criteriaQuery.where(builder.gt(bp.<Short>get(Bestellposition_.anzahl), minMenge))
 		             .distinct(true);
-		//final Join<AbstractKunde, Bestellung> b = k.join("bestellungen");
-		//final Join<Bestellung, Bestellposition> bp = b.join("bestellpositionen");
-		//criteriaQuery.where(builder.gt(bp.<Short>get("anzahl"), minMenge))
-		//             .distinct(true);
 
 		final TypedQuery<Kunde> query = em.createQuery(criteriaQuery);
-		
-		// Ausgabe des komponierten Query-Strings. Voraussetzung: das Modul "org.hibernate" ist aktiviert
-		//if (LOGGER.isLoggable(FINEST)) {
-		//	query.unwrap(org.hibernate.Query.class).getQueryString();
-		//}
 		
 		final List<Kunde> kunden = query.getResultList();
 		return kunden;
@@ -193,7 +179,6 @@ public class KundeDao extends AbstractDao<Kunde, Long> {
 		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
 		final Path<String> nachnamePath = k.get(Kunde_.name);
-		//final Path<String> nachnamePath = k.get("nachname");
 		
 		final Predicate pred = builder.equal(nachnamePath, nachname);
 		criteriaQuery.where(pred);

@@ -64,15 +64,6 @@ public class Kundenverwaltung implements Serializable {
 		final List<Kunde> kunden = dao.findKundenByName(nachname, fetch);
 		return kunden;
 	}
-	
-	/*
-	public List<String> findNachnamenByPrefix(String nachnamePrefix) {
-		final List<String> nachnamen = dao.find(String.class, Kunde.FIND_NACHNAMEN_BY_PREFIX,
-		                                        with(Kunde.PARAM_KUNDE_NACHNAME_PREFIX,
-		                                        	 nachnamePrefix + '%').build());
-		return nachnamen;
-	}
-	*/
 
 	/**
 	 */
@@ -81,15 +72,6 @@ public class Kundenverwaltung implements Serializable {
 		return kunde;
 	}
 	
-	/*
-	public List<Long> findIdsByPrefix(String idPrefix) {
-		final List<Long> ids = dao.find(Long.class, AbstractKunde.FIND_IDS_BY_PREFIX,
-		                                with(AbstractKunde.PARAM_KUNDE_ID_PREFIX,
-		                                   	 idPrefix + '%').build());
-		return ids;
-	}
-	*/
-	
 	/**
 	 */
 	public Kunde findKundeByEmail(String email) {
@@ -97,16 +79,6 @@ public class Kundenverwaltung implements Serializable {
                                                    with(Kunde.PARAM_KUNDE_EMAIL, email).build());
 		return kunde;
 	}
-	
-	/**
-	 */
-	/*
-	public AbstractKunde findKundeMitWartungsvertraegenById(Long id) {
-		final AbstractKunde kunde = dao.findSingle(AbstractKunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE,
-                                                   with(AbstractKunde.PARAM_KUNDE_ID, id).build());
-		return kunde;
-	}
-	*/
 
 	/**
 	 */
@@ -194,25 +166,6 @@ public class Kundenverwaltung implements Serializable {
                                                     with(Kunde.PARAM_KUNDE_ADRESSE_PLZ, plz).build());
 		return kunden;
 	}
-
-	/**
-	 */
-	/*
-	public List<AbstractKunde> findKundenBySeit(Date seit) {
-		final List<AbstractKunde> kunden = dao.find(AbstractKunde.FIND_KUNDEN_BY_DATE,
-                                                    with(AbstractKunde.PARAM_KUNDE_SEIT, seit).build());
-		return kunden;
-	}
-	*/
-	
-	/**
-	 */
-	/*
-	public List<AbstractKunde> findPrivatkundenFirmenkunden() {
-		final List<AbstractKunde> kunden = dao.find(AbstractKunde.FIND_PRIVATKUNDEN_FIRMENKUNDEN);
-		return kunden;
-	}
-	*/
 	
 	/**
 	 */
@@ -230,30 +183,4 @@ public class Kundenverwaltung implements Serializable {
 	
 	/**
 	 */
-	/*
-	public List<Wartungsvertrag> findWartungsvertraege(Long kundeId) {
-		final List<Wartungsvertrag> wartungsvertraege =
-				                    wartungsvertraDao.find(Wartungsvertrag.FIND_WARTUNGSVERTRAEGE_BY_KUNDE_ID,
-                                                           with(Wartungsvertrag.PARAM_KUNDE_ID, kundeId).build());
-		return wartungsvertraege;
-	}
-	*/
-	
-	/**
-	 */
-	/*
-	public Wartungsvertrag createWartungsvertrag(Wartungsvertrag wartungsvertrag,
-			                                     AbstractKunde kunde) {
-		if (wartungsvertrag == null || kunde == null) {
-			return null;
-		}
-		
-		kunde = dao.findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
-		wartungsvertrag.setKunde(kunde);
-		kunde.addWartungsvertrag(wartungsvertrag);
-		
-		wartungsvertrag = wartungsvertraDao.create(wartungsvertrag);
-		return wartungsvertrag;
-	}
-	*/
 }
