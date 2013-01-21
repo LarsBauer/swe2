@@ -22,26 +22,18 @@ public class ArtikelDao extends AbstractDao<Artikel, Long> {
 		if (ids == null || ids.isEmpty()) {
 			return Collections.emptyList();
 		}
-		
-		/**
-		 * SELECT a
-		 * FROM   Artikel a
-		 * WHERE  a.id = ? OR a.id = ? OR ...
-		 */
+
 		final CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
 		final CriteriaQuery<Artikel> criteriaQuery = builder.createQuery(Artikel.class);
 		final Root<Artikel> a = criteriaQuery.from(Artikel.class);
 
 		final Path<Long> idPath = a.get("id");
-		//final Path<String> idPath = a.get(Artikel_.id);   // Metamodel-Klassen funktionieren nicht mit Eclipse
-		
+	
 		Predicate pred = null;
 		if (ids.size() == 1) {
-			// Genau 1 id: kein OR notwendig
 			pred = builder.equal(idPath, ids.get(0));
 		}
 		else {
-			// Mind. 2x id, durch OR verknuepft
 			final Predicate[] equals = new Predicate[ids.size()];
 			int i = 0;
 			for (Long id : ids) {

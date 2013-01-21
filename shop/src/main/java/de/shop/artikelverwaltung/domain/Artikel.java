@@ -29,10 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import de.shop.util.IdGroup;
-/**
- * The persistent class for the artikel database table.
- * 
- */
+
 @Entity
 @Table(name = "artikel")
 @NamedQueries({

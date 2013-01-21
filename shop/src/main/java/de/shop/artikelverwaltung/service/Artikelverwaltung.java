@@ -45,32 +45,22 @@ public class Artikelverwaltung implements Serializable {
 	private void preDestroy() {
 		LOGGER.log(FINER, "CDI-faehiges Bean {0} wird geloescht", this);
 	}
-	
-	/**
-	 */
+
 	public List<Artikel> findVerfuegbareArtikel() {
 		final List<Artikel> artikelListe = dao.find(Artikel.FIND_VERFUEGBARE_ARTIKEL);
 		return artikelListe;
 	}
 
-	
-	/**
-	 */
 	public Artikel findArtikelById(Long id) {
 		final Artikel artikel = dao.find(id);
 		return artikel;
 	}
-	
-	/**
-	 */
+
 	public List<Artikel> findArtikelByIds(List<Long> ids) {
 		final List<Artikel> artikel = dao.findArtikelByIds(ids);
 		return artikel;
 	}
 
-	
-	/**
-	 */
 	public List<Artikel> findArtikelByName(String name) {
 		if (Strings.isNullOrEmpty(name)) {
 			final List<Artikel> artikelListe = findVerfuegbareArtikel();
@@ -84,8 +74,6 @@ public class Artikelverwaltung implements Serializable {
 		return artikelListe;
 	}
 	
-	/**
-	 */
 	public List<Artikel> findArtikelByMaxPreis(double preis) {
 		final List<Artikel> artikelListe = dao.find(Artikel.FIND_ARTIKEL_MAX_PREIS,
 				                                    with(Artikel.PARAM_PREIS_MAX, preis).build());
@@ -106,7 +94,6 @@ public class Artikelverwaltung implements Serializable {
 	}
 	
 	private void validateArtikel(Artikel artikel, Locale locale, Class<?>... groups) {
-		// Werden alle Constraints beim Einfuegen gewahrt?
 		final Validator validator = validationService.getValidator(locale);
 		
 		final Set<ConstraintViolation<Artikel>> violations = validator.validate(artikel, groups);
