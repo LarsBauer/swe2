@@ -31,11 +31,6 @@ public interface Bestellverwaltung {
 
 	/**
 	 */
-	/*
-	List<Artikel> ladenhueter(int anzahl);
-	*/
-	/**
-	 */
 	List<Versand> findVersand(Long id);
 
 	/**

@@ -150,17 +150,6 @@ public class BestellverwaltungImpl implements Serializable, Bestellverwaltung {
 			throw new BestellungValidationException(bestellung, violations);
 		}
 	}
-
-
-	/**
-	 */
-	/*
-	@Override
-	public List<Artikel> ladenhueter(int anzahl) {
-		final List<Artikel> artikel = artikelDao.find(Bestellposition.FIND_LADENHUETER, anzahl);
-		return artikel;
-	}
-	*/
 	
 	/**
 	 */

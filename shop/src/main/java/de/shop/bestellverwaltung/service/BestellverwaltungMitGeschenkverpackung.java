@@ -49,13 +49,7 @@ public abstract class BestellverwaltungMitGeschenkverpackung implements Bestellv
 		
 		return bestellverwaltung.createBestellung(bestellung, kunde, locale);
 	}
-
-	/*
-	@Override
-	public List<Artikel> ladenhueter(int anzahl) {
-		return bestellverwaltung.ladenhueter(anzahl);
-	}
-	*/
+	
 
 	@Override
 	public List<Versand> findVersand(Long id) {

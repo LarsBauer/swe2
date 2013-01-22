@@ -118,7 +118,6 @@ public class BestellverwaltungResource {
 	                                      .build();
 		throw new WebApplicationException(response);
 		
-		// findLieferungenByBestellungId noch nicht implementiert
 	}
 
 	

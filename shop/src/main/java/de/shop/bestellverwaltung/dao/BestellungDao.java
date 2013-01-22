@@ -24,10 +24,6 @@ public class BestellungDao extends AbstractDao<Bestellung, Long> {
 		if (ids == null || ids.isEmpty()) {
 			return null;
 		}
-		
-		// SELECT b
-		// FROM   Bestellung b LEFT JOIN FETCH b.lieferungen
-		// WHERE  b.id = <id> OR ...
 
 		final EntityManager em = getEntityManager();
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
