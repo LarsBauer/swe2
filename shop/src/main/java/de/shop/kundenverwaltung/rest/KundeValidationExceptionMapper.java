@@ -18,13 +18,15 @@ import de.shop.kundenverwaltung.service.KundeValidationException;
 @Provider
 @ApplicationScoped
 public class KundeValidationExceptionMapper implements ExceptionMapper<KundeValidationException> {
+	private static final String NEWLINE = System.getProperty("line.separator");
+	
 	@Override
 	public Response toResponse(KundeValidationException e) {
 		final Collection<ConstraintViolation<Kunde>> violations = e.getViolations();
 		final StringBuilder sb = new StringBuilder();
 		for (ConstraintViolation<Kunde> v : violations) {
 			sb.append(v.getMessage());
-			sb.append(" ");
+			sb.append(NEWLINE);
 		}
 		
 		final String responseStr = sb.toString();

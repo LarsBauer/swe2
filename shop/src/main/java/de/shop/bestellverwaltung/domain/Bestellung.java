@@ -8,6 +8,7 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -18,6 +19,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,15 +38,12 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.kundenverwaltung.domain.Kunde;
@@ -70,7 +70,7 @@ import de.shop.util.PreExistingGroup;
 	   					+ " FROM   Bestellung b LEFT JOIN FETCH b.versand"
 	   					+ " WHERE  b.id = :" + Bestellung.PARAM_ID),
 })
-@XmlRootElement
+@Cacheable
 public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
@@ -89,45 +89,44 @@ public class Bestellung implements Serializable {
 	@GeneratedValue()
 	@Column(name = "b_id", unique = true, nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
-	@XmlAttribute
 	private Long id = KEINE_ID;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@XmlTransient
+	@JsonIgnore
 	private Date aktualisiert;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
+	@JsonIgnore
 	private Date erzeugt;
 	
 	@Transient
-	@XmlElement(name = "kunde", required = true)
 	private URI kundeUri;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
 	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}", groups = PreExistingGroup.class)
-	@XmlTransient
+	@JsonIgnore
 	private Kunde kunde;
 	
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
 	@JoinColumn(name = "bestellung_fk", nullable = false)
 	@NotEmpty(message = "{bestellverwaltung.bestellung.bestellpositionen.notEmpty}")
 	@Valid
-	@XmlElementWrapper(name = "bestellposition", required = true)
-	@XmlElement(name = "bestellposition", required = true)
 	private List<Bestellposition> bestellpositionen;
 	
 	@ManyToMany
 	@JoinTable(name = "bestellung_versand",
 			   joinColumns = @JoinColumn(name = "bestellung_fk"),
 			                 inverseJoinColumns = @JoinColumn(name = "versand_fk"))
-	@XmlTransient
 	private List<Versand> versand;
 	
 	@Transient
-	@XmlElement(name = "versand")
 	private URI versandUri;
 
 	@Column(nullable = false)
@@ -179,6 +178,13 @@ public class Bestellung implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
 	}
 	
 	public List<Bestellposition> getBestellpositionen() {
@@ -261,52 +267,93 @@ public class Bestellung implements Serializable {
 	
 	@Override
 	public String toString() {
-		final Long kundeId = kunde == null ? null : kunde.getId();
-		return "Bestellung [id=" + id + ", kundeId=" + kundeId
-		       + ", erzeugt=" + erzeugt
-		       + ", aktualisiert=" + aktualisiert + ']';
+		return "Bestellung [id=" + id + ", version=" + version
+				+ ", aktualisiert=" + aktualisiert + ", erzeugt=" + erzeugt
+				+ ", kundeUri=" + kundeUri + ", kunde=" + kunde
+				+ ", bestellpositionen=" + bestellpositionen + ", versand="
+				+ versand + ", versandUri=" + versandUri + ", status=" + status
+				+ "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
+		result = prime * result
+				+ ((aktualisiert == null) ? 0 : aktualisiert.hashCode());
+		result = prime
+				* result
+				+ ((bestellpositionen == null) ? 0 : bestellpositionen
+						.hashCode());
 		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
+		result = prime * result
+				+ ((kundeUri == null) ? 0 : kundeUri.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((versand == null) ? 0 : versand.hashCode());
+		result = prime * result
+				+ ((versandUri == null) ? 0 : versandUri.hashCode());
+		result = prime * result + version;
 		return result;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		final Bestellung other = (Bestellung) obj;
-		
-		if (kunde == null) {
-			if (other.kunde != null) {
+		Bestellung other = (Bestellung) obj;
+		if (aktualisiert == null) {
+			if (other.aktualisiert != null)
 				return false;
-			}
-		}
-		else if (!kunde.equals(other.kunde)) {
+		} else if (!aktualisiert.equals(other.aktualisiert))
 			return false;
-		}
-		
+		if (bestellpositionen == null) {
+			if (other.bestellpositionen != null)
+				return false;
+		} else if (!bestellpositionen.equals(other.bestellpositionen))
+			return false;
 		if (erzeugt == null) {
-			if (other.erzeugt != null) {
+			if (other.erzeugt != null)
 				return false;
-			}
-		}
-		else if (!erzeugt.equals(other.erzeugt)) {
+		} else if (!erzeugt.equals(other.erzeugt))
 			return false;
-		}
-		
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (kunde == null) {
+			if (other.kunde != null)
+				return false;
+		} else if (!kunde.equals(other.kunde))
+			return false;
+		if (kundeUri == null) {
+			if (other.kundeUri != null)
+				return false;
+		} else if (!kundeUri.equals(other.kundeUri))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		if (versand == null) {
+			if (other.versand != null)
+				return false;
+		} else if (!versand.equals(other.versand))
+			return false;
+		if (versandUri == null) {
+			if (other.versandUri != null)
+				return false;
+		} else if (!versandUri.equals(other.versandUri))
+			return false;
+		if (version != other.version)
+			return false;
 		return true;
 	}
 }

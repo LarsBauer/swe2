@@ -2,6 +2,7 @@ package de.shop.artikelverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
+import static de.shop.util.Constants.ERSTE_VERSION;
 import static java.util.logging.Level.FINER;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -10,6 +11,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,12 +24,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.Version;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import de.shop.util.IdGroup;
 
@@ -50,7 +51,7 @@ import de.shop.util.IdGroup;
 				+ " WHERE	a.preis < :" + Artikel.PARAM_PREIS_MAX
 				+ " ORDER BY a.id ASC"),	
 })
-@XmlRootElement
+@Cacheable
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
@@ -71,29 +72,29 @@ public class Artikel implements Serializable {
 	@GeneratedValue()
 	@Column(name = "a_id", unique = true, nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
-	@XmlAttribute
 	private Long id = KEINE_ID;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@XmlTransient
+	@JsonIgnore
 	private Date aktualisiert;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@XmlTransient
+	@JsonIgnore
 	private Date erzeugt;
 
 	@Column(name = "groesse", length = GROESSE_LENGTH_MAX, nullable = false)
-	@XmlElement(required = true)
 	private String groesse;
 
 	@Column(name = "name", length = NAME_LENGTH_MAX, nullable = false)
 	@Size(max = NAME_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
-	@XmlElement(required = true)
-	private String name;
+	private String name = "";
 
-	@XmlElement
 	private double preis;
 
 	
@@ -124,6 +125,14 @@ public class Artikel implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	public Date getAktualisiert() {
@@ -168,10 +177,9 @@ public class Artikel implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Artikel [id=" + id + ", name=" + name
-		       + ", preis=" + preis + ", groesse=" + groesse
-		       + ", erzeugt=" + erzeugt
-			   + ", aktualisiert=" + aktualisiert + "]";
+		return "Artikel [id=" + id + ", version=" + version + ", aktualisiert="
+				+ aktualisiert + ", erzeugt=" + erzeugt + ", groesse="
+				+ groesse + ", name=" + name + ", preis=" + preis + "]";
 	}
 	
 	@Override
@@ -179,39 +187,57 @@ public class Artikel implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((name == null) ? 0 : name.hashCode());
+				+ ((aktualisiert == null) ? 0 : aktualisiert.hashCode());
+		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
+		result = prime * result + ((groesse == null) ? 0 : groesse.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(preis);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + version;
 		return result;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		Artikel other = (Artikel) obj;
-		
-		
-		if (name == null) {
-			if (other.name != null) {
+		if (aktualisiert == null) {
+			if (other.aktualisiert != null)
 				return false;
-			}
-		}
-		else if (!name.equals(other.name)) {
+		} else if (!aktualisiert.equals(other.aktualisiert))
 			return false;
-		}
-		
-		if (Double.doubleToLongBits(preis) != Double.doubleToLongBits(other.preis)) {
+		if (erzeugt == null) {
+			if (other.erzeugt != null)
+				return false;
+		} else if (!erzeugt.equals(other.erzeugt))
 			return false;
-		}
+		if (groesse == null) {
+			if (other.groesse != null)
+				return false;
+		} else if (!groesse.equals(other.groesse))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (Double.doubleToLongBits(preis) != Double
+				.doubleToLongBits(other.preis))
+			return false;
+		if (version != other.version)
+			return false;
 		return true;
 	}
 

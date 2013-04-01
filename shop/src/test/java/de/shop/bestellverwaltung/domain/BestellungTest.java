@@ -137,7 +137,7 @@ public class BestellungTest extends AbstractDomainTest {
 		final Long bpid = BP_ID_VORHANDEN;
 		
 		Kunde kunde = new Kunde();
-		kunde.setName(NACHNAME_NEU);
+		kunde.setNachname(NACHNAME_NEU);
 		kunde.setVorname(VORNAME_NEU);
 		kunde.setEmail(EMAIL_NEU);
 		kunde.setPasswort(PASSWORT_NEU);

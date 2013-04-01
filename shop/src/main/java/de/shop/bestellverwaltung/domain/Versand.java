@@ -5,6 +5,7 @@ import static de.shop.util.Constants.KEINE_ID;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,13 +29,10 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.Valid;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.PreExistingGroup;
@@ -51,7 +50,6 @@ import de.shop.util.PreExistingGroup;
                 	    + " FROM Versand v LEFT JOIN FETCH v.bestellungen"
 			            + " WHERE v.id LIKE :" + Versand.PARAM_VERSAND_ID)
 })
-@XmlRootElement
 public class Versand implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
@@ -64,21 +62,23 @@ public class Versand implements Serializable {
 	@Id
 	@GeneratedValue()
 	@Column(name = "v_id", unique = true, nullable = false, updatable = false)
-	@XmlAttribute
 	private Long id = KEINE_ID;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@XmlTransient
+	@JsonIgnore
 	private Date aktualisiert;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@XmlTransient
+	@JsonIgnore
 	private Date erzeugt;
 
 	@Column(nullable = false)
-	@XmlElement
 	private String versandart;
 
 	private double versandkosten;
@@ -86,12 +86,10 @@ public class Versand implements Serializable {
 	@ManyToMany(mappedBy = "versand", cascade = { PERSIST, MERGE })
 	@NotEmpty(message = "{bestellverwaltung.lieferung.bestellungen.notEmpty}", groups = PreExistingGroup.class)
 	@Valid
-	@XmlTransient
+	@JsonIgnore
 	private List<Bestellung> bestellungen;
 	
 	@Transient
-	@XmlElementWrapper(name = "bestellungen", required = true)
-	@XmlElement(name = "bestellung", required = true)
 	private List<URI> bestellungenUris;
 
 	public Versand() {
@@ -137,6 +135,14 @@ public class Versand implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public int getVersion() {
+		return version;
+	}
+	
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
 	public String getVersandart() {
 		return this.versandart;
@@ -177,9 +183,80 @@ public class Versand implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Lieferung [id=" + id + ", versandart=" + versandart + ", versandkosten=" + versandkosten
-				+ ", erzeugt=" + erzeugt 
-				+ ", aktualisiert=" + aktualisiert + ']';
+		return "Versand [id=" + id + ", version=" + version + ", aktualisiert="
+				+ aktualisiert + ", erzeugt=" + erzeugt + ", versandart="
+				+ versandart + ", versandkosten=" + versandkosten
+				+ ", bestellungen=" + bestellungen + ", bestellungenUris="
+				+ bestellungenUris + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((aktualisiert == null) ? 0 : aktualisiert.hashCode());
+		result = prime * result
+				+ ((bestellungen == null) ? 0 : bestellungen.hashCode());
+		result = prime
+				* result
+				+ ((bestellungenUris == null) ? 0 : bestellungenUris.hashCode());
+		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((versandart == null) ? 0 : versandart.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(versandkosten);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + version;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Versand other = (Versand) obj;
+		if (aktualisiert == null) {
+			if (other.aktualisiert != null)
+				return false;
+		} else if (!aktualisiert.equals(other.aktualisiert))
+			return false;
+		if (bestellungen == null) {
+			if (other.bestellungen != null)
+				return false;
+		} else if (!bestellungen.equals(other.bestellungen))
+			return false;
+		if (bestellungenUris == null) {
+			if (other.bestellungenUris != null)
+				return false;
+		} else if (!bestellungenUris.equals(other.bestellungenUris))
+			return false;
+		if (erzeugt == null) {
+			if (other.erzeugt != null)
+				return false;
+		} else if (!erzeugt.equals(other.erzeugt))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (versandart == null) {
+			if (other.versandart != null)
+				return false;
+		} else if (!versandart.equals(other.versandart))
+			return false;
+		if (Double.doubleToLongBits(versandkosten) != Double
+				.doubleToLongBits(other.versandkosten))
+			return false;
+		if (version != other.version)
+			return false;
+		return true;
 	}
 
 }

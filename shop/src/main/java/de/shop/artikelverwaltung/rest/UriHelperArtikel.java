@@ -16,8 +16,8 @@ import de.shop.util.Log;
 public class UriHelperArtikel {
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-		                             .path(ArtikelverwaltungResource.class)
-		                             .path(ArtikelverwaltungResource.class, "findArtikel");
+		                             .path(ArtikelResource.class)
+		                             .path(ArtikelResource.class, "findArtikel");
 		final URI uri = ub.build(artikel.getId());
 		return uri;
 	}

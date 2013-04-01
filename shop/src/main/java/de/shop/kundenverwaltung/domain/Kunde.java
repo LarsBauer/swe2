@@ -7,6 +7,7 @@ import static java.util.logging.Level.FINER;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,15 +35,17 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.ScriptAssert;
 
@@ -94,7 +98,7 @@ import de.shop.util.IdGroup;
 			message = "{kundenverwaltung.kunde.password.notEqual}",
 			groups = PasswordGroup.class)
 
-@XmlRootElement
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 public class Kunde implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
@@ -128,8 +132,11 @@ public class Kunde implements Serializable {
 	@GeneratedValue()
 	@Column(name = "k_id", unique = true, nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{kundenverwaltung.kunde.id.min}", groups = IdGroup.class)
-	@XmlAttribute
 	private Long id = KEINE_ID;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
@@ -138,16 +145,15 @@ public class Kunde implements Serializable {
 
 	@Column(unique = true, nullable = false)
 	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
-	//@XmlTransient
-	private String email;
+	//@JsonIgnore
+	private String email = "";
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@XmlTransient
+	@JsonIgnore
 	private Date erzeugt;
 
 	@Column(length = 1)
-	@XmlElement
 	private String geschlecht;
 
 	@Column(nullable = false)
@@ -155,35 +161,37 @@ public class Kunde implements Serializable {
 	@Size(min = NACHNAME_LENGTH_MIN, max = NACHNAME_LENGTH_MAX,
 	      message = "{kundenverwaltung.kunde.nachname.length}")
 	@Pattern(regexp = NAME_PATTERN, message = "{kundenverwaltung.kunde.nachname.pattern}")
-	@XmlElement(required = true)
-	private String name;
+	private String nachname = "";
 
-	private boolean newsletter;
+	private boolean newsletter = false;
 
 	@Column(length = PASSWORD_LENGTH_MAX, nullable = false)
 	private String passwort;
 	
 	@Transient
+	@JsonIgnore
 	private String passwortWdh;
 
 	@Column(nullable = false)
 	@Size(max = VORNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.vorname.length}")
-	private String vorname;
+	private String vorname = "";
 	
 	@OneToMany
 	@JoinColumn(name = "kunde_fk", nullable = false)
-	@XmlTransient
+	@JsonIgnore
 	private List<Bestellung> bestellungen;
 	
 	@Transient
-	@XmlElement(name = "bestellungen")
 	private URI bestellungenUri;
 	
 	@OneToOne(cascade = { PERSIST, REMOVE }, mappedBy = "kunde")
 	@Valid
 	@NotNull(message = "{kundenverwaltung.kunde.adresse.notNull}")
-	@XmlElement(required = true)
 	private Adresse adresse;
+	
+	@Transient
+	@AssertTrue(message = "{kundenverwaltung.kunde.agb}")
+	private boolean agbAkzeptiert;
 	
 	@PrePersist
 	protected void prePersist() {
@@ -216,7 +224,7 @@ public class Kunde implements Serializable {
 	}
 	
 	public void setValues(Kunde k) {
-		name = k.name;
+		nachname = k.nachname;
 		vorname = k.vorname;
 		email = k.email;
 		passwort = k.passwort;
@@ -259,12 +267,12 @@ public class Kunde implements Serializable {
 		this.geschlecht = geschlecht;
 	}
 
-	public String getName() {
-		return this.name;
+	public String getNachname() {
+		return this.nachname;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNachname(String name) {
+		this.nachname = name;
 	}
 
 	public boolean isNewsletter() {
@@ -345,43 +353,120 @@ public class Kunde implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Kunde [id=" + id
-			   + ", nachname=" + name + ", vorname=" + vorname
-			   + ", geschlecht=" + geschlecht + ", email=" + email 
-			   + ", newsletter=" + newsletter + ", passwort=" + passwort + ", passwortwdh =" + passwortWdh
-			   + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
+		return "Kunde [id=" + id + ", version=" + version + ", aktualisiert="
+				+ aktualisiert + ", email=" + email + ", erzeugt=" + erzeugt
+				+ ", geschlecht=" + geschlecht + ", nachname=" + nachname
+				+ ", newsletter=" + newsletter + ", passwort=" + passwort
+				+ ", passwortWdh=" + passwortWdh + ", vorname=" + vorname
+				+ ", bestellungen=" + bestellungen + ", bestellungenUri="
+				+ bestellungenUri + ", adresse=" + adresse + ", agbAkzeptiert="
+				+ agbAkzeptiert + "]";
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((adresse == null) ? 0 : adresse.hashCode());
+		result = prime * result + (agbAkzeptiert ? 1231 : 1237);
+		result = prime * result
+				+ ((aktualisiert == null) ? 0 : aktualisiert.hashCode());
+		result = prime * result
+				+ ((bestellungen == null) ? 0 : bestellungen.hashCode());
+		result = prime * result
+				+ ((bestellungenUri == null) ? 0 : bestellungenUri.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
+		result = prime * result
+				+ ((geschlecht == null) ? 0 : geschlecht.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((nachname == null) ? 0 : nachname.hashCode());
+		result = prime * result + (newsletter ? 1231 : 1237);
+		result = prime * result
+				+ ((passwort == null) ? 0 : passwort.hashCode());
+		result = prime * result
+				+ ((passwortWdh == null) ? 0 : passwortWdh.hashCode());
+		result = prime * result + version;
+		result = prime * result + ((vorname == null) ? 0 : vorname.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		final Kunde other = (Kunde) obj;
-		
-		if (email == null) {
-			if (other.email != null) {
+		Kunde other = (Kunde) obj;
+		if (adresse == null) {
+			if (other.adresse != null)
 				return false;
-			}
-		}
-		else if (!email.equals(other.email)) {
+		} else if (!adresse.equals(other.adresse))
 			return false;
-		}
-		
+		if (agbAkzeptiert != other.agbAkzeptiert)
+			return false;
+		if (aktualisiert == null) {
+			if (other.aktualisiert != null)
+				return false;
+		} else if (!aktualisiert.equals(other.aktualisiert))
+			return false;
+		if (bestellungen == null) {
+			if (other.bestellungen != null)
+				return false;
+		} else if (!bestellungen.equals(other.bestellungen))
+			return false;
+		if (bestellungenUri == null) {
+			if (other.bestellungenUri != null)
+				return false;
+		} else if (!bestellungenUri.equals(other.bestellungenUri))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (erzeugt == null) {
+			if (other.erzeugt != null)
+				return false;
+		} else if (!erzeugt.equals(other.erzeugt))
+			return false;
+		if (geschlecht == null) {
+			if (other.geschlecht != null)
+				return false;
+		} else if (!geschlecht.equals(other.geschlecht))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (nachname == null) {
+			if (other.nachname != null)
+				return false;
+		} else if (!nachname.equals(other.nachname))
+			return false;
+		if (newsletter != other.newsletter)
+			return false;
+		if (passwort == null) {
+			if (other.passwort != null)
+				return false;
+		} else if (!passwort.equals(other.passwort))
+			return false;
+		if (passwortWdh == null) {
+			if (other.passwortWdh != null)
+				return false;
+		} else if (!passwortWdh.equals(other.passwortWdh))
+			return false;
+		if (version != other.version)
+			return false;
+		if (vorname == null) {
+			if (other.vorname != null)
+				return false;
+		} else if (!vorname.equals(other.vorname))
+			return false;
 		return true;
 	}
 

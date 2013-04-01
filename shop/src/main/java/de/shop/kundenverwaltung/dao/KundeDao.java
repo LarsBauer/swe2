@@ -178,7 +178,7 @@ public class KundeDao extends AbstractDao<Kunde, Long> {
 		final CriteriaQuery<Kunde> criteriaQuery = builder.createQuery(Kunde.class);
 		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
-		final Path<String> nachnamePath = k.get(Kunde_.name);
+		final Path<String> nachnamePath = k.get(Kunde_.nachname);
 		
 		final Predicate pred = builder.equal(nachnamePath, nachname);
 		criteriaQuery.where(pred);

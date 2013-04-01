@@ -41,7 +41,7 @@ public class LieferverwaltungTest extends AbstractTest {
 	private static final Double NEUE_VERSANDKOSTEN_2 = 32.90;
 
 	@Inject
-	private Bestellverwaltung bv;
+	private BestellungService bv;
 	
 	/**
 	 */

@@ -61,7 +61,7 @@ public class KundenverwaltungTest extends AbstractTest {
 	private static final String PASSWORT_FALSCH_NEU = "falsch";
 	
 	@Inject
-	private Kundenverwaltung kv;
+	private KundeService kv;
 	
 	/**
 	 */
@@ -79,15 +79,15 @@ public class KundenverwaltungTest extends AbstractTest {
 		assertThat(kunden.isEmpty(), is(false));
 
 		for (Kunde k : kunden) {
-			assertThat(k.getName(), is(nachname));
+			assertThat(k.getNachname(), is(nachname));
 			
 			// Nur zur Veranschaulichung von both().and()
 			// Wenn Gleichheit mit einem anderen Namen, dann ja auch != null ...
-			assertThat(k.getName(), both(is(notNullValue())).and(is(nachname)));
+			assertThat(k.getNachname(), both(is(notNullValue())).and(is(nachname)));
 			
 			// Veranschaulichung von allOf: mehrere Argumente moeglich,
 			// d.h. nicht nur 2 wie bei both().and()
-			assertThat(k.getName(), allOf(is(notNullValue()), is(nachname)));
+			assertThat(k.getNachname(), allOf(is(notNullValue()), is(nachname)));
 		}
 	}
 
@@ -105,7 +105,7 @@ public class KundenverwaltungTest extends AbstractTest {
 		
 		// Then
 		for (Kunde k : kundenMitLieferungen) {
-			assertThat(k.getName(), is(nachname));
+			assertThat(k.getNachname(), is(nachname));
 			
 			final Collection<Bestellung> bestellungen = k.getBestellungen();
 			if (bestellungen == null || bestellungen.isEmpty())
@@ -194,7 +194,7 @@ public class KundenverwaltungTest extends AbstractTest {
 		
 		// Then
 		for (Kunde k : kunden) {
-			assertThat(k.getName(), is(nachname));
+			assertThat(k.getNachname(), is(nachname));
 		}
 	}
 	
@@ -248,7 +248,7 @@ public class KundenverwaltungTest extends AbstractTest {
 		trans.commit();
 
 		Kunde neuerKunde = new Kunde();
-		neuerKunde.setName(nachname);
+		neuerKunde.setNachname(nachname);
 		neuerKunde.setVorname(vorname);
 		neuerKunde.setEmail(email);
 		neuerKunde.setGeschlecht(geschlecht);
@@ -287,7 +287,7 @@ public class KundenverwaltungTest extends AbstractTest {
 		ergKunde = kv.findKundeById(neuerKunde.getId(), FetchType.NUR_KUNDE);
 		trans.commit();
 		
-		assertThat(ergKunde.getName(), is(nachname));
+		assertThat(ergKunde.getNachname(), is(nachname));
 		assertThat(ergKunde.getEmail(), is(email));
 		assertThat(ergKunde.getGeschlecht(), is(GESCHLECHT_NEU));
 		assertThat(ergKunde.getVorname(), is(KUNDE_NEU_VORNAME));
@@ -312,7 +312,7 @@ public class KundenverwaltungTest extends AbstractTest {
 		
 		// When
 		final Kunde neuerKunde = new Kunde();
-		neuerKunde.setName(k.getName());
+		neuerKunde.setNachname(k.getNachname());
 		neuerKunde.setVorname(k.getVorname());
 		neuerKunde.setEmail(k.getEmail());
 		neuerKunde.setAdresse(k.getAdresse());
@@ -339,7 +339,7 @@ public class KundenverwaltungTest extends AbstractTest {
 		
 		// When
 		final Kunde neuerKunde = new Kunde();
-		neuerKunde.setName(nachname);
+		neuerKunde.setNachname(nachname);
 		neuerKunde.setVorname(vorname);
 		neuerKunde.setEmail(email);
 		neuerKunde.setAdresse(null);
@@ -369,7 +369,7 @@ public class KundenverwaltungTest extends AbstractTest {
 
 		// When
 		Kunde neuerKunde = new Kunde();
-		neuerKunde.setName(nachname);
+		neuerKunde.setNachname(nachname);
 		neuerKunde.setEmail(email);
 		neuerKunde.setVorname(vorname);
 		final Adresse adresse = new Adresse();
@@ -427,19 +427,19 @@ public class KundenverwaltungTest extends AbstractTest {
 		final UserTransaction trans = getUserTransaction();
 		trans.commit();
 		
-		final String alterNachname = kunde.getName();
+		final String alterNachname = kunde.getNachname();
 		final String neuerNachname = alterNachname + alterNachname.charAt(alterNachname.length() - 1);
-		kunde.setName(neuerNachname);
+		kunde.setNachname(neuerNachname);
 	
 		trans.begin();
 		kunde = kv.updateKunde(kunde, LOCALE);
 		trans.commit();
 		
 		// Then
-		assertThat(kunde.getName(), is(neuerNachname));
+		assertThat(kunde.getNachname(), is(neuerNachname));
 		trans.begin();
 		kunde = kv.findKundeById(kundeId, FetchType.NUR_KUNDE);
 		trans.commit();
-		assertThat(kunde.getName(), is(neuerNachname));
+		assertThat(kunde.getNachname(), is(neuerNachname));
 	}
 }

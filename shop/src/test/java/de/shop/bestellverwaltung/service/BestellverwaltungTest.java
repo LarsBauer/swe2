@@ -18,12 +18,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.artikelverwaltung.service.Artikelverwaltung;
+import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.dao.KundeDao.FetchType;
 import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.kundenverwaltung.service.Kundenverwaltung;
+import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.util.AbstractTest;
 
 
@@ -36,13 +36,13 @@ public class BestellverwaltungTest extends AbstractTest {
 	private static final short ARTIKEL_2_ANZAHL = 2;
 	
 	@Inject
-	private Bestellverwaltung bv;
+	private BestellungService bv;
 	
 	@Inject
-	private Kundenverwaltung kv;
+	private KundeService kv;
 	
 	@Inject
-	private Artikelverwaltung av;
+	private ArtikelService av;
 	
 	/**
 	 */

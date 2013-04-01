@@ -15,8 +15,8 @@ import de.shop.util.Log;
 public class UriHelperKunde {
 	public URI getUriKunde(Kunde kunde, UriInfo uriInfo) {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-		                             .path(KundenverwaltungResource.class)
-		                             .path(KundenverwaltungResource.class, "findKundeById");
+		                             .path(KundeResource.class)
+		                             .path(KundeResource.class, "findKundeById");
 		final URI kundeUri = ub.build(kunde.getId());
 		return kundeUri;
 	}
@@ -25,9 +25,17 @@ public class UriHelperKunde {
 	public void updateUriKunde(Kunde kunde, UriInfo uriInfo) {
 		// URL fuer Bestellungen setzen
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-                                     .path(KundenverwaltungResource.class)
-                                     .path(KundenverwaltungResource.class, "findBestellungenByKundeId");
+                                     .path(KundeResource.class)
+                                     .path(KundeResource.class, "findBestellungenByKundeId");
 		final URI bestellungenUri = ub.build(kunde.getId());
 		kunde.setBestellungenUri(bestellungenUri);
+	}
+	
+	public URI getUriDownload(Long kundeId, UriInfo uriInfo) {
+		final URI uri = uriInfo.getBaseUriBuilder()
+		                       .path(KundeResource.class)
+		                       .path(KundeResource.class, "download")
+		                       .build(kundeId);
+		return uri;
 	}
 }

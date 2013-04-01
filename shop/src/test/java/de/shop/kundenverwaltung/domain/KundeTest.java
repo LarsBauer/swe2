@@ -103,7 +103,7 @@ public class KundeTest extends AbstractDomainTest {
 		// Then
 		assertThat(kunden.isEmpty(), is(false));
 		for (Kunde k : kunden) {
-			assertThat(k.getName(), is(nachname));
+			assertThat(k.getNachname(), is(nachname));
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class KundeTest extends AbstractDomainTest {
 	public void createKunde() {
 		// Given
 		Kunde kunde = new Kunde();
-		kunde.setName(NACHNAME_NEU);
+		kunde.setNachname(NACHNAME_NEU);
 		kunde.setVorname(VORNAME_NEU);
 		kunde.setEmail(EMAIL_NEU);
 		kunde.setPasswort(PASSWORT_NEU);
@@ -173,7 +173,7 @@ public class KundeTest extends AbstractDomainTest {
 		// Ueberpruefung des ausgelesenen Objekts
 		kunde = (Kunde) kunden.get(0);
 		assertThat(kunde.getId().longValue() > 0, is(true));
-		assertThat(kunde.getName(), is(NACHNAME_NEU));
+		assertThat(kunde.getNachname(), is(NACHNAME_NEU));
 	}
 	
 
@@ -190,7 +190,7 @@ public class KundeTest extends AbstractDomainTest {
 		
 		// When
 		final Kunde kunde = new Kunde();
-		kunde.setName(nachname);
+		kunde.setNachname(nachname);
 		kunde.setEmail(email);
 		kunde.setVorname(vorname);
 		kunde.setGeschlecht(geschlecht);
