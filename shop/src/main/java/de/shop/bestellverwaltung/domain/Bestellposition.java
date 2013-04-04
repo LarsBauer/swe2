@@ -2,13 +2,11 @@ package de.shop.bestellverwaltung.domain;
 
 
 import static de.shop.util.Constants.KEINE_ID;
-import static java.util.logging.Level.FINER;
 import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
-import java.util.logging.Logger;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
@@ -19,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
@@ -26,6 +25,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 
@@ -40,7 +40,7 @@ import de.shop.artikelverwaltung.domain.Artikel;
 public class Bestellposition implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final int ANZAHL_MIN = 1;
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Id
 	@GeneratedValue()
@@ -83,8 +83,15 @@ public class Bestellposition implements Serializable {
 	
 	@PostPersist
 	private void postPersist() {
-		LOGGER.log(FINER, "Neue Bestellposition mit ID={0}", id);
+		LOGGER.debugf("Neue Bestellposition mit ID=%d", id);
 	}
+	
+	@PostUpdate
+	private void postUpdate() {
+		LOGGER.debugf("Bestellposition mit ID=%s aktualisiert: version=%d", id, version);
+	}
+	
+
 
 	public Long getId() {
 		return this.id;

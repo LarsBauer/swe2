@@ -3,14 +3,12 @@ package de.shop.kundenverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
-import static java.util.logging.Level.FINER;
 import static javax.persistence.TemporalType.TIMESTAMP;
 import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -31,6 +30,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.jboss.logging.Logger;
 
 import de.shop.util.IdGroup;
 
@@ -106,15 +106,20 @@ public class Adresse implements Serializable {
 		erzeugt = new Date();
 		aktualisiert = new Date();
 	}
-	
-	@PostPersist
-	private void postPersist() {
-		LOGGER.log(FINER, "Neue Adresse mit ID={0}", id);
-	}
-	
+
 	@PreUpdate
 	private void preUpdate() {
 		aktualisiert = new Date();
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.debugf("Neue Adresse mit ID=%s", id);
+	}
+	
+	@PostUpdate
+	private void postUpdate() {
+		LOGGER.debugf("Adresse mit ID=%d aktualisiert: version=%d", id, version);
 	}
 
 	public Long getId() {

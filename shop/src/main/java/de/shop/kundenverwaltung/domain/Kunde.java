@@ -3,7 +3,6 @@ package de.shop.kundenverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
-import static java.util.logging.Level.FINER;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.TIMESTAMP;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -30,6 +28,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -48,6 +47,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.ScriptAssert;
+import org.jboss.logging.Logger;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.IdGroup;
@@ -89,7 +89,11 @@ import de.shop.util.IdGroup;
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_PLZ,
                     query = "SELECT k"
                     		+ " FROM  Kunde k"
-                    		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ)
+                    		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ),
+		@NamedQuery(name  = Kunde.FIND_USERNAME_BY_USERNAME_PREFIX,
+          query = "SELECT   CONCAT('', k.id)"
+			        + " FROM  AbstractKunde k"
+           		+ " WHERE CONCAT('', k.id) LIKE :" + Kunde.PARAM_USERNAME_PREFIX),
 	})
                     		
 @ScriptAssert(lang = "javascript",
@@ -122,11 +126,13 @@ public class Kunde implements Serializable {
 	public static final String FIND_KUNDEN_BY_NACHNAME = PREFIX + "findKundenByNachname";
 	public static final String FIND_KUNDE_BY_EMAIL = PREFIX + "findKundeByEmail";
 	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
+	public static final String FIND_USERNAME_BY_USERNAME_PREFIX = PREFIX + "findKundeByUsernamePrefix";
 	
 	public static final String PARAM_KUNDE_ID = "kundeId";
 	public static final String PARAM_KUNDE_NACHNAME = "name";
 	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
 	public static final String PARAM_KUNDE_EMAIL = "email";
+	public static final String PARAM_USERNAME_PREFIX = "usernamePrefix";
 
 	@Id
 	@GeneratedValue()
@@ -201,17 +207,23 @@ public class Kunde implements Serializable {
 	
 	@PostPersist
 	protected void postPersist() {
-		LOGGER.log(FINER, "Neuer Kunde mit ID={0}", id);
+		LOGGER.debugf("Neuer Kunde mit ID=%d", id);
 	}
-	
+
 	@PreUpdate
 	protected void preUpdate() {
 		aktualisiert = new Date();
 	}
 	
+	@PostUpdate
+	protected void postUpdate() {
+		LOGGER.debugf("Kunde mit ID=%d aktualisiert: version=%d", id, version);
+	}
+	
 	@PostLoad
 	protected void postLoad() {
 		passwortWdh = passwort;
+		agbAkzeptiert = true;
 	}
 	
 
@@ -281,6 +293,14 @@ public class Kunde implements Serializable {
 
 	public void setNewsletter(boolean newsletter) {
 		this.newsletter = newsletter;
+	}
+	
+	public void setAgbAkzeptiert(boolean agbAkzeptiert) {
+		this.agbAkzeptiert = agbAkzeptiert;
+	}
+
+	public boolean isAgbAkzeptiert() {
+		return agbAkzeptiert;
 	}
 
 	public String getPasswort() {

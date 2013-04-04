@@ -72,7 +72,7 @@ public class BestellungServiceObserver implements Serializable {
 			final StringBuilder sb = new StringBuilder("Neue Bestellung Nr. "
                                                        + bestellung.getId() + NEWLINE);
 			for (Bestellposition bp : bestellung.getBestellpositionen()) {
-				sb.append(bp.getAnzahl() + "\t" + bp.getArtikel().getName() + NEWLINE);
+				sb.append(bp.getAnzahl() + "\t" + bp.getArtikel().getBezeichnung() + NEWLINE);
 			}
 			final String text = sb.toString();
 			LOGGER.finest(text);

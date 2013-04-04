@@ -3,7 +3,6 @@ package de.shop.bestellverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
-import static java.util.logging.Level.FINER;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
@@ -35,6 +33,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -45,6 +44,7 @@ import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.logging.Logger;
 
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.IdGroup;
@@ -57,6 +57,14 @@ import de.shop.util.PreExistingGroup;
 @Entity
 	@Table(name = "bestellung")
 	@NamedQueries({
+		@NamedQuery(name  = Bestellung.FIND_BESTELLUNGEN_BY_KUNDEID,
+					query = "SELECT b"
+				        + " FROM   Bestellung b"
+			            + " WHERE  b.kunde.id = :" + Bestellung.PARAM_KUNDEID),
+		@NamedQuery(name  = Bestellung.FIND_BESTELLUNGEN_BY_KUNDEID_FETCH_LIEFERUNGEN,
+		        	query = "SELECT DISTINCT b"
+		                  + " FROM   Bestellung b LEFT JOIN FETCH b.lieferungen"
+			              + " WHERE  b.kunde.id = :" + Bestellung.PARAM_KUNDEID),
 		@NamedQuery(name  = Bestellung.FIND_BESTELLUNGEN_BY_KUNDE,
 					query = "SELECT b"
 			            + " FROM   Bestellung b"
@@ -73,12 +81,15 @@ import de.shop.util.PreExistingGroup;
 @Cacheable
 public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private static final String PREFIX = "Bestellung.";
+	public static final String FIND_BESTELLUNGEN_BY_KUNDEID = PREFIX + "findBestellungenByKundeId";
 	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX + "findBestellungenByKunde";
 	public static final String FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN =
             PREFIX + "findBestellungenByIdFetchLieferungen";
+	public static final String FIND_BESTELLUNGEN_BY_KUNDEID_FETCH_LIEFERUNGEN =
+            PREFIX + "findBestellungenByKundeIdFetchLieferungen";
 	public static final String FIND_KUNDE_BY_ID = PREFIX + "findBestellungKundeById";
 	
 	public static final String PARAM_KUNDEID = "kundeId";
@@ -121,13 +132,13 @@ public class Bestellung implements Serializable {
 	private List<Bestellposition> bestellpositionen;
 	
 	@ManyToMany
-	@JoinTable(name = "bestellung_versand",
+	@JoinTable(name = "bestellung_lieferung",
 			   joinColumns = @JoinColumn(name = "bestellung_fk"),
-			                 inverseJoinColumns = @JoinColumn(name = "versand_fk"))
-	private List<Versand> versand;
+			                 inverseJoinColumns = @JoinColumn(name = "lieferung_fk"))
+	private List<Lieferung> lieferungen;
 	
 	@Transient
-	private URI versandUri;
+	private URI lieferungenUri;
 
 	@Column(nullable = false)
 	private String status;
@@ -149,12 +160,17 @@ public class Bestellung implements Serializable {
 	
 	@PostPersist
 	private void postPersist() {
-		LOGGER.log(FINER, "Neue Bestellung mit ID={0}", id);
+		LOGGER.debugf("Neue Bestellung mit ID={0}", id);
 	}
 	
 	@PreUpdate
 	private void preUpdate() {
 		aktualisiert = new Date();
+	}
+	
+	@PostUpdate
+	private void postUpdate() {
+		LOGGER.debugf("Bestellung mit ID=%d aktualisiert: version=%d", id, version);
 	}
 
 	public URI getKundeUri() {
@@ -165,11 +181,11 @@ public class Bestellung implements Serializable {
 		this.kundeUri = kundeUri;
 	}
 	
-	public URI getVersandUri() {
-		return versandUri;
+	public URI getLieferungenUri() {
+		return lieferungenUri;
 	}
-	public void setVersandUri(URI versandUri) {
-		this.versandUri = versandUri;
+	public void setLieferungenUri(URI lieferungenUri) {
+		this.lieferungenUri = lieferungenUri;
 	}
 	
 	public Long getId() {
@@ -212,24 +228,24 @@ public class Bestellung implements Serializable {
 		return this;
 	}
 	
-	public List<Versand> getVersand() {
-		return Collections.unmodifiableList(versand);
+	public List<Lieferung> getLieferungen() {
+		return Collections.unmodifiableList(lieferungen);
 	}
-	public void setVersand(List<Versand> versand) {
-		if (this.versand == null) {
-			this.versand = versand;
+	public void setLieferung(List<Lieferung> lieferungen) {
+		if (this.lieferungen == null) {
+			this.lieferungen = lieferungen;
 			return;
 		}
 		
 		// Wiederverwendung der vorhandenen Collection
-		this.versand.clear();
-		if (versand != null) {
-			this.versand.addAll(versand);
+		this.lieferungen.clear();
+		if (lieferungen != null) {
+			this.lieferungen.addAll(lieferungen);
 		}
 	}
 	
-	public void addVersand(Versand versandneu) {
-		versand.add(versandneu);
+	public void addLieferung(Lieferung lieferungneu) {
+		lieferungen.add(lieferungneu);
 	}
 	
 
@@ -270,9 +286,9 @@ public class Bestellung implements Serializable {
 		return "Bestellung [id=" + id + ", version=" + version
 				+ ", aktualisiert=" + aktualisiert + ", erzeugt=" + erzeugt
 				+ ", kundeUri=" + kundeUri + ", kunde=" + kunde
-				+ ", bestellpositionen=" + bestellpositionen + ", versand="
-				+ versand + ", versandUri=" + versandUri + ", status=" + status
-				+ "]";
+				+ ", bestellpositionen=" + bestellpositionen + ", lieferungen="
+				+ lieferungen + ", lieferungenUri=" + lieferungenUri
+				+ ", status=" + status + "]";
 	}
 
 	@Override
@@ -290,10 +306,11 @@ public class Bestellung implements Serializable {
 		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
 		result = prime * result
 				+ ((kundeUri == null) ? 0 : kundeUri.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((versand == null) ? 0 : versand.hashCode());
 		result = prime * result
-				+ ((versandUri == null) ? 0 : versandUri.hashCode());
+				+ ((lieferungen == null) ? 0 : lieferungen.hashCode());
+		result = prime * result
+				+ ((lieferungenUri == null) ? 0 : lieferungenUri.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + version;
 		return result;
 	}
@@ -337,20 +354,20 @@ public class Bestellung implements Serializable {
 				return false;
 		} else if (!kundeUri.equals(other.kundeUri))
 			return false;
+		if (lieferungen == null) {
+			if (other.lieferungen != null)
+				return false;
+		} else if (!lieferungen.equals(other.lieferungen))
+			return false;
+		if (lieferungenUri == null) {
+			if (other.lieferungenUri != null)
+				return false;
+		} else if (!lieferungenUri.equals(other.lieferungenUri))
+			return false;
 		if (status == null) {
 			if (other.status != null)
 				return false;
 		} else if (!status.equals(other.status))
-			return false;
-		if (versand == null) {
-			if (other.versand != null)
-				return false;
-		} else if (!versand.equals(other.versand))
-			return false;
-		if (versandUri == null) {
-			if (other.versandUri != null)
-				return false;
-		} else if (!versandUri.equals(other.versandUri))
 			return false;
 		if (version != other.version)
 			return false;

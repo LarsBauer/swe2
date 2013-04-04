@@ -22,7 +22,7 @@ public class KundeForm {
 	private String strasse;
 
 	@FormParam("hausnummer")
-	private String hausnr;
+	private String hausnummer;
 
 	@FormParam("agb")
 	private boolean agbAkzeptiert;
@@ -31,8 +31,8 @@ public class KundeForm {
 	public String toString() {
 		return "KundeForm [nachname=" + nachname + ", vorname=" + vorname
 				+ ", email=" + email + ", plz=" + plz
-				+ ", ort=" + ort + ", strasse=" + strasse + ", hausnr="
-				+ hausnr + ", agbAkzeptiert=" + agbAkzeptiert + "]";
+				+ ", ort=" + ort + ", strasse=" + strasse + ", hausnummer="
+				+ hausnummer + ", agbAkzeptiert=" + agbAkzeptiert + "]";
 	}
 
 	public String getNachname() {
@@ -83,12 +83,12 @@ public class KundeForm {
 		this.strasse = strasse;
 	}
 
-	public String getHausnr() {
-		return hausnr;
+	public String getHausnummer() {
+		return hausnummer;
 	}
 
-	public void setHausnr(String hausnr) {
-		this.hausnr = hausnr;
+	public void setHausnummer(String hausnr) {
+		this.hausnummer = hausnr;
 	}
 
 	public boolean isAgbAkzeptiert() {

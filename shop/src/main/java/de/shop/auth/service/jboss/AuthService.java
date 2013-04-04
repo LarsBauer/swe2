@@ -111,13 +111,13 @@ public class AuthService implements Serializable {
 	
 	/**
 	 */
-	public boolean validatePassword(AbstractKunde kunde, String passwort) {
+	public boolean validatePassword(Kunde kunde, String passwort) {
 		if (kunde == null) {
 			return false;
 		}
 		
 		final String verschluesselt = verschluesseln(passwort);
-		final boolean result = verschluesselt.equals(kunde.getPassword());
+		final boolean result = verschluesselt.equals(kunde.getPasswort());
 		return result;
 	}
 	

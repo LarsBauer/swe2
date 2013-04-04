@@ -1,6 +1,0 @@
-k_id;name;vorname;geschlecht;newsletter;email;passwort;erzeugt;aktualisiert;
-100;Alpha;Adrian;m;1;1@hska.de;100;2006-08-01 00:00:00.000;2006-08-01 00:00:00.000;
-101;Alpha;Alfred;m;1;k2@hska.de;101;2006-08-02 00:00:00.000;2006-08-02 00:00:00.000;
-102;Alpha;Anton;\N;0;k3@hska.de;102;2006-08-03 00:00:00.000;2006-08-03 00:00:00.000;
-103;Delta;Dirk;\N;1;k4@hska.de;103;2006-08-04 00:00:00.000;2006-08-04 00:00:00.000;
-104;Epsilon;Emilie;w;0;k5@hska.de;104;2006-08-05 00:00:00.000;2006-08-05 00:00:00.000;

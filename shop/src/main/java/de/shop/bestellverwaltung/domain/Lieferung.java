@@ -1,6 +1,5 @@
 package de.shop.bestellverwaltung.domain;
 
-import static java.util.logging.Level.FINER;
 import static de.shop.util.Constants.KEINE_ID;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
@@ -13,7 +12,12 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+
+
+
+
+
+
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -24,6 +28,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -31,9 +36,12 @@ import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.logging.Logger;
 
 import de.shop.util.PreExistingGroup;
 
@@ -45,28 +53,35 @@ import de.shop.util.PreExistingGroup;
 @Entity
 @Table(name = "versand")
 @NamedQueries({
-	@NamedQuery(name  = Versand.FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN,
-                query = "SELECT v"
-                	    + " FROM Versand v LEFT JOIN FETCH v.bestellungen"
-			            + " WHERE v.id LIKE :" + Versand.PARAM_VERSAND_ID)
+	@NamedQuery(name  = Lieferung.FIND_LIEFERUNGEN_BY_LIEFERNR_FETCH_BESTELLUNGEN,
+                query = "SELECT l"
+                	    + " FROM Lieferung l LEFT JOIN FETCH l.bestellungen"
+			            + " WHERE l.liefernr LIKE :" + Lieferung.PARAM_LIEFER_NR)
 })
-public class Versand implements Serializable {
+public class Lieferung implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	
-	private static final String PREFIX = "Versand.";
-	public static final String FIND_VERSAND_BY_ID_FETCH_BESTELLUNGEN =
-		                       PREFIX + "findVersandByIdFetchBestellungen";
-	public static final String PARAM_VERSAND_ID = "id";
+	private static final int LIEFERNR_LENGTH_MAX = 12;
+	 
+	private static final String PREFIX = "Lieferung.";
+	public static final String FIND_LIEFERUNGEN_BY_LIEFERNR_FETCH_BESTELLUNGEN =
+		                       PREFIX + "findLieferungenByLiefernrFetchBestellungen";
+	public static final String PARAM_LIEFER_NR = "liefernr";
 
 	@Id
 	@GeneratedValue()
-	@Column(name = "v_id", unique = true, nullable = false, updatable = false)
+	@Column(name = "l_id", unique = true, nullable = false, updatable = false)
 	private Long id = KEINE_ID;
 	
 	@Version
 	@Basic(optional = false)
 	private int version = ERSTE_VERSION;
+	
+	@Column(name = "liefernr", length = LIEFERNR_LENGTH_MAX, nullable = false, unique = true)
+	@NotNull(message = "{bestellverwaltung.lieferung.lieferNr.notNull}")
+	@Size(max = LIEFERNR_LENGTH_MAX, message = "{bestellverwaltung.lieferung.lieferNr.length}")
+	private String liefernr;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
@@ -92,24 +107,29 @@ public class Versand implements Serializable {
 	@Transient
 	private List<URI> bestellungenUris;
 
-	public Versand() {
+	public Lieferung() {
 		super();
 	}
 	
 	@PrePersist
-	protected void prePersist() {
+	private void prePersist() {
 		erzeugt = new Date();
+		aktualisiert = new Date();
+	}
+	
+	@PreUpdate
+	private void preUpdate() {
 		aktualisiert = new Date();
 	}
 	
 	@PostPersist
 	private void postPersist() {
-		LOGGER.log(FINER, "Neuer Versand mit ID={0}", id);
+		LOGGER.debugf("Neue Lieferung mit ID=%d", id);
 	}
 	
-	@PreUpdate
-	protected void preUpdate() {
-		aktualisiert = new Date();
+	@PostUpdate
+	private void postUpdate() {
+		LOGGER.debugf("Lieferung mit ID=%d aktualisiert: version=%d", id, version);
 	}
 
 	public Date getAktualisiert() {
@@ -142,6 +162,13 @@ public class Versand implements Serializable {
 	
 	public void setVersion(int version) {
 		this.version = version;
+	}
+	
+	public String getLieferNr() {
+		return liefernr;
+	}
+	public void setLieferNr(String liefernr) {
+		this.liefernr = liefernr;
 	}
 
 	public String getVersandart() {
@@ -183,11 +210,11 @@ public class Versand implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Versand [id=" + id + ", version=" + version + ", aktualisiert="
-				+ aktualisiert + ", erzeugt=" + erzeugt + ", versandart="
-				+ versandart + ", versandkosten=" + versandkosten
-				+ ", bestellungen=" + bestellungen + ", bestellungenUris="
-				+ bestellungenUris + "]";
+		return "Lieferung [id=" + id + ", version=" + version + ", liefernr="
+				+ liefernr + ", aktualisiert=" + aktualisiert + ", erzeugt="
+				+ erzeugt + ", versandart=" + versandart + ", versandkosten="
+				+ versandkosten + ", bestellungen=" + bestellungen
+				+ ", bestellungenUris=" + bestellungenUris + "]";
 	}
 
 	@Override
@@ -203,6 +230,8 @@ public class Versand implements Serializable {
 				+ ((bestellungenUris == null) ? 0 : bestellungenUris.hashCode());
 		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((liefernr == null) ? 0 : liefernr.hashCode());
 		result = prime * result
 				+ ((versandart == null) ? 0 : versandart.hashCode());
 		long temp;
@@ -220,7 +249,7 @@ public class Versand implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Versand other = (Versand) obj;
+		Lieferung other = (Lieferung) obj;
 		if (aktualisiert == null) {
 			if (other.aktualisiert != null)
 				return false;
@@ -245,6 +274,11 @@ public class Versand implements Serializable {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (liefernr == null) {
+			if (other.liefernr != null)
+				return false;
+		} else if (!liefernr.equals(other.liefernr))
 			return false;
 		if (versandart == null) {
 			if (other.versandart != null)
