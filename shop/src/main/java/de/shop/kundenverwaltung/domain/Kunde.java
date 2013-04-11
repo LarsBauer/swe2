@@ -7,6 +7,8 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.TIMESTAMP;
 import static de.shop.util.Constants.ERSTE_VERSION;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -15,9 +17,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Basic;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -49,7 +55,9 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.jboss.logging.Logger;
 
+import de.shop.auth.service.jboss.AuthService.RolleType;
 import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.util.File;
 import de.shop.util.IdGroup;
 
 
@@ -199,6 +207,21 @@ public class Kunde implements Serializable {
 	@AssertTrue(message = "{kundenverwaltung.kunde.agb}")
 	private boolean agbAkzeptiert;
 	
+	@ElementCollection(fetch = EAGER)
+	@CollectionTable(name = "kunde_rolle",
+	                 joinColumns = @JoinColumn(name = "kunde_fk", nullable = false),
+	                 uniqueConstraints =  @UniqueConstraint(columnNames = { "kunde_fk", "rolle_fk" }))
+	@Column(table = "kunde_rolle", name = "rolle_fk", nullable = false)
+	private Set<RolleType> rollen;
+	
+	@OneToOne(fetch = LAZY, cascade = { PERSIST, REMOVE })
+	@JoinColumn(name = "file_fk")
+	@JsonIgnore
+	private File file;
+	
+	@Transient
+	private URI fileUri;
+	
 	@PrePersist
 	protected void prePersist() {
 		erzeugt = new Date();
@@ -245,6 +268,30 @@ public class Kunde implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Set<RolleType> getRollen() {
+		return rollen;
+	}
+
+	public void setRollen(Set<RolleType> rollen) {
+		this.rollen = rollen;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public URI getFileUri() {
+		return fileUri;
+	}
+
+	public void setFileUri(URI fileUri) {
+		this.fileUri = fileUri;
 	}
 
 	public Date getAktualisiert() {
