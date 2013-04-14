@@ -78,7 +78,7 @@ import de.shop.util.IdGroup;
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME,
                     query = "SELECT k"
                     		+ " FROM   Kunde k"
-            	       		+ " WHERE  UPPER(k.name) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+            	       		+ " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
         @NamedQuery(name  = Kunde.FIND_KUNDE_BY_EMAIL,
                     query = "SELECT DISTINCT k"
         		            + " FROM   Kunde k"
@@ -89,7 +89,7 @@ import de.shop.util.IdGroup;
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
                     query = "SELECT DISTINCT k"
         		            + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
-        		            + " WHERE  UPPER(k.name) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+        		            + " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
         @NamedQuery(name  = Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
         		    query = "SELECT DISTINCT k"
         			         + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
@@ -100,7 +100,7 @@ import de.shop.util.IdGroup;
                     		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ),
 		@NamedQuery(name  = Kunde.FIND_USERNAME_BY_USERNAME_PREFIX,
           query = "SELECT   CONCAT('', k.id)"
-			        + " FROM  AbstractKunde k"
+			        + " FROM  Kunde k"
            		+ " WHERE CONCAT('', k.id) LIKE :" + Kunde.PARAM_USERNAME_PREFIX),
 	})
                     		

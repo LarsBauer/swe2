@@ -47,11 +47,11 @@ import de.shop.util.PreExistingGroup;
 
 
 /**
- * The persistent class for the versand database table.
+ * The persistent class for the lieferung database table.
  * 
  */
 @Entity
-@Table(name = "versand")
+@Table(name = "lieferung")
 @NamedQueries({
 	@NamedQuery(name  = Lieferung.FIND_LIEFERUNGEN_BY_LIEFERNR_FETCH_BESTELLUNGEN,
                 query = "SELECT l"
@@ -98,7 +98,7 @@ public class Lieferung implements Serializable {
 
 	private double versandkosten;
 	
-	@ManyToMany(mappedBy = "versand", cascade = { PERSIST, MERGE })
+	@ManyToMany(mappedBy = "lieferungen", cascade = { PERSIST, MERGE })
 	@NotEmpty(message = "{bestellverwaltung.lieferung.bestellungen.notEmpty}", groups = PreExistingGroup.class)
 	@Valid
 	@JsonIgnore

@@ -1,14 +1,11 @@
 package de.shop.artikelverwaltung.service;
 
 import static de.shop.util.Constants.KEINE_ID;
-import static java.util.logging.Level.FINER;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -23,6 +20,8 @@ import javax.persistence.criteria.Root;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
+
+import org.jboss.logging.Logger;
 
 import com.google.common.base.Strings;
 
@@ -46,12 +45,12 @@ public class ArtikelService implements Serializable {
 	
 	@PostConstruct
 	private void postConstruct() {
-		logger.log(FINER, "CDI-faehiges Bean {0} wurde erzeugt", this);
+		logger.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
 	}
 	
 	@PreDestroy
 	private void preDestroy() {
-		logger.log(FINER, "CDI-faehiges Bean {0} wird geloescht", this);
+		logger.debugf("CDI-faehiges Bean %s wird geloescht", this);
 	}
 
 	public List<Artikel> findVerfuegbareArtikel() {

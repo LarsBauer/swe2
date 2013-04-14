@@ -75,7 +75,7 @@ import de.shop.util.PreExistingGroup;
   			            + " WHERE  b.id = :" + Bestellung.PARAM_ID),
 	   	@NamedQuery(name  = Bestellung.FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN,
 	   				query = "SELECT DISTINCT b"
-	   					+ " FROM   Bestellung b LEFT JOIN FETCH b.versand"
+	   					+ " FROM   Bestellung b LEFT JOIN FETCH b.lieferungen"
 	   					+ " WHERE  b.id = :" + Bestellung.PARAM_ID),
 })
 @Cacheable
