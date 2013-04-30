@@ -1,5 +1,6 @@
 package de.shop.kundenverwaltung.service;
 
+import static de.shop.util.Constants.KEINE_ID;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
@@ -242,7 +243,7 @@ public class KundeService implements Serializable {
 		
 		// Password verschluesseln
 		passwortVerschluesseln(kunde);
-	
+		kunde.setId(KEINE_ID);
 		em.persist(kunde);
 		event.fire(kunde);
 		
@@ -302,6 +303,14 @@ public class KundeService implements Serializable {
 		return kunde;
 }
 
+	public void deleteKunde(Kunde kunde) {
+		if (kunde == null) {
+			return;
+		}
+
+		deleteKundeById(kunde.getId());
+	}
+	
 	/**
 	 */
 	public void deleteKundeById(Long kundeId) {

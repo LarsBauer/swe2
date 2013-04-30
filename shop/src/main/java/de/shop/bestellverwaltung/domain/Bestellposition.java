@@ -39,12 +39,13 @@ import de.shop.artikelverwaltung.domain.Artikel;
 @Cacheable
 public class Bestellposition implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static final int ANZAHL_MIN = 1;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 
+	private static final int ANZAHL_MIN = 1;
+	
 	@Id
-	@GeneratedValue()
-	@Column(name = "bp_id", unique = true, nullable = false, updatable = false)
+	@GeneratedValue
+	@Column(name = "id", unique = true, nullable = false, updatable = false)
 	private Long id = KEINE_ID;
 	
 	@Version
@@ -63,7 +64,6 @@ public class Bestellposition implements Serializable {
 	
 	@Transient
 	private URI artikelUri;
-
 
 	public Bestellposition() {
 		super();
@@ -91,8 +91,6 @@ public class Bestellposition implements Serializable {
 		LOGGER.debugf("Bestellposition mit ID=%s aktualisiert: version=%d", id, version);
 	}
 	
-
-
 	public Long getId() {
 		return this.id;
 	}
@@ -135,9 +133,13 @@ public class Bestellposition implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Bestellposition [id=" + id + ", version=" + version
-				+ ", anzahl=" + anzahl + ", artikel=" + artikel
-				+ ", artikelUri=" + artikelUri + "]";
+		if (artikel == null) {
+			return "Bestellposition [id=" + id + ", version=" + version
+			       + ", artikelUri=" + artikelUri + ", anzahl=" + anzahl + "]";
+		}
+
+		return "Bestellposition [id=" + id + ", version=" + version + ", artikel.id=" + artikel.getId()
+		       + ", anzahl=" + anzahl + "]";
 	}
 	
 	@Override
@@ -146,41 +148,32 @@ public class Bestellposition implements Serializable {
 		int result = 1;
 		result = prime * result + anzahl;
 		result = prime * result + ((artikel == null) ? 0 : artikel.hashCode());
-		result = prime * result
-				+ ((artikelUri == null) ? 0 : artikelUri.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + version;
 		return result;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Bestellposition other = (Bestellposition) obj;
-		if (anzahl != other.anzahl)
+		}
+		final Bestellposition other = (Bestellposition) obj;
+		if (anzahl != other.anzahl) {
 			return false;
+		}
 		if (artikel == null) {
-			if (other.artikel != null)
+			if (other.artikel != null) {
 				return false;
-		} else if (!artikel.equals(other.artikel))
+			}
+		}
+		else if (!artikel.equals(other.artikel)) {
 			return false;
-		if (artikelUri == null) {
-			if (other.artikelUri != null)
-				return false;
-		} else if (!artikelUri.equals(other.artikelUri))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (version != other.version)
-			return false;
+		}
 		return true;
 	}
 

@@ -53,8 +53,8 @@ public class Adresse implements Serializable {
 	public static final int HAUSNR_LENGTH_MAX = 4;
 
 	@Id
-	@GeneratedValue()
-	@Column(name = "ad_id", unique = true, nullable = false, updatable = false)
+	@GeneratedValue
+	@Column(name = "id", nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{kundenverwaltung.adresse.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
 	
@@ -62,17 +62,22 @@ public class Adresse implements Serializable {
 	@Basic(optional = false)
 	private int version = ERSTE_VERSION;
 
-	@Column(nullable = false)
-	@Temporal(TIMESTAMP)
-	@JsonIgnore
-	private Date aktualisiert;
+	@Column(length = PLZ_LENGTH_MAX, nullable = false)
+	@NotNull(message = "{kundenverwaltung.adresse.plz.notNull}")
+	@Pattern(regexp = "\\d{5}", message = "{kundenverwaltung.adresse.plz}")
+	private String plz;
 
-	@Column(nullable = false)
-	@Temporal(TIMESTAMP)
-	@JsonIgnore
-	private Date erzeugt;
+	@Column(length = ORT_LENGTH_MAX, nullable = false)
+	@NotNull(message = "{kundenverwaltung.adresse.ort.notNull}")
+	@Size(min = ORT_LENGTH_MIN, max = ORT_LENGTH_MAX, message = "{kundenverwaltung.adresse.ort.length}")
+	private String ort;
 
-	@Column(nullable = false)
+	@Column(length = STRASSE_LENGTH_MAX, nullable = false)
+	@NotNull(message = "{kundenverwaltung.adresse.strasse.notNull}")
+	@Size(min = STRASSE_LENGTH_MIN, max = STRASSE_LENGTH_MAX, message = "{kundenverwaltung.adresse.strasse.length}")
+	private String strasse;
+
+	@Column(length = HAUSNR_LENGTH_MAX, nullable = false)
 	@Size(max = HAUSNR_LENGTH_MAX, message = "{kundenverwaltung.adresse.hausnr.length}")
 	private String hausnummer;
 
@@ -83,22 +88,26 @@ public class Adresse implements Serializable {
 	private Kunde kunde;
 
 	@Column(nullable = false)
-	@NotNull(message = "{kundenverwaltung.adresse.ort.notNull}")
-	@Size(min = ORT_LENGTH_MIN, max = ORT_LENGTH_MAX, message = "{kundenverwaltung.adresse.ort.length}")
-	private String ort;
-
-	@Column(length = PLZ_LENGTH_MAX, nullable = false)
-	@NotNull(message = "{kundenverwaltung.adresse.plz.notNull}")
-	@Pattern(regexp = "\\d{5}", message = "{kundenverwaltung.adresse.plz}")
-	private String plz;
+	@Temporal(TIMESTAMP)
+	@JsonIgnore
+	private Date erzeugt;
 
 	@Column(nullable = false)
-	@NotNull(message = "{kundenverwaltung.adresse.strasse.notNull}")
-	@Size(min = STRASSE_LENGTH_MIN, max = STRASSE_LENGTH_MAX, message = "{kundenverwaltung.adresse.strasse.length}")
-	private String strasse;
+	@Temporal(TIMESTAMP)
+	@JsonIgnore
+	private Date aktualisiert;
+
 
 	public Adresse() {
 		super();
+	}
+	
+	public Adresse(String plz, String ort, String strasse, String hausnr) {
+		super();
+		this.plz = plz;
+		this.ort = ort;
+		this.strasse = strasse;
+		this.hausnummer = hausnr;
 	}
 	
 	@PrePersist
@@ -138,20 +147,28 @@ public class Adresse implements Serializable {
 		this.version = version;
 	}
 
-	public Date getAktualisiert() {
-		return (Date) this.aktualisiert.clone();
+	public String getPlz() {
+		return this.plz;
 	}
 
-	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date) aktualisiert.clone();
+	public void setPlz(String plz) {
+		this.plz = plz;
 	}
 
-	public Date getErzeugt() {
-		return (Date) this.erzeugt.clone();
+	public String getOrt() {
+		return this.ort;
 	}
 
-	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date) erzeugt.clone();
+	public void setOrt(String ort) {
+		this.ort = ort;
+	}
+
+	public String getStrasse() {
+		return this.strasse;
+	}
+
+	public void setStrasse(String strasse) {
+		this.strasse = strasse;
 	}
 
 	public String getHausnummer() {
@@ -170,107 +187,83 @@ public class Adresse implements Serializable {
 		this.kunde = kunde;
 	}
 
-	public String getOrt() {
-		return this.ort;
+	public Date getErzeugt() {
+		return erzeugt == null ? null : (Date) erzeugt.clone();
 	}
 
-	public void setOrt(String ort) {
-		this.ort = ort;
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = erzeugt == null ? null : (Date) erzeugt.clone();
 	}
 
-	public String getPlz() {
-		return this.plz;
+	public Date getAktualisiert() {
+		return aktualisiert == null ? null : (Date) aktualisiert.clone();
 	}
 
-	public void setPlz(String plz) {
-		this.plz = plz;
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
 	}
 
-	public String getStrasse() {
-		return this.strasse;
-	}
-
-	public void setStrasse(String strasse) {
-		this.strasse = strasse;
-	}
-	
 	@Override
 	public String toString() {
-		return "Adresse [id=" + id + ", version=" + version + ", aktualisiert="
-				+ aktualisiert + ", erzeugt=" + erzeugt + ", hausnummer="
-				+ hausnummer + ", kunde=" + kunde + ", ort=" + ort + ", plz="
-				+ plz + ", strasse=" + strasse + "]";
+		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort + ", strasse=" + strasse
+		       + ", hausnummer=" + hausnummer + ']';
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((aktualisiert == null) ? 0 : aktualisiert.hashCode());
-		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
-		result = prime * result
-				+ ((hausnummer == null) ? 0 : hausnummer.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
+		result = prime * result + ((hausnummer == null) ? 0 : hausnummer.hashCode());
 		result = prime * result + ((ort == null) ? 0 : ort.hashCode());
 		result = prime * result + ((plz == null) ? 0 : plz.hashCode());
 		result = prime * result + ((strasse == null) ? 0 : strasse.hashCode());
-		result = prime * result + version;
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Adresse other = (Adresse) obj;
-		if (aktualisiert == null) {
-			if (other.aktualisiert != null)
-				return false;
-		} else if (!aktualisiert.equals(other.aktualisiert))
-			return false;
-		if (erzeugt == null) {
-			if (other.erzeugt != null)
-				return false;
-		} else if (!erzeugt.equals(other.erzeugt))
-			return false;
+		}
+		final Adresse other = (Adresse) obj;
 		if (hausnummer == null) {
-			if (other.hausnummer != null)
+			if (other.hausnummer != null) {
 				return false;
-		} else if (!hausnummer.equals(other.hausnummer))
+			}
+		}
+		else if (!hausnummer.equals(other.hausnummer)) {
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (kunde == null) {
-			if (other.kunde != null)
-				return false;
-		} else if (!kunde.equals(other.kunde))
-			return false;
+		}
 		if (ort == null) {
-			if (other.ort != null)
+			if (other.ort != null) {
 				return false;
-		} else if (!ort.equals(other.ort))
+			}
+		}
+		else if (!ort.equals(other.ort)) {
 			return false;
+		}
 		if (plz == null) {
-			if (other.plz != null)
+			if (other.plz != null) {
 				return false;
-		} else if (!plz.equals(other.plz))
+			}
+		}
+		else if (!plz.equals(other.plz)) {
 			return false;
+		}
 		if (strasse == null) {
-			if (other.strasse != null)
+			if (other.strasse != null) {
 				return false;
-		} else if (!strasse.equals(other.strasse))
+			}
+		}
+		else if (!strasse.equals(other.strasse)) {
 			return false;
-		if (version != other.version)
-			return false;
+		}
 		return true;
 	}
 

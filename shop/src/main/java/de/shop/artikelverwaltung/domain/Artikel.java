@@ -1,7 +1,6 @@
 package de.shop.artikelverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
-import static de.shop.util.Constants.MIN_ID;
 import static de.shop.util.Constants.ERSTE_VERSION;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -24,13 +23,11 @@ import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jboss.logging.Logger;
-
-import de.shop.util.IdGroup;
 
 @Entity
 @Table(name = "artikel")
@@ -50,7 +47,7 @@ import de.shop.util.IdGroup;
 		query = "SELECT		 a"
 				+ " FROM 	Artikel a"
 				+ " WHERE	a.preis < :" + Artikel.PARAM_PREIS_MAX
-				+ " ORDER BY a.id ASC"),	
+				+ " ORDER BY a.id ASC")	
 })
 @Cacheable
 public class Artikel implements Serializable {
@@ -70,51 +67,34 @@ public class Artikel implements Serializable {
 	
 
 	@Id
-	@GeneratedValue()
-	@Column(name = "a_id", unique = true, nullable = false, updatable = false)
-	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
+	@GeneratedValue
+	@Column(name = "id", nullable = false, updatable = false)
 	private Long id = KEINE_ID;
 	
 	@Version
 	@Basic(optional = false)
 	private int version = ERSTE_VERSION;
 
-	@Column(nullable = false)
-	@Temporal(TIMESTAMP)
-	@JsonIgnore
-	private Date aktualisiert;
+	@Column(length = BEZEICHNUNG_LENGTH_MAX, nullable = false)
+	@NotNull(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
+	@Size(max = BEZEICHNUNG_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
+	private String bezeichnung = "";
+
+	@Column(name = "groesse", length = GROESSE_LENGTH_MAX, nullable = false)
+	private String groesse;
+
+	private double preis;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	@JsonIgnore
 	private Date erzeugt;
 
-	@Column(name = "groesse", length = GROESSE_LENGTH_MAX, nullable = false)
-	private String groesse;
+	@Column(nullable = false)
+	@Temporal(TIMESTAMP)
+	@JsonIgnore
+	private Date aktualisiert;
 
-	@Column(name = "name", length = BEZEICHNUNG_LENGTH_MAX, nullable = false)
-	@Size(max = BEZEICHNUNG_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
-	private String bezeichnung = "";
-
-	private double preis;
-
-	
-	
-	public Artikel() {
-		super();
-	}
-	
-	public Artikel(Long id, int version, Date aktualisiert, Date erzeugt,
-			String groesse, String bezeichnung, double preis) {
-		super();
-		this.id = id;
-		this.version = version;
-		this.aktualisiert = aktualisiert;
-		this.erzeugt = erzeugt;
-		this.groesse = groesse;
-		this.bezeichnung = bezeichnung;
-		this.preis = preis;
-	}
 
 	@PrePersist
 	private void prePersist() {
@@ -153,20 +133,12 @@ public class Artikel implements Serializable {
 		this.version = version;
 	}
 
-	public Date getAktualisiert() {
-		return (Date) this.aktualisiert.clone();
+	public String getBezeichnung() {
+		return this.bezeichnung;
 	}
 
-	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date) aktualisiert.clone();
-	}
-
-	public Date getErzeugt() {
-		return (Date) this.erzeugt.clone();
-	}
-
-	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date) erzeugt.clone();
+	public void setBezeichnung(String bez) {
+		this.bezeichnung = bez;
 	}
 
 	public String getGroesse() {
@@ -177,14 +149,6 @@ public class Artikel implements Serializable {
 		this.groesse = groesse;
 	}
 
-	public String getBezeichnung() {
-		return this.bezeichnung;
-	}
-
-	public void setBezeichnung(String bez) {
-		this.bezeichnung = bez;
-	}
-
 	public double getPreis() {
 		return this.preis;
 	}
@@ -193,12 +157,28 @@ public class Artikel implements Serializable {
 		this.preis = preis;
 	}
 	
+	public Date getErzeugt() {
+		return erzeugt == null ? null : (Date) erzeugt.clone();
+	}
+
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = erzeugt == null ? null : (Date) erzeugt.clone();
+	}
+
+	public Date getAktualisiert() {
+		return aktualisiert == null ? null : (Date) aktualisiert.clone();
+	}
+
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
+	}
+
+	
 	@Override
 	public String toString() {
-		return "Artikel [id=" + id + ", version=" + version + ", aktualisiert="
-				+ aktualisiert + ", erzeugt=" + erzeugt + ", groesse="
-				+ groesse + ", bezeichnung=" + bezeichnung + ", preis=" + preis
-				+ "]";
+		return "Artikel [id=" + id + ", version=" + version
+				+ ", bezeichnung=" + bezeichnung + ", groesse="+ groesse 
+				+ ", preis=" + preis + "]";
 	}
 	
 	@Override
@@ -206,58 +186,30 @@ public class Artikel implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((aktualisiert == null) ? 0 : aktualisiert.hashCode());
-		result = prime * result
 				+ ((bezeichnung == null) ? 0 : bezeichnung.hashCode());
-		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
-		result = prime * result + ((groesse == null) ? 0 : groesse.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(preis);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + version;
 		return result;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Artikel other = (Artikel) obj;
-		if (aktualisiert == null) {
-			if (other.aktualisiert != null)
-				return false;
-		} else if (!aktualisiert.equals(other.aktualisiert))
-			return false;
+		}
+		final Artikel other = (Artikel) obj;
 		if (bezeichnung == null) {
-			if (other.bezeichnung != null)
+			if (other.bezeichnung != null) {
 				return false;
-		} else if (!bezeichnung.equals(other.bezeichnung))
+			}
+		}
+		else if (!bezeichnung.equals(other.bezeichnung)) {
 			return false;
-		if (erzeugt == null) {
-			if (other.erzeugt != null)
-				return false;
-		} else if (!erzeugt.equals(other.erzeugt))
-			return false;
-		if (groesse == null) {
-			if (other.groesse != null)
-				return false;
-		} else if (!groesse.equals(other.groesse))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (Double.doubleToLongBits(preis) != Double
-				.doubleToLongBits(other.preis))
-			return false;
-		if (version != other.version)
-			return false;
+		}
 		return true;
 	}
 

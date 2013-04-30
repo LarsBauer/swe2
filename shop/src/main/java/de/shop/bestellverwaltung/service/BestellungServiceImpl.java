@@ -78,38 +78,6 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		}
 		return bestellung;
 	}
-
-	/**
-	 */
-	
-	@Override
-	public List<Bestellung> findBestellungenMitLieferungenByKunde(Kunde kunde) {
-		final List<Bestellung> bestellungen =
-				               em.createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDEID_FETCH_LIEFERUNGEN,
-                                                   Bestellung.class)
-                                 .setParameter(Bestellung.PARAM_KUNDEID, kunde.getId())
-                                 .getResultList();
-		return bestellungen;
-	}
-
-
-	/**
-	 */
-	@Override
-	public Kunde findKundeById(Long id, Locale locale) {
-		try {
-			final Kunde kunde = em.createNamedQuery(Bestellung.FIND_KUNDE_BY_ID, Kunde.class)
-					                      .setParameter(Bestellung.PARAM_ID, id)
-					                      .getSingleResult();
-			return kunde;
-		}
-		catch (NoResultException e) {
-			return null;
-		}
-	}
-
-	/**
-	 */
 	
 	@Override
 	public List<Bestellung> findBestellungenByKunde(Kunde kunde) {
@@ -123,6 +91,31 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 			                                    .getResultList();
 		return bestellungen;
 	}
+	
+	public Kunde findKundeById(Long id, Locale locale) {
+		try {
+			final Kunde kunde = em.createNamedQuery(Bestellung.FIND_KUNDE_BY_ID, Kunde.class)
+					                      .setParameter(Bestellung.PARAM_ID, id)
+					                      .getSingleResult();
+			return kunde;
+		}
+		catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	@Override
+	public List<Bestellung> findBestellungenMitLieferungenByKunde(Kunde kunde) {
+		final List<Bestellung> bestellungen =
+				               em.createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDEID_FETCH_LIEFERUNGEN,
+                                                   Bestellung.class)
+                                 .setParameter(Bestellung.PARAM_KUNDEID, kunde.getId())
+                                 .getResultList();
+		return bestellungen;
+	}
+
+
+
 	
 	@Override
 	public Bestellung createBestellung(Bestellung bestellung, Long kundeId, Locale locale) {
@@ -160,6 +153,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		
 		validateBestellung(bestellung, locale, Default.class);
 		em.persist(bestellung);
+		event.fire(bestellung);
 		
 		return bestellung;
 	}

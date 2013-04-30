@@ -14,11 +14,13 @@ import org.jboss.logging.Logger;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Lieferung;
 import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.util.Log;
 
 @Decorator
+@Log
 public abstract class BestellungServiceMitGeschenkverpackung implements BestellungService {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	
+
 	@Inject
 	@Delegate
 	@Any
@@ -30,13 +32,18 @@ public abstract class BestellungServiceMitGeschenkverpackung implements Bestellu
 	}
 
 	@Override
-	public List<Bestellung> findBestellungenMitLieferungenByKunde(Kunde kunde) {
-		return bs.findBestellungenMitLieferungenByKunde(kunde);
+	public List<Bestellung> findBestellungenByKunde(Kunde kunde) {
+		return bs.findBestellungenByKunde(kunde);
 	}
 
 	@Override
 	public Kunde findKundeById(Long id, Locale locale) {
 		return bs.findKundeById(id, locale);
+	}
+
+	@Override
+	public List<Bestellung> findBestellungenMitLieferungenByKunde(Kunde kunde) {
+		return bs.findBestellungenMitLieferungenByKunde(kunde);
 	}
 
 	@Override
@@ -52,17 +59,14 @@ public abstract class BestellungServiceMitGeschenkverpackung implements Bestellu
 
 		return bs.createBestellung(bestellung, kunde, locale);
 	}
-	
 
 	@Override
 	public List<Lieferung> findLieferungen(String nr) {
 		return bs.findLieferungen(nr);
 	}
-	
+
 	@Override
 	public Lieferung createLieferung(Lieferung lieferung) {
 		return bs.createLieferung(lieferung);
 	}
-	
-
 }

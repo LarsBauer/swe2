@@ -1,5 +1,6 @@
 package de.shop.kundenverwaltung.rest;
 
+import static de.shop.util.Constants.KEINE_ID;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
@@ -7,7 +8,6 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
@@ -101,7 +101,7 @@ public class KundeResource {
 	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}")
-	public Kunde findKundeById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
+	public Kunde findKundeById(@PathParam("id") Long id) {
 		final Locale locale = localeHelper.getLocale(headers);
 		final Kunde kunde = ks.findKundeById(id, FetchType.NUR_KUNDE, locale);
 		if (kunde == null) {
@@ -122,8 +122,7 @@ public class KundeResource {
 	 * @return Collection mit den gefundenen Kundendaten
 	 */
 	@GET
-	public Collection<Kunde> findKundenByNachname(@QueryParam("nachname") @DefaultValue("") String nachname,
-			                                              @Context UriInfo uriInfo) {
+	public Collection<Kunde> findKundenByNachname(@QueryParam("nachname") @DefaultValue("") String nachname) {
 		Collection<Kunde> kunden = null;
 		if ("".equals(nachname)) {
 			kunden = ks.findAllKunden(FetchType.NUR_KUNDE, OrderByType.UNORDERED);
@@ -159,7 +158,7 @@ public class KundeResource {
 	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}/bestellungen")
-	public Collection<Bestellung> findBestellungenByKundeId(@PathParam("id") Long kundeId,  @Context UriInfo uriInfo) {
+	public Collection<Bestellung> findBestellungenByKundeId(@PathParam("id") Long kundeId) {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		final Kunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE, locale);
@@ -170,7 +169,7 @@ public class KundeResource {
 		
 		// URIs innerhalb der gefundenen Bestellungen anpassen
 		for (Bestellung bestellung : bestellungen) {
-			uriHelperBestellung.updateUriBestellung(bestellung, uriInfo);
+			uriHelperBestellung.updateUrlBestellung(bestellung, uriInfo);
 		}
 		return bestellungen;
 	}
@@ -183,21 +182,25 @@ public class KundeResource {
 	@POST
 	@Consumes(APPLICATION_JSON)
 	@Produces
-	public Response createKunde(Kunde kunde, @Context UriInfo uriInfo, @Context HttpHeaders headers) {
+	public Response createKunde(Kunde kunde) {
+		final Locale locale = localeHelper.getLocale(headers);
+		
+		kunde.setId(KEINE_ID);
 		final Adresse adresse = kunde.getAdresse();
 		if (adresse != null) {
 			adresse.setKunde(kunde);
 		}
+		kunde.setBestellungenUri(null);
+		kunde.setPasswortWdh(kunde.getPasswort());
 		
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales.get(0);
 		kunde = ks.createKunde(kunde, locale);
-		LOGGER.trace(kunde);
+		LOGGER.debugf("Kunde: {0}", kunde);
 		
 		final URI kundeUri = uriHelperKunde.getUriKunde(kunde, uriInfo);
-		return Response.created(kundeUri).build();
+		final Response response = Response.created(kundeUri).build();
+		
+		return response;
 	}
-	
 	
 	/**
 	 * Mit der URL /kunden einen Kunden per PUT aktualisieren
@@ -205,8 +208,7 @@ public class KundeResource {
 	 */
 	@PUT
 	@Consumes(APPLICATION_JSON)
-	@Produces
-	public void updateKunde(Kunde kunde, @Context UriInfo uriInfo, @Context HttpHeaders headers) {
+	public void updateKunde(Kunde kunde) {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		// Vorhandenen Kunden ermitteln

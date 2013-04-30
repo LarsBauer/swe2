@@ -43,6 +43,7 @@ public class ArtikelService implements Serializable {
 	@Inject
 	private ValidatorProvider validatorProvider;
 	
+	
 	@PostConstruct
 	private void postConstruct() {
 		logger.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
@@ -53,6 +54,7 @@ public class ArtikelService implements Serializable {
 		logger.debugf("CDI-faehiges Bean %s wird geloescht", this);
 	}
 
+	
 	public List<Artikel> findVerfuegbareArtikel() {
 		final List<Artikel> artikel = em.createNamedQuery(Artikel.FIND_VERFUEGBARE_ARTIKEL, Artikel.class)
 				                        .getResultList();
@@ -62,6 +64,20 @@ public class ArtikelService implements Serializable {
 
 	public Artikel findArtikelById(Long id) {
 		final Artikel artikel = em.find(Artikel.class, id);
+		return artikel;
+	}
+	
+
+	public List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
+		if (Strings.isNullOrEmpty(bezeichnung)) {
+			final List<Artikel> artikelListe = findVerfuegbareArtikel();
+			return artikelListe;
+		}
+		
+		final List<Artikel> artikel = em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, Artikel.class)
+				                        .setParameter(Artikel.PARAM_BEZEICHNUNG, "%" + bezeichnung + "%")
+				                        .getResultList();
+		
 		return artikel;
 	}
 
@@ -103,20 +119,6 @@ public class ArtikelService implements Serializable {
 		return artikel;
 	}
 
-	public List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
-		if (Strings.isNullOrEmpty(bezeichnung)) {
-			final List<Artikel> artikelListe = findVerfuegbareArtikel();
-			return artikelListe;
-		}
-		
-		final List<Artikel> artikel = em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, Artikel.class)
-				                        .setParameter(Artikel.PARAM_BEZEICHNUNG, "%" + bezeichnung + "%")
-				                        .getResultList();
-		
-		return artikel;
-	}
-	
-	
 	public Artikel createArtikel(Artikel artikel, Locale locale) {
 		if (artikel == null) {
 			return artikel;

@@ -47,11 +47,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.jboss.logging.Logger;
 
@@ -70,58 +69,81 @@ import de.shop.util.IdGroup;
 	@NamedQueries({
 		@NamedQuery(name  = Kunde.FIND_KUNDEN,
                 	query = "SELECT k"
-                			+ " FROM   Kunde k"),
+                		  + " FROM   Kunde k"),
         @NamedQuery(name  = Kunde.FIND_KUNDEN_ORDER_BY_ID,
             		query = "SELECT   k"
-            		        + " FROM  Kunde k"
-            		        + " ORDER BY k.id"),
+            		      + " FROM  Kunde k"
+            		      + " ORDER BY k.id"),
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME,
                     query = "SELECT k"
                     		+ " FROM   Kunde k"
             	       		+ " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+        @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_PLZ,
+        			query = "SELECT   k"
+            			  + " FROM  Kunde k"
+            			  + " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ),
         @NamedQuery(name  = Kunde.FIND_KUNDE_BY_EMAIL,
-                    query = "SELECT DISTINCT k"
-        		            + " FROM   Kunde k"
-        		            + " WHERE  k.email = :" + Kunde.PARAM_KUNDE_EMAIL),
+       				query = "SELECT DISTINCT k"
+        		          + " FROM   Kunde k"
+        		          + " WHERE  k.email = :" + Kunde.PARAM_KUNDE_EMAIL),
         @NamedQuery(name  = Kunde.FIND_KUNDEN_FETCH_BESTELLUNGEN,
         			query = "SELECT  DISTINCT k"
-        					+ " FROM Kunde k LEFT JOIN FETCH k.bestellungen"),
+        				  + " FROM Kunde k LEFT JOIN FETCH k.bestellungen"),
         @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
-                    query = "SELECT DISTINCT k"
-        		            + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
-        		            + " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
+        			query = "SELECT DISTINCT k"
+        		          + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
+        		          + " WHERE  UPPER(k.nachname) = UPPER(:" + Kunde.PARAM_KUNDE_NACHNAME + ")"),
         @NamedQuery(name  = Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
-        		    query = "SELECT DISTINCT k"
-        			         + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
-        			         + " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),	            
-        @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_PLZ,
-                    query = "SELECT k"
-                    		+ " FROM  Kunde k"
-                    		+ " WHERE k.adresse.plz = :" + Kunde.PARAM_KUNDE_ADRESSE_PLZ),
+        			query = "SELECT DISTINCT k"
+        			      + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
+        			      + " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),	            
 		@NamedQuery(name  = Kunde.FIND_USERNAME_BY_USERNAME_PREFIX,
-          query = "SELECT   CONCAT('', k.id)"
-			        + " FROM  Kunde k"
-           		+ " WHERE CONCAT('', k.id) LIKE :" + Kunde.PARAM_USERNAME_PREFIX),
+          			query = "SELECT   CONCAT('', k.id)"
+          				  + " FROM  Kunde k"
+          				  + " WHERE CONCAT('', k.id) LIKE :" + Kunde.PARAM_USERNAME_PREFIX),
+        @NamedQuery(name  = Kunde.FIND_ALL_NACHNAMEN,
+          	   	   query = "SELECT      DISTINCT k.nachname"
+          	   			 + " FROM     Kunde k"
+          	   			 + " ORDER BY k.nachname"),
+        @NamedQuery(name  = Kunde.FIND_KUNDEN_BY_ID_PREFIX,
+        		        	query = "SELECT   k"
+        		            + " FROM  Kunde k"
+        		            + " WHERE CONCAT('', k.id) LIKE :" + Kunde.PARAM_KUNDE_ID_PREFIX
+        		            + " ORDER BY k.id"),
+        @NamedQuery(name  = Kunde.FIND_IDS_BY_PREFIX,
+        		    query = "SELECT   k.id"
+        				  + " FROM  Kunde k"
+        				  + " WHERE CONCAT('', k.id) LIKE :" + Kunde.PARAM_KUNDE_ID_PREFIX
+        				  + " ORDER BY k.id"),
+        @NamedQuery(name  = Kunde.FIND_NACHNAMEN_BY_PREFIX,
+        	   	    query = "SELECT   DISTINCT k.nachname"
+        			      + " FROM  Kunde k "
+        	   	          + " WHERE UPPER(k.nachname) LIKE UPPER(:"
+        	   	          + Kunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
 	})
                     		
 @ScriptAssert(lang = "javascript",
-			script = "(_this.password == null && _this.passwordWdh == null)"
-						+ "|| (_this.password != null && _this.password.equals(_this.passwordWdh))",
+			script = "(_this.passwort == null && _this.passwortWdh == null)"
+						+ "|| (_this.passwort != null && _this.passwort.equals(_this.passwortWdh))",
 			message = "{kundenverwaltung.kunde.password.notEqual}",
 			groups = PasswordGroup.class)
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-public class Kunde implements Serializable {
+//@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+public class Kunde implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 	
 	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
+	private static final String PREFIX_ADEL = "(o'|von|von der|von und zu|van)?";
+	public static final String NACHNAME_PATTERN = PREFIX_ADEL + NAME_PATTERN + "(-" + NAME_PATTERN + ")?";
 	public static final int NACHNAME_LENGTH_MIN = 2;
 	public static final int NACHNAME_LENGTH_MAX = 32;
 	public static final int VORNAME_LENGTH_MAX = 32;
-	public static final int EMAIL_LENGTH_MAX = 128;
+	public static final int EMAIL_LENGTH_MAX = 32;
 	public static final int DETAILS_LENGTH_MAX = 128 * 1024;
 	public static final int PASSWORD_LENGTH_MAX = 256;
+	public static final int BEMERKUNGEN_LENGTH_MAX = 2000;
+	public static final int USERNAME_LENGTH_MAX = 32;
 	
 	private static final String PREFIX = "Kunde.";
 	public static final String FIND_KUNDEN = PREFIX + "findKunden";
@@ -131,20 +153,26 @@ public class Kunde implements Serializable {
             PREFIX + "findKundenByNachnameFetchBestellungen";
 	public static final String FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN =
             PREFIX + "findKundeByIdFetchBestellungen";
+	public static final String FIND_NACHNAMEN_BY_PREFIX = PREFIX + "findNachnamenByPrefix";
+	public static final String FIND_ALL_NACHNAMEN = PREFIX + "findAllNachnamen";
+	public static final String FIND_IDS_BY_PREFIX = PREFIX + "findIdsByIdPrefix";
+	public static final String FIND_KUNDEN_BY_ID_PREFIX = PREFIX + "findKundenByIdPrefix";
 	public static final String FIND_KUNDEN_BY_NACHNAME = PREFIX + "findKundenByNachname";
 	public static final String FIND_KUNDE_BY_EMAIL = PREFIX + "findKundeByEmail";
 	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
 	public static final String FIND_USERNAME_BY_USERNAME_PREFIX = PREFIX + "findKundeByUsernamePrefix";
 	
 	public static final String PARAM_KUNDE_ID = "kundeId";
+	public static final String PARAM_KUNDE_NACHNAME_PREFIX = "nachnamePrefix";
+	public static final String PARAM_KUNDE_ID_PREFIX = "idPrefix";
 	public static final String PARAM_KUNDE_NACHNAME = "name";
 	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
 	public static final String PARAM_KUNDE_EMAIL = "email";
 	public static final String PARAM_USERNAME_PREFIX = "usernamePrefix";
 
 	@Id
-	@GeneratedValue()
-	@Column(name = "k_id", unique = true, nullable = false, updatable = false)
+	@GeneratedValue
+	@Column(name = "id", nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{kundenverwaltung.kunde.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
 	
@@ -153,42 +181,41 @@ public class Kunde implements Serializable {
 	private int version = ERSTE_VERSION;
 
 	@Column(nullable = false)
-	@Temporal(TIMESTAMP)
-	@XmlTransient
-	private Date aktualisiert;
-
-	@Column(unique = true, nullable = false)
-	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
-	//@JsonIgnore
-	private String email = "";
-
+	@NotNull(message = "{kundenverwaltung.kunde.nachname.notNull}")
+	@Size(min = NACHNAME_LENGTH_MIN, max = NACHNAME_LENGTH_MAX,
+	      message = "{kundenverwaltung.kunde.nachname.length}")
+	@Pattern(regexp = NACHNAME_PATTERN, message = "{kundenverwaltung.kunde.nachname.pattern}")
+	private String nachname = "";
+	
 	@Column(nullable = false)
-	@Temporal(TIMESTAMP)
-	@JsonIgnore
-	private Date erzeugt;
+	@Size(max = VORNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.vorname.length}")
+	private String vorname = "";
+
+	@Column(length = EMAIL_LENGTH_MAX, unique = true)
+	@Email(message = "{kundenverwaltung.kunde.email}")
+	private String email = "";
 
 	@Column(length = 1)
 	private String geschlecht;
 
-	@Column(nullable = false)
-	@NotNull(message = "{kundenverwaltung.kunde.nachname.notNull}")
-	@Size(min = NACHNAME_LENGTH_MIN, max = NACHNAME_LENGTH_MAX,
-	      message = "{kundenverwaltung.kunde.nachname.length}")
-	@Pattern(regexp = NAME_PATTERN, message = "{kundenverwaltung.kunde.nachname.pattern}")
-	private String nachname = "";
-
 	private boolean newsletter = false;
 
 	@Column(length = PASSWORD_LENGTH_MAX, nullable = false)
+	@Size(max = PASSWORD_LENGTH_MAX, message = "{kundenverwaltung.kunde.password.length}")
 	private String passwort;
 	
 	@Transient
 	@JsonIgnore
 	private String passwortWdh;
-
-	@Column(nullable = false)
-	@Size(max = VORNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.vorname.length}")
-	private String vorname = "";
+	
+	@Transient
+	@AssertTrue(message = "{kundenverwaltung.kunde.agb}")
+	private boolean agbAkzeptiert;
+	
+	@OneToOne(mappedBy = "kunde", cascade = { PERSIST, REMOVE })
+	@Valid
+	@NotNull(message = "{kundenverwaltung.kunde.adresse.notNull}")
+	private Adresse adresse;
 	
 	@OneToMany
 	@JoinColumn(name = "kunde_fk", nullable = false)
@@ -197,15 +224,6 @@ public class Kunde implements Serializable {
 	
 	@Transient
 	private URI bestellungenUri;
-	
-	@OneToOne(cascade = { PERSIST, REMOVE }, mappedBy = "kunde")
-	@Valid
-	@NotNull(message = "{kundenverwaltung.kunde.adresse.notNull}")
-	private Adresse adresse;
-	
-	@Transient
-	@AssertTrue(message = "{kundenverwaltung.kunde.agb}")
-	private boolean agbAkzeptiert;
 	
 	@ElementCollection(fetch = EAGER)
 	@CollectionTable(name = "kunde_rolle",
@@ -222,6 +240,22 @@ public class Kunde implements Serializable {
 	@Transient
 	private URI fileUri;
 	
+	@Column
+	@Size(max = BEMERKUNGEN_LENGTH_MAX)
+	@SafeHtml
+	private String bemerkungen;
+
+	@Column(nullable = false)
+	@Temporal(TIMESTAMP)
+	@JsonIgnore
+	private Date erzeugt;
+
+	@Column(nullable = false)
+	@Temporal(TIMESTAMP)
+	@JsonIgnore
+	private Date aktualisiert;
+
+
 	@PrePersist
 	protected void prePersist() {
 		erzeugt = new Date();
@@ -249,81 +283,30 @@ public class Kunde implements Serializable {
 		agbAkzeptiert = true;
 	}
 	
-
-	public Kunde() {
-		super();
-	}
-
-	public Long getId() {
-		return this.id;
-	}
-	
 	public void setValues(Kunde k) {
+		version = k.version;
 		nachname = k.nachname;
 		vorname = k.vorname;
 		email = k.email;
+		geschlecht = k.geschlecht;
 		passwort = k.passwort;
 		passwortWdh = k.passwort;
+		agbAkzeptiert = k.agbAkzeptiert;
+	}
+	
+	public Long getId() {
+		return this.id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	public Set<RolleType> getRollen() {
-		return rollen;
-	}
 
-	public void setRollen(Set<RolleType> rollen) {
-		this.rollen = rollen;
+	public int getVersion() {
+		return version;
 	}
-
-	public File getFile() {
-		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
-	}
-
-	public URI getFileUri() {
-		return fileUri;
-	}
-
-	public void setFileUri(URI fileUri) {
-		this.fileUri = fileUri;
-	}
-
-	public Date getAktualisiert() {
-		return (Date) this.aktualisiert.clone();
-	}
-
-	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = (Date) aktualisiert.clone();
-	}
-
-	public String getEmail() {
-		return this.email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Date getErzeugt() {
-		return (Date) this.erzeugt.clone();
-	}
-
-	public void setErzeugt(Date erzeugt) {
-		this.erzeugt = (Date) erzeugt.clone();
-	}
-
-	public String getGeschlecht() {
-		return this.geschlecht;
-	}
-
-	public void setGeschlecht(String geschlecht) {
-		this.geschlecht = geschlecht;
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	public String getNachname() {
@@ -334,6 +317,22 @@ public class Kunde implements Serializable {
 		this.nachname = name;
 	}
 
+	public String getVorname() {
+		return this.vorname;
+	}
+
+	public void setVorname(String vorname) {
+		this.vorname = vorname;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public boolean isNewsletter() {
 		return this.newsletter;
 	}
@@ -341,13 +340,13 @@ public class Kunde implements Serializable {
 	public void setNewsletter(boolean newsletter) {
 		this.newsletter = newsletter;
 	}
-	
-	public void setAgbAkzeptiert(boolean agbAkzeptiert) {
-		this.agbAkzeptiert = agbAkzeptiert;
+
+	public String getGeschlecht() {
+		return this.geschlecht;
 	}
 
-	public boolean isAgbAkzeptiert() {
-		return agbAkzeptiert;
+	public void setGeschlecht(String geschlecht) {
+		this.geschlecht = geschlecht;
 	}
 
 	public String getPasswort() {
@@ -365,14 +364,13 @@ public class Kunde implements Serializable {
 	public void setPasswortWdh(String passwortWdh) {
 		this.passwortWdh = passwortWdh;
 	}
-
-
-	public String getVorname() {
-		return this.vorname;
+	
+	public void setAgbAkzeptiert(boolean agbAkzeptiert) {
+		this.agbAkzeptiert = agbAkzeptiert;
 	}
 
-	public void setVorname(String vorname) {
-		this.vorname = vorname;
+	public boolean isAgbAkzeptiert() {
+		return agbAkzeptiert;
 	}
 	
 	public Adresse getAdresse() {
@@ -418,123 +416,113 @@ public class Kunde implements Serializable {
 		this.bestellungenUri = bestellungenUri;
 	}
 	
+	public Set<RolleType> getRollen() {
+		return rollen;
+	}
+
+	public void setRollen(Set<RolleType> rollen) {
+		this.rollen = rollen;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public URI getFileUri() {
+		return fileUri;
+	}
+
+	public void setFileUri(URI fileUri) {
+		this.fileUri = fileUri;
+	}
+
+	public String getBemerkungen() {
+		return bemerkungen;
+	}
+
+	public void setBemerkungen(String bemerkungen) {
+		this.bemerkungen = bemerkungen;
+	}
+
+	public Date getErzeugt() {
+		return erzeugt == null ? null : (Date) erzeugt.clone();
+	}
+
+	public void setErzeugt(Date erzeugt) {
+		this.erzeugt = erzeugt == null ? null : (Date) erzeugt.clone();
+	}
+
+	public Date getAktualisiert() {
+		return aktualisiert == null ? null : (Date) aktualisiert.clone();
+	}
+
+	public void setAktualisiert(Date aktualisiert) {
+		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
+	}
+
+
 	@Override
 	public String toString() {
-		return "Kunde [id=" + id + ", version=" + version + ", aktualisiert="
-				+ aktualisiert + ", email=" + email + ", erzeugt=" + erzeugt
-				+ ", geschlecht=" + geschlecht + ", nachname=" + nachname
-				+ ", newsletter=" + newsletter + ", passwort=" + passwort
-				+ ", passwortWdh=" + passwortWdh + ", vorname=" + vorname
-				+ ", bestellungen=" + bestellungen + ", bestellungenUri="
-				+ bestellungenUri + ", adresse=" + adresse + ", agbAkzeptiert="
-				+ agbAkzeptiert + "]";
+		return "Kunde [id=" + id + ", version=" + version
+			   + ", nachname=" + nachname + ", vorname=" + vorname + ", geschlecht=" + geschlecht
+			   + ", email=" + email
+			   + ", rollen=" + rollen + ", passwort=" + passwort + ", passwortWdh=" + passwortWdh
+			   + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((adresse == null) ? 0 : adresse.hashCode());
-		result = prime * result + (agbAkzeptiert ? 1231 : 1237);
-		result = prime * result
-				+ ((aktualisiert == null) ? 0 : aktualisiert.hashCode());
-		result = prime * result
-				+ ((bestellungen == null) ? 0 : bestellungen.hashCode());
-		result = prime * result
-				+ ((bestellungenUri == null) ? 0 : bestellungenUri.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((erzeugt == null) ? 0 : erzeugt.hashCode());
-		result = prime * result
-				+ ((geschlecht == null) ? 0 : geschlecht.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((nachname == null) ? 0 : nachname.hashCode());
-		result = prime * result + (newsletter ? 1231 : 1237);
-		result = prime * result
-				+ ((passwort == null) ? 0 : passwort.hashCode());
-		result = prime * result
-				+ ((passwortWdh == null) ? 0 : passwortWdh.hashCode());
-		result = prime * result + version;
-		result = prime * result + ((vorname == null) ? 0 : vorname.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Kunde other = (Kunde) obj;
-		if (adresse == null) {
-			if (other.adresse != null)
-				return false;
-		} else if (!adresse.equals(other.adresse))
-			return false;
-		if (agbAkzeptiert != other.agbAkzeptiert)
-			return false;
-		if (aktualisiert == null) {
-			if (other.aktualisiert != null)
-				return false;
-		} else if (!aktualisiert.equals(other.aktualisiert))
-			return false;
-		if (bestellungen == null) {
-			if (other.bestellungen != null)
-				return false;
-		} else if (!bestellungen.equals(other.bestellungen))
-			return false;
-		if (bestellungenUri == null) {
-			if (other.bestellungenUri != null)
-				return false;
-		} else if (!bestellungenUri.equals(other.bestellungenUri))
-			return false;
+		}
+		final Kunde other = (Kunde) obj;
 		if (email == null) {
-			if (other.email != null)
+			if (other.email != null) {
 				return false;
-		} else if (!email.equals(other.email))
+			}
+		}
+		else if (!email.equals(other.email)) {
 			return false;
-		if (erzeugt == null) {
-			if (other.erzeugt != null)
-				return false;
-		} else if (!erzeugt.equals(other.erzeugt))
-			return false;
-		if (geschlecht == null) {
-			if (other.geschlecht != null)
-				return false;
-		} else if (!geschlecht.equals(other.geschlecht))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (nachname == null) {
-			if (other.nachname != null)
-				return false;
-		} else if (!nachname.equals(other.nachname))
-			return false;
-		if (newsletter != other.newsletter)
-			return false;
-		if (passwort == null) {
-			if (other.passwort != null)
-				return false;
-		} else if (!passwort.equals(other.passwort))
-			return false;
-		if (passwortWdh == null) {
-			if (other.passwortWdh != null)
-				return false;
-		} else if (!passwortWdh.equals(other.passwortWdh))
-			return false;
-		if (version != other.version)
-			return false;
-		if (vorname == null) {
-			if (other.vorname != null)
-				return false;
-		} else if (!vorname.equals(other.vorname))
-			return false;
+		}
 		return true;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		final Kunde neuesObjekt = (Kunde) super.clone();
+		neuesObjekt.id = id;
+		neuesObjekt.version = version;
+		neuesObjekt.nachname = nachname;
+		neuesObjekt.vorname = vorname;
+		neuesObjekt.geschlecht = geschlecht;
+		neuesObjekt.email = email;
+		neuesObjekt.newsletter = newsletter;
+		neuesObjekt.passwort = passwort;
+		neuesObjekt.passwortWdh = passwortWdh;
+		neuesObjekt.agbAkzeptiert = agbAkzeptiert;
+		neuesObjekt.bemerkungen = bemerkungen;
+		neuesObjekt.adresse = adresse;
+		neuesObjekt.erzeugt = erzeugt;
+		neuesObjekt.aktualisiert = aktualisiert;
+		return neuesObjekt;
 	}
 
 }

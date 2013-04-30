@@ -1,13 +1,14 @@
 package de.shop.bestellverwaltung.rest;
 
-
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.rest.UriHelperArtikel;
 import de.shop.bestellverwaltung.domain.Bestellposition;
@@ -16,26 +17,26 @@ import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.UriHelperKunde;
 import de.shop.util.Log;
 
-
 @ApplicationScoped
 @Log
 public class UriHelperBestellung {
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	
 	@Inject
 	private UriHelperKunde uriHelperKunde;
 	
 	@Inject
 	private UriHelperArtikel uriHelperArtikel;
 	
-	public void updateUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
-		// URL fuer Kunde setzen
+	public void updateUrlBestellung(Bestellung bestellung, UriInfo uriInfo) {
+		// URI fuer Kunde setzen
 		final Kunde kunde = bestellung.getKunde();
 		if (kunde != null) {
-			
 			final URI kundeUri = uriHelperKunde.getUriKunde(bestellung.getKunde(), uriInfo);
 			bestellung.setKundeUri(kundeUri);
 		}
 		
-		// URLs fuer Artikel in den Bestellpositionen setzen
+		// URIs fuer Artikel in den Bestellpositionen setzen
 		final List<Bestellposition> bestellpositionen = bestellung.getBestellpositionen();
 		if (bestellpositionen != null && !bestellpositionen.isEmpty()) {
 			for (Bestellposition bp : bestellpositionen) {
@@ -44,20 +45,21 @@ public class UriHelperBestellung {
 			}
 		}
 		
-		// URL fuer Lieferungen setzen
-		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-                                     .path(BestellungResource.class)
-                                     .path(BestellungResource.class, "findLieferungenByBestellungId");
-		final URI uri = ub.build(bestellung.getId());
+		// URI fuer Lieferungen setzen
+		final URI uri = uriInfo.getBaseUriBuilder()
+                               .path(BestellungResource.class)
+                               .path(BestellungResource.class, "findLieferungenByBestellungId")
+                               .build(bestellung.getId());
 		bestellung.setLieferungenUri(uri);
 		
+		LOGGER.trace(bestellung);
 	}
 
 	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
-		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-		                             .path(BestellungResource.class)
-		                             .path(BestellungResource.class, "findBestellungById");
-		final URI uri = ub.build(bestellung.getId());
+		final URI uri = uriInfo.getBaseUriBuilder()
+		                       .path(BestellungResource.class)
+		                       .path(BestellungResource.class, "findBestellungById")
+		                       .build(bestellung.getId());
 		return uri;
 	}
 }

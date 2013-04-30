@@ -65,8 +65,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 	
 	private static final Long KUNDE_ID_VORHANDEN = Long.valueOf(101);
 	private static final Long KUNDE_ID_NICHT_VORHANDEN = Long.valueOf(1000);
-	private static final Long KUNDE_ID_UPDATE = Long.valueOf(120);
-	private static final Long KUNDE_ID_DELETE = Long.valueOf(122);
+	private static final Long KUNDE_ID_UPDATE = Long.valueOf(103);
+	private static final Long KUNDE_ID_DELETE = Long.valueOf(105);
 	private static final Long KUNDE_ID_DELETE_MIT_BESTELLUNGEN = Long.valueOf(101);
 	private static final Long KUNDE_ID_DELETE_FORBIDDEN = Long.valueOf(101);
 	private static final String NACHNAME_VORHANDEN = "Alpha";
@@ -76,7 +76,6 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final String NEUER_VORNAME = "Vorname";
 	private static final String NEUE_EMAIL = NEUER_NACHNAME + "@test.de";
 	private static final String NEUE_EMAIL_INVALID = "falsch@falsch";
-	private static final String NEU_SEIT = "2000-01-31";
 	private static final String NEUE_PLZ = "76133";
 	private static final String NEUER_ORT = "Karlsruhe";
 	private static final String NEUE_STRASSE = "Testweg";
@@ -86,11 +85,12 @@ public class KundeResourceTest extends AbstractResourceTest {
 	//private static final String FILENAME = "video.mp4";
 	private static final String FILENAME_UPLOAD = "src/test/resources/rest/" + FILENAME;
 	private static final String FILENAME_DOWNLOAD = "target/" + FILENAME;
-	private static final CopyOption[] COPY_OPTIONS = { REPLACE_EXISTING };
+	private static final CopyOption[] COPY_OPTIONS = {REPLACE_EXISTING};
 	private static final Long KUNDE_ID_UPLOAD = Long.valueOf(102);
 
 	private static final String FILENAME_INVALID_MIMETYPE = "image.bmp";
-	private static final String FILENAME_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/" + FILENAME_INVALID_MIMETYPE;
+	private static final String FILENAME_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/" 
+																	+ FILENAME_INVALID_MIMETYPE;
 	
 	
 	@Test
@@ -158,7 +158,7 @@ public class KundeResourceTest extends AbstractResourceTest {
                                          .get(KUNDEN_PATH);
 		
 		// Then
-		try (final JsonReader jsonReader =
+		try (final JsonReader jsonReader = 
 				              getJsonReaderFactory().createReader(new StringReader(response.asString()))) {
 			final JsonArray jsonArray = jsonReader.readArray();
 	    	assertThat(jsonArray.size() > 0, is(true));
@@ -215,7 +215,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 		                    		                  .add("plz", plz)
 		                    		                  .add("ort", ort)
 		                    		                  .add("strasse", strasse)
-		                    		                  .add("hausnr", hausnr)
+		                    		                  .add("hausnummer", hausnr)
 		                    		                  .build())
 		                              .build();
 
@@ -239,7 +239,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 	
 	
 	@Test
-	public void createPrivatkundeFalschesPassword() {
+	public void createKundeFalschesPassword() {
 		LOGGER.finer("BEGINN");
 		
 		// Given
@@ -265,14 +265,13 @@ public class KundeResourceTest extends AbstractResourceTest {
 	}
 	
 	@Test
-	public void createPrivatkundeInvalid() {
+	public void createKundeInvalid() {
 		LOGGER.finer("BEGINN");
 		
 		// Given
 		final String nachname = NEUER_NACHNAME_INVALID;
 		final String vorname = NEUER_VORNAME;
 		final String email = NEUE_EMAIL_INVALID;
-		final String seit = NEU_SEIT;
 		final boolean agbAkzeptiert = false;
 		final String username = USERNAME;
 		final String password = PASSWORD;
@@ -281,7 +280,6 @@ public class KundeResourceTest extends AbstractResourceTest {
    		                              .add("nachname", nachname)
    		                              .add("vorname", vorname)
    		                              .add("email", email)
-   		                              .add("seit", seit)
    		                              .add("agbAkzeptiert", agbAkzeptiert)
    		                              .addNull("adresse")
    		                              .build();
@@ -317,7 +315,7 @@ public class KundeResourceTest extends AbstractResourceTest {
                                    .get(KUNDEN_ID_PATH);
 		
 		JsonObject jsonObject;
-		try (final JsonReader jsonReader =
+		try (final JsonReader jsonReader = 
 				              getJsonReaderFactory().createReader(new StringReader(response.asString()))) {
 			jsonObject = jsonReader.readObject();
 		}
