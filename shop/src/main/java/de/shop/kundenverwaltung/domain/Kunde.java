@@ -200,7 +200,7 @@ public class Kunde implements Serializable, Cloneable {
 
 	private boolean newsletter = false;
 
-	@Column(length = PASSWORD_LENGTH_MAX, nullable = false)
+	@Column(length = PASSWORD_LENGTH_MAX)
 	@Size(max = PASSWORD_LENGTH_MAX, message = "{kundenverwaltung.kunde.password.length}")
 	private String passwort;
 	

@@ -41,7 +41,7 @@ public class BestellungResourceTest extends AbstractResourceTest {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 	
 	private static final Long BESTELLUNG_ID_VORHANDEN = Long.valueOf(400);
-	private static final Long KUNDE_ID_VORHANDEN = Long.valueOf(101);
+	private static final Long KUNDE_ID_VORHANDEN = Long.valueOf(102);
 	private static final Long ARTIKEL_ID_VORHANDEN_1 = Long.valueOf(300);
 	private static final Long ARTIKEL_ID_VORHANDEN_2 = Long.valueOf(301);
 

@@ -191,7 +191,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 	}
 	
 	@Test
-	public void createPrivatkunde() {
+	public void createKunde() {
 		LOGGER.finer("BEGINN");
 		
 		// Given

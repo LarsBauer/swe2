@@ -132,7 +132,7 @@ public class Bestellung implements Serializable {
 	@Transient
 	private URI lieferungenUri;
 
-	@Column(nullable = false)
+	@Column
 	private String status;
 
 	@Column(nullable = false)

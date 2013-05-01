@@ -201,10 +201,10 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
     			job.add(k, jsonObject.get(k));
     		}
     	}
-    	final ConcurrentUpdate concurrenUpdate = new ConcurrentUpdate(jsonObject, KUNDEN_PATH,
+    	final ConcurrentUpdate concurrentUpdate = new ConcurrentUpdate(jsonObject, KUNDEN_PATH,
     			                                                      username2, password2);
     	final ExecutorService executorService = Executors.newSingleThreadExecutor();
-		final Future<Response> future = executorService.submit(concurrenUpdate);
+		final Future<Response> future = executorService.submit(concurrentUpdate);
 		response = future.get();   // Warten bis der "parallele" Thread fertig ist
 		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
 		
