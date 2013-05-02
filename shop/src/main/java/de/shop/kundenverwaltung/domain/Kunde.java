@@ -119,7 +119,7 @@ import de.shop.util.IdGroup;
         	   	    query = "SELECT   DISTINCT k.nachname"
         			      + " FROM  Kunde k "
         	   	          + " WHERE UPPER(k.nachname) LIKE UPPER(:"
-        	   	          + Kunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
+        	   	          + Kunde.PARAM_KUNDE_NACHNAME_PREFIX + ")")
 	})
                     		
 @ScriptAssert(lang = "javascript",

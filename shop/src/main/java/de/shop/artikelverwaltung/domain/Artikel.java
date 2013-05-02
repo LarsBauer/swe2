@@ -177,7 +177,7 @@ public class Artikel implements Serializable {
 	@Override
 	public String toString() {
 		return "Artikel [id=" + id + ", version=" + version
-				+ ", bezeichnung=" + bezeichnung + ", groesse="+ groesse 
+				+ ", bezeichnung=" + bezeichnung + ", groesse=" + groesse 
 				+ ", preis=" + preis + "]";
 	}
 	

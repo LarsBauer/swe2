@@ -23,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OrderBy;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
@@ -83,6 +84,7 @@ public class Lieferung implements Serializable {
 	private double versandkosten;
 
 	@ManyToMany(mappedBy = "lieferungen", cascade = PERSIST)
+	@OrderBy("id ASC")
 	@NotEmpty(message = "{bestellverwaltung.lieferung.bestellungen.notEmpty}")
 	@Valid
 	@JsonIgnore
@@ -90,16 +92,17 @@ public class Lieferung implements Serializable {
 	
 	@Transient
 	private List<URI> bestellungenUris;
+
+	@Column(nullable = false)
+	@Temporal(TIMESTAMP)
+	@JsonIgnore
+	private Date erzeugt;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	@JsonIgnore
 	private Date aktualisiert;
 
-	@Column(nullable = false)
-	@Temporal(TIMESTAMP)
-	@JsonIgnore
-	private Date erzeugt;
 	
 	public Lieferung() {
 		super();
@@ -188,6 +191,9 @@ public class Lieferung implements Serializable {
 	}
 	
 	public void addBestellung(Bestellung bestellung) {
+		if (bestellungen == null) {
+			bestellungen = new HashSet<>();
+		}
 		bestellungen.add(bestellung);
 	}
 	
@@ -226,9 +232,9 @@ public class Lieferung implements Serializable {
 	@Override
 	public String toString() {
 		return "Lieferung [id=" + id + ", version=" + version 
-				+ ", liefernr="+ liefernr + ", versandart=" + versandart
+				+ ", liefernr=" + liefernr + ", versandart=" + versandart
 				+ ", versandkosten=" + versandkosten 
-				+ ", aktualisiert=" + aktualisiert + ", erzeugt=" + erzeugt + "]" ;
+				+ ", aktualisiert=" + aktualisiert + ", erzeugt=" + erzeugt + "]";
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import static de.shop.util.TestConstants.KUNDEN_ID_PATH_PARAM;
 import static de.shop.util.TestConstants.KUNDEN_ID_PATH;
 import static de.shop.util.TestConstants.KUNDEN_PATH;
 import static java.net.HttpURLConnection.HTTP_CONFLICT;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.hamcrest.CoreMatchers.is;
@@ -142,7 +141,7 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
     	final ExecutorService executorService = Executors.newSingleThreadExecutor();
 		final Future<Response> future = executorService.submit(concurrentDelete);
 		response = future.get();   // Warten bis der "parallele" Thread fertig ist
-		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
+		assertThat(response.getStatusCode(), is(HTTP_CONFLICT));
 		
     	// Fehlschlagendes Update
 		final JsonObjectBuilder job = getJsonBuilderFactory().createObjectBuilder();
@@ -162,7 +161,7 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
                           .put(KUNDEN_PATH);
 		
 		// Then
-    	assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));
+    	assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
 		
 		LOGGER.finer("ENDE");
 	}
@@ -215,7 +214,7 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
                           .delete(KUNDEN_ID_PATH);
 		
 		// Then
-    	assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
+    	assertThat(response.getStatusCode(), is(HTTP_CONFLICT));
 		
 		LOGGER.finer("ENDE");
 	}
