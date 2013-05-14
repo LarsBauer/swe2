@@ -1,5 +1,11 @@
 package de.shop.util;
 
+/*import de.shop.bestellverwaltung.service.BestellungServiceTest;
+import de.shop.kundenverwaltung.domain.KundeTest;
+import de.shop.kundenverwaltung.service.KundeServiceConcurrencyHelper;
+import de.shop.kundenverwaltung.service.KundeServiceConcurrencyTest;
+import de.shop.kundenverwaltung.service.KundeServiceTest; */
+
 public final class TestConstants {
 	public static final String WEB_PROJEKT = "shop";
 	
@@ -34,7 +40,16 @@ public final class TestConstants {
 	public static final String ARTIKEL_URI = BASEURI + ":" + PORT + BASEPATH + ARTIKEL_PATH;
 	
 	// Testklassen fuer Service- und Domain-Tests
-	public static final Class<?>[] TEST_CLASSES = {};
+	public static final Class<?>[] TEST_CLASSES = { //Domain-Tests
+		                                            //AbstractDomainTest.class,
+		                                            //KundeTest.class,
+		                                            // Service-Tests
+		                                            //AbstractServiceTest.class,
+		                                            //KundeServiceTest.class,
+		                                            //KundeServiceConcurrencyHelper.class,
+		                                            //KundeServiceConcurrencyTest.class,
+		                                            //BestellungServiceTest.class
+													};
 	
 	private TestConstants() {
 	}

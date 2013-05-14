@@ -96,7 +96,11 @@ import de.shop.util.IdGroup;
         @NamedQuery(name  = Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
         			query = "SELECT DISTINCT k"
         			      + " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
-        			      + " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),	            
+        			      + " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),	
+        @NamedQuery(name  = Kunde.FIND_KUNDE_BY_USERNAME,
+        	        query = "SELECT   k"
+        				  + " FROM  Kunde k"
+        	              + " WHERE CONCAT('', k.id) = :" + Kunde.PARAM_KUNDE_USERNAME),
 		@NamedQuery(name  = Kunde.FIND_USERNAME_BY_USERNAME_PREFIX,
           			query = "SELECT   CONCAT('', k.id)"
           				  + " FROM  Kunde k"
@@ -160,6 +164,7 @@ public class Kunde implements Serializable, Cloneable {
 	public static final String FIND_KUNDEN_BY_NACHNAME = PREFIX + "findKundenByNachname";
 	public static final String FIND_KUNDE_BY_EMAIL = PREFIX + "findKundeByEmail";
 	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
+	public static final String FIND_KUNDE_BY_USERNAME = PREFIX + "findKundeByUsername";
 	public static final String FIND_USERNAME_BY_USERNAME_PREFIX = PREFIX + "findKundeByUsernamePrefix";
 	
 	public static final String PARAM_KUNDE_ID = "kundeId";
@@ -169,6 +174,7 @@ public class Kunde implements Serializable, Cloneable {
 	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
 	public static final String PARAM_KUNDE_EMAIL = "email";
 	public static final String PARAM_USERNAME_PREFIX = "usernamePrefix";
+	public static final String PARAM_KUNDE_USERNAME = "username";
 
 	@Id
 	@GeneratedValue
