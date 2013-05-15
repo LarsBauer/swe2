@@ -38,8 +38,6 @@ public class ArtikelController implements Serializable {
 	private static final String SESSION_VERFUEGBARE_ARTIKEL = "verfuegbareArtikel";
 
 	private String bezeichnung;
-	
-	private List<Artikel> ladenhueter;
 
 	@Inject
 	private ArtikelService as;
@@ -72,11 +70,6 @@ public class ArtikelController implements Serializable {
 
 	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;
-	}
-
-
-	public List<Artikel> getLadenhueter() {
-		return ladenhueter;
 	}
 
 	@Transactional
