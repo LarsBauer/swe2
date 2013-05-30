@@ -43,6 +43,10 @@
 			<article id="article">
 				<ui:insert name="article"/>
 			</article>
+			
+			<customers id="customers">
+				<ui:insert name="customers"/>
+			</customers>
 		
 			<aside id="aside">
 				<ui:insert name="aside"/>
