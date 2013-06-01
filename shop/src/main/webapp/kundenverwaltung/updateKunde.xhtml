@@ -9,9 +9,6 @@
 	  xmlns:a4j="http://richfaces.org/a4j">
 
 	<ui:composition template="/WEB-INF/templates/desktop/main.xml">
-		<ui:define name="metadata">
-			<f:event type="preRenderView" listener="#{kc.copyHobbies}"/>
-		</ui:define>
 		
 		<ui:param name="pageTitle" value="#{msgKv['updateKunde.title']}"/>
 	

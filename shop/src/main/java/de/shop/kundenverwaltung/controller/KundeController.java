@@ -1,26 +1,19 @@
 package de.shop.kundenverwaltung.controller;
 
-//eingefuegt
 import static de.shop.util.Constants.JSF_INDEX;
 import static de.shop.util.Constants.JSF_REDIRECT_SUFFIX;
 import static de.shop.util.Messages.MessagesType.KUNDENVERWALTUNG;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
 import static javax.persistence.PersistenceContextType.EXTENDED;
-//
 
 import java.io.Serializable;
-// eingefuegt
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateful;
@@ -43,15 +36,6 @@ import org.richfaces.component.SortOrder;
 import org.richfaces.component.UIPanelMenuItem;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
-
-import javax.enterprise.context.RequestScoped;
-import javax.faces.context.Flash;
-
-import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.kundenverwaltung.service.KundeService;
-import de.shop.kundenverwaltung.service.KundeService.FetchType;
-import de.shop.util.Log;
-import de.shop.util.Transactional;
 
 import de.shop.auth.controller.AuthController;
 import de.shop.kundenverwaltung.domain.Kunde;
@@ -78,25 +62,20 @@ import de.shop.util.FileHelper;
 @SessionScoped
 @Stateful
 @TransactionAttribute(SUPPORTS)
-//@RequestScoped
-//@Log
 public class KundeController implements Serializable {
 	private static final long serialVersionUID = -8817180909526894740L;
 	
-    //eingefuegt
-    private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int MAX_AUTOCOMPLETE = 10;
-    
-    private static final String JSF_KUNDENVERWALTUNG = "/kundenverwaltung/";
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	
+	private static final int MAX_AUTOCOMPLETE = 10;
+
+	private static final String JSF_KUNDENVERWALTUNG = "/kundenverwaltung/";
 	private static final String JSF_VIEW_KUNDE = JSF_KUNDENVERWALTUNG + "viewKunde";
 	private static final String JSF_LIST_KUNDEN = JSF_KUNDENVERWALTUNG + "/kundenverwaltung/listKunden";
-	private static final String JSF_UPDATE_Kunde = JSF_KUNDENVERWALTUNG + "updateKunde";
+	private static final String JSF_UPDATE_KUNDE = JSF_KUNDENVERWALTUNG + "updateKunde";
 	private static final String JSF_DELETE_OK = JSF_KUNDENVERWALTUNG + "okDelete";
-    
-	private static final String FLASH_KUNDE = "kunde";
-	//private static final String JSF_VIEW_KUNDE = "/kundenverwaltung/viewKunde";
 	
-    private static final String REQUEST_KUNDE_ID = "kundeId";
+	private static final String REQUEST_KUNDE_ID = "kundeId";
 
 	private static final String CLIENT_ID_KUNDEID = "form:kundeIdInput";
 	private static final String MSG_KEY_KUNDE_NOT_FOUND_BY_ID = "viewKunde.notFound";
@@ -124,45 +103,11 @@ public class KundeController implements Serializable {
 	
 	@PersistenceContext(type = EXTENDED)
 	private transient EntityManager em;
-    
+	
 	@Inject
 	private KundeService ks;
 	
 	@Inject
-	private Flash flash;  
-    
-    /*
-	@Override
-	public String toString() {
-		return "KundeController [kundeId=" + kundeId + "]";
-	}
-
-	public void setKundeId(Long kundeId) {
-		this.kundeId = kundeId;
-	}
-
-	public Long getKundeId() {
-		return kundeId;
-	}
-
-	
-	 //Action Methode, um einen Kunden zu gegebener ID zu suchen
-	 //@return URL fuer Anzeige des gefundenen Kunden; sonst null
-	 
-	@Transactional
-	public String findKundeById() {
-		final Kunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE, null);
-		if (kunde == null) {
-			flash.remove(FLASH_KUNDE);
-			return null;
-		}
-		
-		flash.put(FLASH_KUNDE, kunde);
-		return JSF_VIEW_KUNDE;
-	}
-    
-    */
-    @Inject
 	private transient HttpServletRequest request;
 	
 	@Inject
@@ -188,6 +133,7 @@ public class KundeController implements Serializable {
 
 	private Long kundeId;
 	private Kunde kunde;
+	private List<String> hobbies;
 	
 	private String nachname;
 	
@@ -249,6 +195,14 @@ public class KundeController implements Serializable {
 
 	public Kunde getKunde() {
 		return kunde;
+	}
+
+	public List<String> getHobbies() {
+		return hobbies;
+	}
+	
+	public void setHobbies(List<String> hobbies) {
+		this.hobbies = hobbies;
 	}
 
 	public String getNachname() {
@@ -429,9 +383,8 @@ public class KundeController implements Serializable {
 	
 	@TransactionAttribute(REQUIRED)
 	public String createKunde() {
-
 		try {
-			neuerKunde = (Kunde) ks.createKunde(neuerKunde, locale);
+			neuerKunde = ks.createKunde(neuerKunde, locale);
 		}
 		catch (InvalidKundeException | EmailExistsException e) {
 			final String outcome = createKundeErrorMsg(e);
@@ -471,6 +424,7 @@ public class KundeController implements Serializable {
 		final Adresse adresse = new Adresse();
 		adresse.setKunde(neuerKunde);
 		neuerKunde.setAdresse(adresse);
+		
 	}
 	
 	/**
@@ -480,6 +434,7 @@ public class KundeController implements Serializable {
 	public Class<?>[] getPasswordGroup() {
 		return PASSWORD_GROUP.clone();
 	}
+
 
 	/**
 	 * Verwendung als ValueChangeListener bei updateKunde.xhtml
@@ -510,11 +465,9 @@ public class KundeController implements Serializable {
 			return JSF_INDEX;
 		}
 		
-		/*
 		if (kunde.getClass().equals(Kunde.class)) {
-			final Kunde Kunde = (Kunde) kunde;
+			final Kunde kunde1 = kunde;
 		}
-		*/
 		
 		LOGGER.tracef("Aktualisierter Kunde: %s", kunde);
 		try {
@@ -588,7 +541,6 @@ public class KundeController implements Serializable {
 		return JSF_DELETE_OK;
 	}
 	
-    /*
 	public String selectForUpdate(Kunde ausgewaehlterKunde) {
 		if (ausgewaehlterKunde == null) {
 			return null;
@@ -596,9 +548,10 @@ public class KundeController implements Serializable {
 		
 		kunde = ausgewaehlterKunde;
 		
-		return JSF_UPDATE_Kunde
+		return Kunde.class.equals(ausgewaehlterKunde.getClass())
+			   ? JSF_UPDATE_KUNDE
+			   : JSF_UPDATE_KUNDE;
 	}
-    */
 
 	@TransactionAttribute(REQUIRED)
 	public String delete(Kunde ausgewaehlterKunde) {
