@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:ui="http://java.sun.com/jsf/facelets">
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:rich="http://richfaces.org/rich">
 	<ui:composition template="/WEB-INF/templates/desktop/main.xml">
 		<ui:define name="title">
 			#{msg['index.title']}
@@ -10,6 +13,12 @@
 
 		<ui:define name="article">
 			<h1>#{msg['index.welcome']}</h1>
+			
+			<h:graphicImage id="ChuckNorris"
+		    	            name="chuck-norris.gif"
+		        	        library="images"
+		            	    alt="#{msg['index.chucknorris']}"/>
+		            	    
 		</ui:define>
 	</ui:composition>
 </html>

@@ -133,7 +133,6 @@ public class KundeController implements Serializable {
 
 	private Long kundeId;
 	private Kunde kunde;
-	private List<String> hobbies;
 	
 	private String nachname;
 	
@@ -195,14 +194,6 @@ public class KundeController implements Serializable {
 
 	public Kunde getKunde() {
 		return kunde;
-	}
-
-	public List<String> getHobbies() {
-		return hobbies;
-	}
-	
-	public void setHobbies(List<String> hobbies) {
-		this.hobbies = hobbies;
 	}
 
 	public String getNachname() {

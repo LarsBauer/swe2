@@ -13,13 +13,12 @@
 	
 		<ui:define name="article">
 			<h1 id="heading">#{msg['index.welcome']}</h1>
-					
-			<p id="datum">
-				#{msg['index.heute']}
-				<h:outputText id="aktuellesDatum" value="#{kc.aktuellesDatum}">
-					<f:convertDateTime type="date" dateStyle="full"/>
-				</h:outputText>
-			</p>
+			
+			<h:graphicImage id="ChuckNorris"
+		    	            name="chuck-norris.gif"
+		        	        library="images"
+		            	    alt="#{msg['index.chucknorris']}"/>
+		            	    
 		</ui:define>
 	</ui:composition>
 </html>

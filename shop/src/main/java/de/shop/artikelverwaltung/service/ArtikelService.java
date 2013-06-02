@@ -1,6 +1,7 @@
 package de.shop.artikelverwaltung.service;
 
 import static de.shop.util.Constants.KEINE_ID;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,8 @@ import org.jboss.logging.Logger;
 import com.google.common.base.Strings;
 
 import de.shop.artikelverwaltung.domain.Artikel;
+import de.shop.util.ConcurrentDeletedException;
+import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
 
@@ -139,6 +142,56 @@ public class ArtikelService implements Serializable {
 		if (!violations.isEmpty()) {
 			throw new ArtikelValidationException(artikel, violations);
 		}
+	}
+	
+	public Artikel updateArtikel(Artikel artikel, Locale locale) {
+		if (artikel == null) {
+			return null;
+		}
+
+		// Werden alle Constraints beim Modifizieren gewahrt?
+		validateArtikel(artikel, locale, Default.class, IdGroup.class);
+
+		// artikel vom EntityManager trennen, weil anschliessend z.B. nach Id gesucht wird
+		em.detach(artikel);
+
+		// Wurde das Objekt konkurrierend geloescht?
+		Artikel tmp = findArtikelById(artikel.getId());
+		if (tmp == null) {
+			throw new ConcurrentDeletedException(artikel.getId());
+		}
+		em.detach(tmp);
+
+		artikel = em.merge(artikel);   // OptimisticLockException
+
+		return artikel;
+	}
+	
+	public void deleteArtikel(Artikel artikel) {
+		if (artikel == null) {
+			return;
+		}
+
+		deleteArtikelById(artikel.getId());
+	}
+	
+	/**
+	 */
+	public void deleteArtikelById(Long artikelId) {
+		Artikel artikel;
+		try {
+			artikel = findArtikelById(artikelId);
+		}
+		catch (ArtikelverwaltungException e) {
+			return;
+		}
+		if (artikel == null) {
+			// Der Artikel existiert nicht oder ist bereits geloescht
+			return;
+		}
+
+		// Artikeldaten loeschen
+		em.remove(artikel);
 	}
 	
 }

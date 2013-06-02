@@ -81,11 +81,11 @@
 									<h:outputText id="emailLabel" value="#{msgKv['viewKunde.email']}"/>
 									<h:outputText id="email" value="#{kc.kunde.email}"/>
 									
-									<h:outputText id="weiblichLabel" value="#{msgKv['viewKunde.geschlecht']}" rendered="#{kc.kunde.class.simpleName eq 'Privatkunde' and kc.kunde.geschlecht eq 'WEIBLICH'}"/>
-									<h:outputText id="weiblich" value="#{msgKv['viewKunde.geschlecht.weiblich']}" rendered="#{kc.kunde.class.simpleName eq 'Privatkunde' and kc.kunde.geschlecht eq 'WEIBLICH'}"/>
+									<h:outputText id="weiblichLabel" value="#{msgKv['viewKunde.geschlecht']}" rendered="#{kc.kunde.geschlecht eq 'w'}"/>
+									<h:outputText id="weiblich" value="#{msgKv['viewKunde.geschlecht.weiblich']}" rendered="#{kc.kunde.geschlecht eq 'w'}"/>
 						
-									<h:outputText id="maennlichLabel" value="#{msgKv['viewKunde.geschlecht']}" rendered="#{kc.kunde.class.simpleName eq 'Privatkunde' and kc.kunde.geschlecht eq 'MAENNLICH'}"/>
-									<h:outputText id="maennlich" value="#{msgKv['viewKunde.geschlecht.maennlich']}" rendered="#{kc.kunde.class.simpleName eq 'Privatkunde' and kc.kunde.geschlecht eq 'MAENNLICH'}"/>
+									<h:outputText id="maennlichLabel" value="#{msgKv['viewKunde.geschlecht']}" rendered="#{kc.kunde.geschlecht eq 'm'}"/>
+									<h:outputText id="maennlich" value="#{msgKv['viewKunde.geschlecht.maennlich']}" rendered="#{kc.kunde.geschlecht eq 'm'}"/>
 					
 									<h:outputText id="newsletterLabel" value="#{msgKv['viewKunde.newsletter']}"/>
 									<h:selectBooleanCheckbox id="newsletter" value="#{kc.kunde.newsletter}" disabled="true" readonly="true"/>
