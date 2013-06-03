@@ -4,22 +4,27 @@ import static de.shop.util.Constants.JSF_INDEX;
 import static de.shop.util.Constants.JSF_REDIRECT_SUFFIX;
 import static de.shop.util.Messages.MessagesType.KUNDENVERWALTUNG;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
+import static javax.ejb.TransactionAttributeType.SUPPORTS;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
-import javax.faces.context.Flash;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.OptimisticLockException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 
@@ -31,10 +36,6 @@ import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.artikelverwaltung.service.ArtikelValidationException;
 import de.shop.artikelverwaltung.service.ArtikelverwaltungException;
 import de.shop.auth.controller.AuthController;
-import de.shop.kundenverwaltung.domain.Adresse;
-import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.kundenverwaltung.service.EmailExistsException;
-import de.shop.kundenverwaltung.service.InvalidKundeException;
 import de.shop.util.AbstractShopException;
 import de.shop.util.Client;
 import de.shop.util.ConcurrentDeletedException;
@@ -47,7 +48,9 @@ import de.shop.util.Transactional;
  * Dialogsteuerung fuer die ArtikelService
  */
 @Named("ac")
-@RequestScoped
+@SessionScoped
+@Stateful
+@TransactionAttribute(SUPPORTS)
 @Log
 public class ArtikelController implements Serializable {
 	private static final long serialVersionUID = 1564024850446471639L;
@@ -56,8 +59,10 @@ public class ArtikelController implements Serializable {
 	
 	private static final String JSF_ARTIKELVERWALTUNG = "/artikelverwaltung/";
 	private static final String JSF_VIEW_ARTIKEL = JSF_ARTIKELVERWALTUNG + "viewArtikel";
-	private static final String JSF_LIST_ARTIKEL = JSF_ARTIKELVERWALTUNG + "listArtikel";
-	private static final String FLASH_ARTIKEL = "artikel";
+	private static final String JSF_LIST_ARTIKEL = JSF_ARTIKELVERWALTUNG + "/artikelverwaltung/listArtikel";
+	private static final String JSF_UPDATE_ARTIKEL = JSF_ARTIKELVERWALTUNG + "updateArtikel";
+	private static final String JSF_DELETE_OK = JSF_ARTIKELVERWALTUNG + "okDelete";
+	//private static final String FLASH_ARTIKEL = "artikel";
 	
 	private static final String JSF_SELECT_ARTIKEL = JSF_ARTIKELVERWALTUNG + "selectArtikel";
 	private static final String SESSION_VERFUEGBARE_ARTIKEL = "verfuegbareArtikel";
@@ -65,17 +70,25 @@ public class ArtikelController implements Serializable {
 	private static final String MSG_KEY_UPDATE_ARTIKEL_CONCURRENT_UPDATE = "updateArtikel.concurrentUpdate";
 	private static final String MSG_KEY_UPDATE_ARTIKEL_CONCURRENT_DELETE = "updateArtikel.concurrentDelete";
 
+	private static final String REQUEST_ARTIKEL_ID = "artikelId";
+
 	private String bezeichnung;
 	private Long artikelId;
 	private Artikel artikel;
 	private Artikel neuerArtikel;
 	private boolean geaendertArtikel;
+	private List<Artikel> artikelList = Collections.emptyList();
 
 	@Inject
 	private ArtikelService as;
 	
 	@Inject
+	private transient HttpServletRequest request;
+	
+	/*
+	@Inject
 	private Flash flash;
+	*/
 	
 	@Inject
 	private AuthController auth;
@@ -145,13 +158,42 @@ public class ArtikelController implements Serializable {
 	public void setNeuerArtikel(Artikel neuerArtikel) {
 		this.neuerArtikel = neuerArtikel;
 	}
+	
+	public List<Artikel> getArtikelList() {
+		return artikelList;
+	}
 
 	@Transactional
 	public String findArtikelByBezeichnung() {
-		final List<Artikel> artikel = as.findArtikelByBezeichnung(bezeichnung);
-		flash.put(FLASH_ARTIKEL, artikel);
+		if(bezeichnung == null || bezeichnung.isEmpty()) {
+			artikelList = as.findVerfuegbareArtikel();
+			//flash.put(FLASH_ARTIKEL, artikelList);
+			return JSF_LIST_ARTIKEL;
+		}
+		
+		try {
+		artikelList = as.findArtikelByBezeichnung(bezeichnung);
+		}
+		catch(ArtikelValidationException e) {
+			final Collection<ConstraintViolation<Artikel>> violations = e.getViolations();
+			messages.error(violations, null);
+			return null;
+		}
 
+		//flash.put(FLASH_ARTIKEL, artikelList);
 		return JSF_LIST_ARTIKEL;
+	}
+	
+	@TransactionAttribute(REQUIRED)
+	public String details(Artikel ausgewaehlterArtikel) {
+		if (ausgewaehlterArtikel == null) {
+			return null;
+		}
+		
+		this.artikel = as.findArtikelById(ausgewaehlterArtikel.getId());
+		this.artikelId = artikel.getId();
+		
+		return JSF_VIEW_ARTIKEL;
 	}
 		
 	@Transactional
@@ -167,6 +209,7 @@ public class ArtikelController implements Serializable {
 	
 	@TransactionAttribute(REQUIRED)
 	public String createArtikel() {
+		
 		try {
 			neuerArtikel = as.createArtikel(neuerArtikel, locale);
 		}
@@ -245,5 +288,63 @@ public class ArtikelController implements Serializable {
 				messages.error(KUNDENVERWALTUNG, MSG_KEY_UPDATE_ARTIKEL_CONCURRENT_DELETE, null);
 		}
 		return null;
+	}
+	
+	public String selectForUpdate(Artikel ausgewaehlterArtikel) {
+		if (ausgewaehlterArtikel == null) {
+			return null;
+		}
+		
+		artikel = ausgewaehlterArtikel;
+		
+		return Artikel.class.equals(ausgewaehlterArtikel.getClass())
+			   ? JSF_UPDATE_ARTIKEL
+			   : JSF_UPDATE_ARTIKEL;
+	}
+	
+	public void geaendert(ValueChangeEvent e) {
+		if (geaendertArtikel) {
+			return;
+		}
+		
+		if (e.getOldValue() == null) {
+			if (e.getNewValue() != null) {
+				geaendertArtikel = true;
+			}
+			return;
+		}
+
+		if (!e.getOldValue().equals(e.getNewValue())) {
+			geaendertArtikel = true;				
+		}
+	}
+	
+	@TransactionAttribute(REQUIRED)
+	public String delete(Artikel ausgewaehlterArtikel) {
+
+		as.deleteArtikel(ausgewaehlterArtikel);
+
+		
+		return null;
+	}
+	
+	@TransactionAttribute(REQUIRED)
+	public String deleteAngezeigtenArtikel() {
+		if (artikel == null) {
+			return null;
+		}
+		
+		LOGGER.trace(artikel);
+
+		as.deleteArtikel(artikel);
+		
+		// Aufbereitung fuer ok.xhtml
+		request.setAttribute(REQUEST_ARTIKEL_ID, artikel.getId());
+				
+		// Zuruecksetzen
+		artikel = null;
+		artikelId = null;
+
+		return JSF_DELETE_OK;
 	}
 }
