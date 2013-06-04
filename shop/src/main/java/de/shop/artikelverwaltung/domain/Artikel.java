@@ -35,6 +35,7 @@ import org.jboss.logging.Logger;
 	@NamedQuery(name  = Artikel.FIND_VERFUEGBARE_ARTIKEL,
         	query = "SELECT      a"
         	        + " FROM     Artikel a"
+        			+ " WHERE a.erhaeltlich = 1"
                     + " ORDER BY a.id ASC"),
                     
 	@NamedQuery(name = Artikel.FIND_ARTIKEL_BY_BEZ,
@@ -94,7 +95,10 @@ public class Artikel implements Serializable {
 	@Temporal(TIMESTAMP)
 	@JsonIgnore
 	private Date aktualisiert;
-
+	
+	@Column(nullable=false)
+	private boolean erhaeltlich;
+	
 
 	@PrePersist
 	private void prePersist() {
@@ -172,7 +176,14 @@ public class Artikel implements Serializable {
 	public void setAktualisiert(Date aktualisiert) {
 		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
 	}
-
+	
+	public boolean isErhaeltlich(){
+		return this.erhaeltlich;
+	}
+	
+	public void setErhaeltlich(boolean erhaeltlich){
+		this.erhaeltlich = erhaeltlich;
+	}
 	
 	@Override
 	public String toString() {
