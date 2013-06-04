@@ -3,7 +3,7 @@
 -- Kommentare durch -- am Zeilenanfang
 -- ===============================================================================
 
-INSERT INTO artikel (id, version, bezeichnung, groesse, preis, erzeugt, aktualisiert, erhaeltlich) VALUES (300,0,'T Shirt','L', '19,99', '01.01.2007 01:00:00','01.01.2007 01:00:00','1');
+INSERT INTO artikel (id, version, bezeichnung, groesse, preis, erzeugt, aktualisiert, erhaeltlich) VALUES (300,0,'T-Shirt','L', '19,99', '01.01.2007 01:00:00','01.01.2007 01:00:00','1');
 INSERT INTO artikel (id, version, bezeichnung, groesse, preis, erzeugt, aktualisiert, erhaeltlich) VALUES (301,0,'Socken','S', '4,99','01.01.2007 02:00:00','01.01.2007 02:00:00','1');
 INSERT INTO artikel (id, version, bezeichnung, groesse, preis, erzeugt, aktualisiert, erhaeltlich) VALUES (302,0,'Hemd','XS','30,00', '01.01.2007 03:00:00','01.01.2007 03:00:00','1');
 INSERT INTO artikel (id, version, bezeichnung, groesse, preis, erzeugt, aktualisiert, erhaeltlich) VALUES (303,0,'Hosentraeger','M', '12,50','01.01.2007 04:00:00','01.01.2007 04:00:00','0');
