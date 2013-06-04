@@ -51,6 +51,11 @@
 						<h:inputText id="preis" value="#{ac.neuerArtikel.preis}" converterMessage="#{msgAv['createArtikel.preis']}">
 							<f:convertNumber type="currency" currencyCode="EUR" maxFractionDigits="2"/>
 						</h:inputText>
+						<f:verbatim/>
+						
+						<h:outputText id="erhaeltlichLabel" value="#{msgAv['createArtikel.erhaeltlich']}"/>
+						<h:selectBooleanCheckbox id="erhaeltlich" value="#{ac.artikel.erhaeltlich}"/>
+						<f:verbatim/>
 						
 					</h:panelGrid>
 		
