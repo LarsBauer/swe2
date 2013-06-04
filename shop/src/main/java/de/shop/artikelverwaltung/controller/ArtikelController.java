@@ -2,7 +2,7 @@ package de.shop.artikelverwaltung.controller;
 
 import static de.shop.util.Constants.JSF_INDEX;
 import static de.shop.util.Constants.JSF_REDIRECT_SUFFIX;
-import static de.shop.util.Messages.MessagesType.KUNDENVERWALTUNG;
+import static de.shop.util.Messages.MessagesType.ARTIKELVERWALTUNG;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
 
@@ -49,8 +49,7 @@ import de.shop.util.Transactional;
  */
 @Named("ac")
 @SessionScoped
-@Stateful
-@TransactionAttribute(SUPPORTS)
+//@TransactionAttribute(SUPPORTS)
 @Log
 public class ArtikelController implements Serializable {
 	private static final long serialVersionUID = 1564024850446471639L;
@@ -207,6 +206,7 @@ public class ArtikelController implements Serializable {
 		return JSF_SELECT_ARTIKEL;
 	}
 	
+	@Transactional
 	@TransactionAttribute(REQUIRED)
 	public String createArtikel() {
 		
@@ -219,7 +219,7 @@ public class ArtikelController implements Serializable {
 		}
 
 		// Push-Event fuer Webbrowser
-		neuerArtikelEvent.fire(String.valueOf(neuerArtikel.getId()));
+		//neuerArtikelEvent.fire(String.valueOf(neuerArtikel.getId()));
 		
 		// Aufbereitung fuer viewArtikel.xhtml
 		artikelId = neuerArtikel.getId();
@@ -282,10 +282,10 @@ public class ArtikelController implements Serializable {
 			messages.error(violations, null);
 		}
 		else if (exceptionClass.equals(OptimisticLockException.class)) {
-				messages.error(KUNDENVERWALTUNG, MSG_KEY_UPDATE_ARTIKEL_CONCURRENT_UPDATE, null);
+				messages.error(ARTIKELVERWALTUNG, MSG_KEY_UPDATE_ARTIKEL_CONCURRENT_UPDATE, null);
 		}
 		else if (exceptionClass.equals(ConcurrentDeletedException.class)) {
-				messages.error(KUNDENVERWALTUNG, MSG_KEY_UPDATE_ARTIKEL_CONCURRENT_DELETE, null);
+				messages.error(ARTIKELVERWALTUNG, MSG_KEY_UPDATE_ARTIKEL_CONCURRENT_DELETE, null);
 		}
 		return null;
 	}
@@ -317,34 +317,5 @@ public class ArtikelController implements Serializable {
 		if (!e.getOldValue().equals(e.getNewValue())) {
 			geaendertArtikel = true;				
 		}
-	}
-	
-	@TransactionAttribute(REQUIRED)
-	public String delete(Artikel ausgewaehlterArtikel) {
-
-		as.deleteArtikel(ausgewaehlterArtikel);
-
-		
-		return null;
-	}
-	
-	@TransactionAttribute(REQUIRED)
-	public String deleteAngezeigtenArtikel() {
-		if (artikel == null) {
-			return null;
-		}
-		
-		LOGGER.trace(artikel);
-
-		as.deleteArtikel(artikel);
-		
-		// Aufbereitung fuer ok.xhtml
-		request.setAttribute(REQUEST_ARTIKEL_ID, artikel.getId());
-				
-		// Zuruecksetzen
-		artikel = null;
-		artikelId = null;
-
-		return JSF_DELETE_OK;
 	}
 }
