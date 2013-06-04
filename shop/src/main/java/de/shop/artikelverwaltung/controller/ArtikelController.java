@@ -5,6 +5,7 @@ import static de.shop.util.Constants.JSF_REDIRECT_SUFFIX;
 import static de.shop.util.Messages.MessagesType.ARTIKELVERWALTUNG;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
+import static javax.persistence.PersistenceContextType.EXTENDED;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -23,7 +24,9 @@ import javax.enterprise.event.Event;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
@@ -49,7 +52,7 @@ import de.shop.util.Transactional;
  */
 @Named("ac")
 @SessionScoped
-//@TransactionAttribute(SUPPORTS)
+@TransactionAttribute(SUPPORTS)
 @Log
 public class ArtikelController implements Serializable {
 	private static final long serialVersionUID = 1564024850446471639L;
@@ -58,7 +61,7 @@ public class ArtikelController implements Serializable {
 	
 	private static final String JSF_ARTIKELVERWALTUNG = "/artikelverwaltung/";
 	private static final String JSF_VIEW_ARTIKEL = JSF_ARTIKELVERWALTUNG + "viewArtikel";
-	private static final String JSF_LIST_ARTIKEL = JSF_ARTIKELVERWALTUNG + "/artikelverwaltung/listArtikel";
+	private static final String JSF_LIST_ARTIKEL = JSF_ARTIKELVERWALTUNG + "listArtikel";
 	private static final String JSF_UPDATE_ARTIKEL = JSF_ARTIKELVERWALTUNG + "updateArtikel";
 	private static final String JSF_DELETE_OK = JSF_ARTIKELVERWALTUNG + "okDelete";
 	//private static final String FLASH_ARTIKEL = "artikel";
@@ -78,6 +81,9 @@ public class ArtikelController implements Serializable {
 	private boolean geaendertArtikel;
 	private List<Artikel> artikelList = Collections.emptyList();
 
+	@PersistenceContext(type = EXTENDED)
+	private transient EntityManager em;
+	
 	@Inject
 	private ArtikelService as;
 	
@@ -207,7 +213,7 @@ public class ArtikelController implements Serializable {
 	}
 	
 	@Transactional
-	@TransactionAttribute(REQUIRED)
+	//@TransactionAttribute(REQUIRED)
 	public String createArtikel() {
 		
 		try {
@@ -244,7 +250,8 @@ public class ArtikelController implements Serializable {
 		neuerArtikel = new Artikel();	
 	}
 	
-	@TransactionAttribute(REQUIRED)
+	@Transactional
+	//@TransactionAttribute(REQUIRED)
 	public String update() {
 		auth.preserveLogin();
 		
@@ -263,7 +270,7 @@ public class ArtikelController implements Serializable {
 		}
 
 		// Push-Event fuer Webbrowser
-		updateArtikelEvent.fire(String.valueOf(artikel.getId()));
+		//updateArtikelEvent.fire(String.valueOf(artikel.getId()));
 		
 		// ValueChangeListener zuruecksetzen
 		geaendertArtikel = false;
@@ -297,9 +304,7 @@ public class ArtikelController implements Serializable {
 		
 		artikel = ausgewaehlterArtikel;
 		
-		return Artikel.class.equals(ausgewaehlterArtikel.getClass())
-			   ? JSF_UPDATE_ARTIKEL
-			   : JSF_UPDATE_ARTIKEL;
+		return JSF_UPDATE_ARTIKEL;
 	}
 	
 	public void geaendert(ValueChangeEvent e) {

@@ -89,14 +89,6 @@
 								         		action="#{ac.selectForUpdate(artikel)}"
 								         		alt="#{msgAv['listArtikel.editButtonAlt']}"/>
 							</rich:column>
-					
-							<rich:column id="deleteSpalte" rendered="#{not empty artikel and rich:isUserInRole('admin')}">
-								<a4j:commandButton id="deleteButton"
-										   image="#{resource['images:delete.gif']}"
-								           action="#{ac.delete(artikel)}"
-								           alt="#{msgAv['listArtikel.deleteButtonAlt']}"
-								           onclick="return confirm('#{msgAv['listArtikel.deleteArtikelBestaetigung']}')"/>
-					</rich:column>
 						</rich:dataTable>
 						
 						<p id="abstand2">
