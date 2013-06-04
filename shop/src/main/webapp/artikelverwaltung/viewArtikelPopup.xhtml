@@ -1,0 +1,52 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:c="http://java.sun.com/jsp/jstl/core"
+			    xmlns:rich="http://richfaces.org/rich"
+			    xmlns:a4j="http://richfaces.org/a4j">
+			    
+	<rich:tabPanel id="tabPanel" switchType="client">
+		<rich:tab id="DetailsTab">
+			<f:facet name="header">
+				<h:panelGroup id="DetailsLabel">
+					<h:graphicImage id="DetailsGif"
+					                name="stammdaten.gif"
+					                library="images"/>
+					#{' '}
+					#{msgAv['viewArtikelPopup.details']}
+				</h:panelGroup>
+			</f:facet>
+			
+			<rich:panel id="DetailsPanel">
+				<h:panelGrid id="detailsGrid" columns="2">
+					<h:outputText id="idLabel" value="#{msgAv['viewArtikelPopup.artikelnr']}"/>
+					<h:outputText id="id" value="#{artikel.id}"/>
+			
+					<h:outputText id="bezeichnungLabel" value="#{msgAv['viewArtikelPopup.bezeichnung']}"/>
+					<h:outputText id="bezeichnung" value="#{artikel.bezeichnung}"/>
+		
+					<h:outputText id="groesseLabel" value="#{msgAv['viewArtikelPopup.groesse']}"/>
+					<h:outputText id="groesse" value="#{artikel.groesse}"/>
+		
+					<h:outputText id="preisLabel" value="#{msgAv['viewArtikelPopup.preis']}"/>
+					<h:outputText id="preis" value="#{artikel.preis}">
+						<f:convertNumber type="currency" currencyCode="EUR" maxFractionDigits="2"/>
+					</h:outputText>
+				</h:panelGrid>
+			</rich:panel>
+		</rich:tab>
+		
+		<rich:tab id="multimediaTab">
+			<f:facet name="header">
+				<h:panelGroup id="bildLabel">
+					<h:graphicImage id="bildGif"
+					                name="bild.gif"
+					                library="images"/>
+					#{' '}
+					#{msgKv['viewArtikelPopup.artikel.bild']}
+				</h:panelGroup>
+			</f:facet>
+			<h:graphicImage id="bild" name="#{artikel.bezeichnung}.jpg" library="images"/>
+		</rich:tab>	
+	</rich:tabPanel>
+</ui:composition>
