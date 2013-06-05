@@ -54,7 +54,10 @@
 						<f:verbatim/>
 						
 						<h:outputText id="erhaeltlichLabel" value="#{msgAv['createArtikel.erhaeltlich']}"/>
-						<h:selectBooleanCheckbox id="erhaeltlich" value="#{ac.neuerArtikel.erhaeltlich}"/>
+						<h:selectOneRadio id="erhaeltlich" value="#{ac.neuerArtikel.erhaeltlich}">
+							<f:selectItem id="true" itemValue="TRUE" itemLabel="#{msgAv['createArtikel.erhaeltlich.ja']}"/>
+							<f:selectItem id="fals" itemValue="FALSE" itemLabel="#{msgAv['createArtikel.erhaeltlich.nein']}"/>
+						</h:selectOneRadio>
 						<f:verbatim/>
 						
 					</h:panelGrid>

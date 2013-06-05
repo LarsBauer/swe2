@@ -16,9 +16,7 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.faces.event.ValueChangeEvent;
@@ -33,7 +31,6 @@ import javax.validation.ConstraintViolation;
 
 import org.jboss.logging.Logger;
 import org.richfaces.cdi.push.Push;
-
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.artikelverwaltung.service.ArtikelValidationException;
@@ -63,7 +60,6 @@ public class ArtikelController implements Serializable {
 	private static final String JSF_VIEW_ARTIKEL = JSF_ARTIKELVERWALTUNG + "viewArtikel";
 	private static final String JSF_LIST_ARTIKEL = JSF_ARTIKELVERWALTUNG + "listArtikel";
 	private static final String JSF_UPDATE_ARTIKEL = JSF_ARTIKELVERWALTUNG + "updateArtikel";
-	private static final String JSF_DELETE_OK = JSF_ARTIKELVERWALTUNG + "okDelete";
 	//private static final String FLASH_ARTIKEL = "artikel";
 	
 	private static final String JSF_SELECT_ARTIKEL = JSF_ARTIKELVERWALTUNG + "selectArtikel";
@@ -80,6 +76,7 @@ public class ArtikelController implements Serializable {
 	private Artikel neuerArtikel;
 	private boolean geaendertArtikel;
 	private List<Artikel> artikelList = Collections.emptyList();
+
 
 	@PersistenceContext(type = EXTENDED)
 	private transient EntityManager em;
@@ -213,7 +210,7 @@ public class ArtikelController implements Serializable {
 	}
 	
 	@Transactional
-	//@TransactionAttribute(REQUIRED)
+	@TransactionAttribute(REQUIRED)
 	public String createArtikel() {
 		
 		try {

@@ -47,6 +47,9 @@
 									<h:outputText id="preis" value="#{ac.artikel.preis}">
 										<f:convertNumber type="currency" currencyCode="EUR" maxFractionDigits="2"/>
 									</h:outputText>
+									
+									<h:outputText id="erhaeltlichLabel" value="#{msgAv['viewArtikel.erhaeltlich']}"/>
+									<h:selectBooleanCheckbox id="newsletter" value="#{ac.artikel.erhaeltlich}" disabled="true" readonly="true"/>
 
 								</h:panelGrid>
 							</rich:panel>
