@@ -12,30 +12,6 @@
 		        	        library="images"
 		            	    alt="#{msg['header.logo.alt']}"/>
 		</h:outputLink>
-
-		<h:form id="schnellsucheForm">
-			<rich:dropDownMenu id="schnellsucheMenu">
-				<f:facet name="label">
-					#{msg['header.schnellsuche']}
-				</f:facet>
-
-				<rich:menuItem id="schnellsucheItem">
-					<h:panelGrid id="schnellsucheGrid" columns="3">
-						<h:outputLabel id="artikelBezLabel"
-						               value="#{msg['header.schnellsuche.artikelBezeichnung']}"
-						               for="artikelBezeichnung"/>
-						<h:inputText id="artikelBezeichnung" value="#{ac.bezeichnung}"/>
-						<h:commandButton id="artikelButton" action="#{ac.findArtikelByBezeichnung}" value="#{msg['header.schnellsuche.button']}"/>
-
-						<h:outputLabel id="kundeIdLabel"
-						               value="#{msg['header.schnellsuche.kundeid']}"
-						               for="kundeId"/>
-						<h:inputText id="kundeId" value="#{kc.kundeId}"/>
-						<h:commandButton id="kundeButton" action="#{kc.findKundeById}" value="#{msg['header.schnellsuche.button']}"/>
-					</h:panelGrid>
-				</rich:menuItem>
-			</rich:dropDownMenu>
-		</h:form>
 				
 		<rich:toolbarGroup id="rightGroup" location="right">
 			<h:form id="loginFormHeader" rendered="#{not auth.loggedIn}">

@@ -23,6 +23,7 @@ import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -82,8 +83,11 @@ public class Artikel implements Serializable {
 	private String bezeichnung = "";
 
 	@Column(name = "groesse", length = GROESSE_LENGTH_MAX, nullable = false)
+	@NotNull(message = "{artikelverwaltung.artikel.groesse.notNull}")
 	private String groesse;
 
+	@NotNull(message = "{artikelverwaltung.artikel.preis.notNull}")
+	@Min(value = 0, message = "{artikelverwaltung.artikel.preis.positiv")
 	private double preis;
 
 	@Column(nullable = false)
@@ -97,6 +101,7 @@ public class Artikel implements Serializable {
 	private Date aktualisiert;
 	
 
+	@NotNull(message = "{artikelverwaltung.artikel.erhaeltlich.notNull}")
 	private boolean erhaeltlich = true;
 	
 
