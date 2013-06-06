@@ -167,7 +167,7 @@ public class ArtikelController implements Serializable {
 
 	@Transactional
 	public String findArtikelByBezeichnung() {
-		if(bezeichnung == null || bezeichnung.isEmpty()) {
+		if (bezeichnung == null || bezeichnung.isEmpty()) {
 			artikelList = as.findVerfuegbareArtikel();
 			//flash.put(FLASH_ARTIKEL, artikelList);
 			return JSF_LIST_ARTIKEL;
@@ -176,7 +176,7 @@ public class ArtikelController implements Serializable {
 		try {
 		artikelList = as.findArtikelByBezeichnung(bezeichnung);
 		}
-		catch(ArtikelValidationException e) {
+		catch (ArtikelValidationException e) {
 			final Collection<ConstraintViolation<Artikel>> violations = e.getViolations();
 			messages.error(violations, null);
 			return null;

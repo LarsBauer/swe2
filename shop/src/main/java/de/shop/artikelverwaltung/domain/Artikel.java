@@ -177,11 +177,11 @@ public class Artikel implements Serializable {
 		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
 	}
 	
-	public boolean isErhaeltlich(){
+	public boolean isErhaeltlich() {
 		return this.erhaeltlich;
 	}
 	
-	public void setErhaeltlich(boolean erhaeltlich){
+	public void setErhaeltlich(boolean erhaeltlich) {
 		this.erhaeltlich = erhaeltlich;
 	}
 	
