@@ -48,7 +48,7 @@
 						<f:verbatim/>
 						
 						<h:outputText id="preisLabel" value="#{msgAv['createArtikel.preis']}"/>
-						<h:inputText id="preis" value="#{ac.neuerArtikel.preis}" converterMessage="#{msgAv['createArtikel.preis']}">
+						<h:inputText id="preis" value="#{ac.neuerArtikel.preis}" converterMessage="#{msgAv['createArtikel.preis.converter']}">
 							<f:convertNumber type="currency" currencyCode="EUR" maxFractionDigits="2"/>
 						</h:inputText>
 						<f:verbatim/>

@@ -169,7 +169,7 @@ public class ArtikelController implements Serializable {
 	public String findArtikelByBezeichnung() {
 		if (bezeichnung == null || bezeichnung.isEmpty()) {
 			artikelList = as.findVerfuegbareArtikel();
-			//flash.put(FLASH_ARTIKEL, artikelList);
+
 			return JSF_LIST_ARTIKEL;
 		}
 		
@@ -182,7 +182,6 @@ public class ArtikelController implements Serializable {
 			return null;
 		}
 
-		//flash.put(FLASH_ARTIKEL, artikelList);
 		return JSF_LIST_ARTIKEL;
 	}
 	
@@ -248,7 +247,7 @@ public class ArtikelController implements Serializable {
 	}
 	
 	@Transactional
-	//@TransactionAttribute(REQUIRED)
+	@TransactionAttribute(REQUIRED)
 	public String update() {
 		auth.preserveLogin();
 		
@@ -267,7 +266,7 @@ public class ArtikelController implements Serializable {
 		}
 
 		// Push-Event fuer Webbrowser
-		//updateArtikelEvent.fire(String.valueOf(artikel.getId()));
+		updateArtikelEvent.fire(String.valueOf(artikel.getId()));
 		
 		// ValueChangeListener zuruecksetzen
 		geaendertArtikel = false;
