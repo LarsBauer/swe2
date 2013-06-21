@@ -1,9 +1,8 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/kunde_details"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context=".ui.kunde.KundeDetails" >
+	android:layout_height="wrap_content"
+	tools:context=".ui.main.Main" >
 
 	<TableRow>
 
@@ -27,11 +26,13 @@
 			android:layout_height="wrap_content"
 			android:text="@string/k_name" />
 		
-		<TextView
-			android:id="@+id/name"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingLeft="5dp" />
+		<EditText
+		    android:id="@+id/name_edt"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:inputType="text"
+		    android:paddingLeft="5dp"
+		    tools:ignore="LabelFor" />
 
 	</TableRow>
 

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <resources>
 	
-	<string name="k_kunde_name">Name</string>
-	<string name="k_kunde_id">ID</string>
+
 	<string name="s_app_name">Shop</string>
 	<string name="s_menu_settings">Einstellungen</string>
 	<string name="s_hallo">Hallo!</string>
@@ -12,5 +11,25 @@
 	<string name="s_kunden_suche_id">Suche mit Kundennr.</string>
 	<string name="s_kunden_suche_nachname">Suche mit Nachname</string>
 	<string name="s_neu_anlegen">Neu anlegen</string>
+	<string name="s_verbindungsdaten_pref">Verbindungsdaten</string>
+	<string name="s_protocol_title">protocol title</string>
+	<string name="s_protocol_summary">protocol summary</string>
+	<string name="s_host_title">host title</string>
+	<string name="s_host_summary">host summary</string>
+	<string name="s_port_title">port title</string>
+	<string name="s_port_summary">port summary</string>
+	<string name="s_path_title">path title</string>
+	<string name="s_path_summary">path summary</string>
+	<string name="s_mock_pref">mock pref</string>
+	<string name="s_mock_title">mock title</string>
+	<string name="s_mock_summary">mock summary</string>
+	<string name="s_hint_kundennr_bestellnr">hint Knr Bnr</string>
+	<string name="s_option_speichern">Speichern</string>
+	<string name="s_option_suchen">Suchen</string>
+	<string name="s_einstellungen">Einstellungen</string>
+	<string name="s_option_edit">editieren</string>
+	<string name="s_btn_suchen">Suchen</string>
+	<string name="k_kunde_suche_id_label">Suchen nach ID</string>
+	<string name="k_kunde_suche_nachname_label">Suchen nach Nachname</string>
     
 </resources>

@@ -1,6 +1,9 @@
-package de.shop.ui.main;
+package de.shop.ui.kunde;
 
+import static de.shop.util.Constants.KUNDEN_KEY;
 import static de.shop.util.Constants.KUNDE_KEY;
+
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,7 +13,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 import de.shop.R;
 import de.shop.data.Kunde;
@@ -18,11 +20,8 @@ import de.shop.service.BestellungService;
 import de.shop.service.KundeService;
 import de.shop.service.BestellungService.BestellungServiceBinder;
 import de.shop.service.KundeService.KundeServiceBinder;
-import de.shop.ui.kunde.KundeDetails;
 
-public class Main extends Activity {
-	private static final String LOG_TAG = Main.class.getSimpleName();
-	
+public class KundenListe extends Activity {
 	private KundeServiceBinder kundeServiceBinder;
 	private BestellungServiceBinder bestellungServiceBinder;
 	
@@ -51,45 +50,54 @@ public class Main extends Activity {
 		}
 	};
 	
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.kunden_liste);
         
-        // Gibt es Suchergebnisse durch SearchView in der ActionBar, z.B. Kunde ?
-        
-        Fragment detailsFragment = null;
-        final Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-        	// Keine Suchergebnisse o.ae. vorhanden
-        	
-        	detailsFragment = new Startseite();
-        	
-          // Preferences laden
-          Prefs.init(this);
+        final Fragment details = new KundeDetails();
+		final Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+        	@SuppressWarnings("unchecked")
+			final List<Kunde> kunden = (List<Kunde>) extras.get(KUNDEN_KEY);
+        	if (kunden != null && !kunden.isEmpty()) {
+        		final Bundle args = new Bundle(1);
+        		args.putSerializable(KUNDE_KEY, kunden.get(0));
+        		details.setArguments(args);
+        	}
         }
-        else {
-	        final Kunde kunde = (Kunde) extras.get(KUNDE_KEY);
-	        if (kunde != null) {
-	        	Log.d(LOG_TAG, kunde.toString());
-	        	
-	    		final Bundle args = new Bundle(1);
-	    		args.putSerializable(KUNDE_KEY, kunde);
-	    		
-	        	detailsFragment = new KundeDetails();
-	        	detailsFragment.setArguments(args);
-	        }
-        }
-        
+		
         getFragmentManager().beginTransaction()
-                            .add(R.id.details, detailsFragment)
+                            .add(R.id.details, details)
                             .commit();
+        
+//      Entfaellt seit API 16 durch <activity android:parentActivityName="..."> in AndroidManifest.xml
+//		final ActionBar actionBar = getActionBar();
+//		actionBar.setHomeButtonEnabled(true);
+//		actionBar.setDisplayHomeAsUpEnabled(true);
     }
-    
+
+  
+//    Entfaellt seit API 16 durch <activity android:parentActivityName="..."> in AndroidManifest.xml
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                // App Icon in der Actionbar wurde angeklickt: Main aufrufen
+//                final Intent intent = new Intent(this, Main.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//                return true;  // Ereignis ist verbraucht: nicht weiterreichen
+//                
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
+	
     @Override
 	public void onStart() {
 		super.onStart();
-
+		
 		Intent intent = new Intent(this, KundeService.class);
 		bindService(intent, kundeServiceConnection, Context.BIND_AUTO_CREATE);
 		
