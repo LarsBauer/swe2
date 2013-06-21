@@ -1,4 +1,4 @@
-package de.shop.ui.main;
+package de.shop.ui.bestellung;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 
 import de.shop.R;
 
-public class Startseite extends Fragment {
+public class BestellungenNeu extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// attachToRoot = false, weil die Verwaltung des Fragments durch die Activity erfolgt
-		return inflater.inflate(R.layout.startseite, container, false);
+		return inflater.inflate(R.layout.bestellungen_neu, container, false);
 	}
 }

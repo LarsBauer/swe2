@@ -3,7 +3,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="horizontal"
-	tools:context=".ui.main.Main" >
+	tools:context=".ui.main.Main">
 	
 <!--
 	Die Warning "This tag and its children can be replaced by one <TextView/> and a compound drawable"
