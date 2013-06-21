@@ -1,6 +1,5 @@
 [
 {
-	"type": "P",
 	"id": 100,
 	"version": 0,
     "nachname": "Test",
@@ -28,7 +27,6 @@
     "hobbies": [ "SPORT" ]
 },
 {
-	"type": "P",
 	"id": 101,
 	"version": 0,
     "nachname": "Test",
@@ -56,7 +54,6 @@
     "hobbies": [ "LESEN" ]
 },
 {
-	"type": "F",
 	"id": 102,
 	"version": 0,
     "nachname": "Test",
@@ -81,7 +78,6 @@
     "bestellungenUri": "http://localhost:8080/shop/rest/kunden/102/bestellungen"
 },
 {
-	"type": "F",
 	"id": 103,
 	"version": 0,
     "nachname": "Test",
@@ -106,7 +102,6 @@
     "bestellungenUri": "http://localhost:8080/shop/rest/kunden/103/bestellungen"
 },
 {
-	"type": "P",
 	"id": 104,
 	"version": 0,
     "nachname": "Test",
@@ -134,7 +129,6 @@
     "hobbies": [ "REISEN" ]
 },
 {
-	"type": "P",
 	"id": 105,
 	"version": 0,
     "nachname": "Test",
@@ -162,7 +156,6 @@
     "hobbies": [ "SPORT", "LESEN" ]
 },
 {
-	"type": "P",
 	"id": 106,
 	"version": 0,
     "nachname": "Test",
@@ -190,7 +183,6 @@
     "hobbies": [ "SPORT", "REISEN" ]
 },
 {
-	"type": "P",
 	"id": 107,
 	"version": 0,
     "nachname": "Test",
@@ -218,7 +210,6 @@
     "hobbies": [ "LESEN", "REISEN" ]
 },
 {
-	"type": "P",
 	"id": 108,
 	"version": 0,
     "nachname": "Test",
@@ -246,7 +237,6 @@
     "hobbies": [ "SPORT", "LESEN", "REISEN" ]
 },
 {
-	"type": "P",
 	"id": 109,
 	"version": 0,
     "nachname": "Test",
