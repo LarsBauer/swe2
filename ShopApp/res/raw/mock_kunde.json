@@ -1,0 +1,20 @@
+{
+	"id": 100,
+    "name": "Test",
+    "vorname": "Theo",
+    "email": "theo@test.de",
+    "newsletter": true,
+    "passwort": "100",
+    "passwortWdh": "100",
+    "adresse": {
+		"id": 200,
+		"version": 0,
+        "plz": "76133",
+        "ort": "Karlsruhe",
+        "strasse": "Moltkestraße",
+        "hausnummer": "31"
+    },
+    "agbAkzeptiert": true,
+    "bestellungenUri": "http://localhost:8080/shop/rest/kunden/100/bestellungen",
+    "geschlecht": "m",
+}
