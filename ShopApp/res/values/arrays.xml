@@ -1,8 +1,0 @@
-<resources>
-
-	<string-array name="a_protocol_values">
-	    <item>http</item>
-	    <item>https</item>
-	</string-array>
-
-</resources>
