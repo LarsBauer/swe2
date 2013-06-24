@@ -14,9 +14,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -34,7 +32,7 @@ import de.shop.util.InternalShopError;
 public class KundeService extends Service {
 	private static final String LOG_TAG = KundeService.class.getSimpleName();
 	private static final String TYPE = "type";
-	private static final Map<String, Class<? extends Kunde>> CLASS_MAP;
+
 	
 	private KundeServiceBinder binder = new KundeServiceBinder();
 	
@@ -78,9 +76,7 @@ public class KundeService extends Service {
 					final Long id = ids[0];
 		    		final String path = KUNDEN_PATH + "/" + id;
 		    		Log.v(LOG_TAG, "path = " + path);
-		    		final HttpResponse<Kunde> result = mock
-		    				                                   ? Mock.sucheKundeById(id)
-		    				                                   : WebServiceClient.getJsonSingle(path, TYPE, CLASS_MAP);
+		    		final HttpResponse<Kunde> result = Mock.sucheKundeById(id);
 
 					Log.d(LOG_TAG + ".AsyncTask", "doInBackground: " + result);
 					return result;
@@ -133,9 +129,7 @@ public class KundeService extends Service {
 					final String nachname = nachnamen[0];
 					final String path = NACHNAME_PATH + nachname;
 					Log.v(LOG_TAG, "path = " + path);
-		    		final HttpResponse<Kunde> result = mock
-		    				                                   ? Mock.sucheKundenByNachname(nachname)
-		    				                                   : WebServiceClient.getJsonList(path, TYPE, CLASS_MAP);
+		    		final HttpResponse<Kunde> result = Mock.sucheKundenByNachname(nachname);
 					Log.d(LOG_TAG + ".AsyncTask", "doInBackground: " + result);
 					return result;
 				}

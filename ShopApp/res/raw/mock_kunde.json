@@ -1,23 +1,20 @@
 {
 	"id": 100,
-	"version": 0,
     "name": "Test",
     "vorname": "Theo",
-    "seit": "2001-01-31",
-    "umsatz": 1500.5,
     "email": "theo@test.de",
     "newsletter": true,
-    "password": "100",
-    "passwordWdh": "100",
+    "passwort": "100",
+    "passwortWdh": "100",
     "adresse": {
 		"id": 200,
 		"version": 0,
         "plz": "76133",
         "ort": "Karlsruhe",
         "strasse": "Moltkestraße",
-        "hausnr": "31"
+        "hausnummer": "31"
     },
     "agbAkzeptiert": true,
     "bestellungenUri": "http://localhost:8080/shop/rest/kunden/100/bestellungen",
-    "geschlecht": "MAENNLICH",
+    "geschlecht": "m",
 }
