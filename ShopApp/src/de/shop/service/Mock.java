@@ -87,7 +87,13 @@ final class Mock {
     		}
     	}
     	
-
+    	final Kunde kunde = new Kunde();
+    	kunde.fromJsonObject(jsonObject);
+    	kunde.id = id;
+    	
+    	final HttpResponse<Kunde> result = new HttpResponse<Kunde>(HTTP_OK, jsonObject.toString(), kunde);
+		return result;
+    	
 	}
 
 	static HttpResponse<Kunde> sucheKundenByNachname(String nachname) {

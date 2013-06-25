@@ -30,6 +30,10 @@ public class Kunde implements JsonMappable, Serializable {
 	public String bestellungenUri;
 	public String type;
 
+	public Kunde() {
+		super();
+	}
+	
 	public Kunde(Long id, String name) {
 		super();
 		this.id = id;
