@@ -16,8 +16,8 @@ import de.shop.data.Kunde;
 import de.shop.service.KundeService;
 import de.shop.service.KundeService.KundeServiceBinder;
 
-public class SucheNameActivity extends Activity {
-	private static final String LOG_TAG = SucheNameActivity.class.getSimpleName();
+public class SucheNachnameActivity extends Activity {
+	private static final String LOG_TAG = SucheNachnameActivity.class.getSimpleName();
 	
 	private KundeServiceBinder kundeServiceBinder;
 	
@@ -64,12 +64,12 @@ public class SucheNameActivity extends Activity {
 	}
 	
 	private void suchen(String name) {
-		final ArrayList<Kunde> kunden = kundeServiceBinder.sucheKundenByNachname(name);
+		final ArrayList<? extends Kunde> kunden = kundeServiceBinder.sucheKundenByNachname(name, this).resultList;
 		Log.d(LOG_TAG, kunden.toString());
 		
 		final Intent intent = new Intent(this, KundenListe.class);
 		if (kunden != null && !kunden.isEmpty()) {
-			intent.putExtra(KUNDEN_KEY, kunden);
+			intent.putExtra(KUNDEN_KEY, kunden); 
 		}
 		startActivity(intent);
 	}

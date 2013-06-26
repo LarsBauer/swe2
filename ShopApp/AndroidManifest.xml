@@ -78,7 +78,7 @@
 			<!-- Weitere Konfiguration fuer die Suche durch diese Activity -->
 			<meta-data
 	            android:name="android.app.searchable"
-	            android:resource="@xml/searchable_name" />
+	            android:resource="@xml/searchable_nachname" />
 		</activity>
 		
 		<!-- Local Services -->

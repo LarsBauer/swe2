@@ -49,7 +49,7 @@ public class KundeStammdaten extends Fragment implements OnTouchListener {
 		final TextView txtId = (TextView) view.findViewById(R.id.kunde_id);
     	txtId.setText(kunde.id.toString());
     	
-    	final TextView txtName = (TextView) view.findViewById(R.id.name_txt);
+    	final TextView txtName = (TextView) view.findViewById(R.id.nachname_txt);
     	txtName.setText(kunde.name);
     	
     	final Activity activity = getActivity();

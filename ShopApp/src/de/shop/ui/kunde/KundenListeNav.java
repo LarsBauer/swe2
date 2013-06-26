@@ -29,7 +29,7 @@ public class KundenListeNav extends ListFragment implements OnItemClickListener 
 	private static final String ID = "id";
 	private static final String NAME = "name";
 	private static final String[] FROM = { ID, NAME};
-	private static final int[] TO = { R.id.kunde_id, R.id.name_txt };
+	private static final int[] TO = { R.id.kunde_id, R.id.nachname_txt };
 	
 	private List<Kunde> kunden;
 	private List<Map<String, Object>> kundenItems;

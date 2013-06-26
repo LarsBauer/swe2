@@ -1,9 +1,5 @@
 <resources>
-	
-	<string name="k_kunde_suche_id_label">Search by ID</string>
-	<string name="k_kunde_suche_nachname_label">Search by lastname</string>
-	<string name="k_karte">karte</string>
-	<string name="k_kunde_id_auswahl_hint">auswahl_hint</string>
+
 	<string name="s_app_name">Shop</string>
 	<string name="s_hallo">Hello!</string>
 	<string name="s_desc_icon">Icon of the menu item</string>
@@ -49,5 +45,5 @@
     <string name="s_mobile">Mobile Connection available</string>
     <string name="s_not_connected">No Network available</string>
     <string name="s_mock">ATTENTION: offline test mode</string>
-
+	
 </resources>

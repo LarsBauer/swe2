@@ -2,7 +2,7 @@
 	
 	<!-- Suchfeld -->
 	<item android:id="@+id/suchen"
-	      android:title="@string/s_option_suchen"
+          android:title="@string/s_option_suchen"
           android:icon="@drawable/ic_option_suchen"
           android:inputType="number"
           android:showAsAction="ifRoom"

@@ -25,7 +25,7 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/k_name" />
+			android:text="@string/k_nachname" />
 		
 		<TextView
 			android:id="@+id/name"

@@ -3,32 +3,22 @@ package de.shop.data;
 import static de.shop.ShopApp.jsonBuilderFactory;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
-import de.shop.util.InternalShopError;
-
 public class Kunde implements JsonMappable, Serializable {
 	private static final long serialVersionUID = -7505776004556360014L;
-	private static final String DATE_FORMAT = "yyyy-MM-dd";
 
 	public Long id;
 	public int version;
 	public String name;
 	public String vorname;
-	public short kategorie;
 	public String email;
+	public String geschlecht;
 	public Adresse adresse;
 	public boolean newsletter;
 	public boolean agbAkzeptiert = true;
-	public Date seit;
 	public String bestellungenUri;
-	public String type;
 
 	public Kunde() {
 		super();
@@ -46,14 +36,12 @@ public class Kunde implements JsonMappable, Serializable {
 			                     .add("version", version)
 			                     .add("name", name)
 			                     .add("vorname", vorname)
-			                     .add("kategorie", kategorie)
 			                     .add("email", email)
+			                     .add("geschlecht", geschlecht)
 			                     .add("adresse", adresse.getJsonBuilderFactory())
 			                     .add("newsletter", newsletter)
 			                     .add("agbAkzeptiert", agbAkzeptiert)
-			                     .add("seit", new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(seit))
-			                     .add("bestellungenUri", bestellungenUri)
-			                     .add("type", type);
+			                     .add("bestellungenUri", bestellungenUri);
 	}
 	
 	@Override
@@ -66,20 +54,13 @@ public class Kunde implements JsonMappable, Serializable {
 	    version = jsonObject.getInt("version");
 		name = jsonObject.getString("name");
 		vorname = jsonObject.getString("vorname");
-	    kategorie = (short) jsonObject.getInt("kategorie");
 		email = jsonObject.getString("email");
+		geschlecht = jsonObject.getString("geschlecht");
 		adresse = new Adresse();
 		adresse.fromJsonObject(jsonObject.getJsonObject("adresse"));
 		newsletter = jsonObject.getBoolean("newsletter");
 		agbAkzeptiert = jsonObject.getBoolean("agbAkzeptiert");
-		try {
-			seit = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).parse(jsonObject.getString("seit"));
-		}
-		catch (ParseException e) {
-			throw new InternalShopError(e.getMessage(), e);
-		};
 		bestellungenUri = jsonObject.getString("bestellungenUri");
-		type = jsonObject.getString("type");
 	}
 	
 	@Override
@@ -116,7 +97,7 @@ public class Kunde implements JsonMappable, Serializable {
 	public String toString() {
 		return "AbstractKunde [id=" + id + ", name=" + name + ", vorname="
 				+ vorname + ", email=" + email + ", adresse=" + adresse
-				+ ", newsletter=" + newsletter  + ", seit=" + seit
+				+ ", newsletter=" + newsletter + ", geschlecht=" + geschlecht
 				+ ", bestellungenUri=" + bestellungenUri + "]";
 	}
 }

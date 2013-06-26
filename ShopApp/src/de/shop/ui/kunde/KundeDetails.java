@@ -56,4 +56,6 @@ public class KundeDetails extends Fragment {
                     		                                              args));
 	    actionBar.addTab(tab);
 	}
+	
+	
 }

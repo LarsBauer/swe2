@@ -4,19 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:baselineAligned="false"
+	android:baselineAligned="false"
     tools:context=".ui.main.Main" >
 
 	<TextView
 		android:id="@+id/bestellungen_kunde_id"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:textIsSelectable="false"
 		android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 	
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_marginTop="10dp" >
+	    android:layout_marginTop="10dp"
+	    android:baselineAligned="false" >
 	
 	    <ListView
 	    	android:id="@+id/bestellungen_liste"
@@ -40,6 +42,7 @@
 					android:id="@+id/bestellung_id"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:textIsSelectable="false"
 					android:paddingLeft="5dp" />
 		
 			</TableRow>
@@ -55,6 +58,7 @@
 					android:id="@+id/datum"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:textIsSelectable="false"
 					android:paddingLeft="5dp" />
 		
 			</TableRow>

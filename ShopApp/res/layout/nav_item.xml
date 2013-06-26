@@ -3,7 +3,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="horizontal"
-	tools:context=".ui.main.Main">
+	tools:context=".ui.main.Main" >
 	
 <!--
 	Die Warning "This tag and its children can be replaced by one <TextView/> and a compound drawable"
@@ -23,6 +23,7 @@
 		android:id="@+id/nav_text"
 		android:layout_height="match_parent"
 		android:layout_width="wrap_content"
+		android:textIsSelectable="false"
 		android:layout_marginLeft="20dp"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 	    android:gravity="center_vertical"

@@ -2,8 +2,8 @@
 	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    tools:context=".ui.kunde.KundenListe" >
+	android:baselineAligned="false"
+    tools:context=".ui.KundenListe" >
 
 	<!-- Fragmente gibt es erst ab Honeycomb bzw. Version 3.0 bzw. API Level 11 -->
 	

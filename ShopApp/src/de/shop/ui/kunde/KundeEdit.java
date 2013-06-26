@@ -42,7 +42,7 @@ public class KundeEdit extends Fragment {
     	final TextView txtId = (TextView) view.findViewById(R.id.kunde_id);
     	txtId.setText(String.valueOf(kunde.id));
     	
-    	txtName = (EditText) view.findViewById(R.id.name_edt);
+    	txtName = (EditText) view.findViewById(R.id.nachname_edt);
     	txtName.setText(kunde.name);
     }
     
