@@ -51,7 +51,7 @@ public class KundenSucheName extends Fragment implements OnClickListener {
 			case R.id.btn_suchen:
 				final String name = nameTxt.getText().toString();
 				final Main mainActivity = (Main) getActivity();
-				final ArrayList<Kunde> kunden = mainActivity.getKundeServiceBinder().sucheKundenByNachname(name);
+				final ArrayList<Kunde> kunden = mainActivity.getKundeServiceBinder().sucheKundenByNachname(name, view.getContext());
 		
 				final Intent intent = new Intent(getActivity(), KundenListe.class);
 				intent.putExtra(KUNDEN_KEY, kunden);

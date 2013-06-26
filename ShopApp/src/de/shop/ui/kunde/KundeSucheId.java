@@ -70,7 +70,7 @@ public class KundeSucheId extends Fragment implements OnClickListener {
 				final String kundeIdStr = kundeIdTxt.getText().toString();
 				final Long kundeId = Long.valueOf(kundeIdStr);
 				final Main mainActivity = (Main) getActivity();
-				final Kunde kunde = mainActivity.getKundeServiceBinder().sucheKundeById(kundeId);
+				final Kunde kunde = mainActivity.getKundeServiceBinder().sucheKundeById(kundeId, view.getContext());
 				
 				final Bundle args = new Bundle(1);
 				args.putSerializable(KUNDE_KEY, kunde);

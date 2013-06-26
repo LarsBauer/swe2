@@ -86,7 +86,7 @@ public class KundeBestellungen extends Fragment implements OnItemClickListener, 
 			return;
 		}
 		
-		bestellungenIds = kundeServiceBinder.sucheBestellungenIdsByKundeId(kunde.id);
+		bestellungenIds = kundeServiceBinder.sucheBestellungenIdsByKundeId(kunde.id, view.getContext());
 		
 		// ListView mit den IDs der Bestellungen aufbauen
 		final ListView listView = (ListView) view.findViewById(R.id.bestellungen_liste);
