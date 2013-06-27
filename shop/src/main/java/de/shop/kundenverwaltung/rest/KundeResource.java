@@ -7,6 +7,7 @@ import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -172,6 +173,24 @@ public class KundeResource {
 			uriHelperBestellung.updateUrlBestellung(bestellung, uriInfo);
 		}
 		return bestellungen;
+	}
+	
+	@GET
+	@Path("{id:[1-9][0-9]*}/bestellungenIds")
+	public Collection<Long> findBestellungenIdsByKundeId(@PathParam("id") Long kundeId) {
+		final Collection<Bestellung> bestellungen = findBestellungenByKundeId(kundeId);
+		if (bestellungen.isEmpty()) {
+			final String msg = "Kein Kunde gefunden mit der ID " + kundeId;
+			throw new NotFoundException(msg);
+		}
+		
+		final int anzahl = bestellungen.size();
+		final Collection<Long> bestellungenIds = new ArrayList<>(anzahl);
+		for (Bestellung bestellung : bestellungen) {
+			bestellungenIds.add(bestellung.getId());
+		}
+		
+		return bestellungenIds;
 	}
 	
 	/**
