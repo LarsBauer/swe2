@@ -103,7 +103,7 @@ public class ArtikelSucheId extends Fragment implements OnClickListener, OnEdito
 		
 		final Long artikelId = Long.valueOf(artikelIdStr);
 		final Main mainActivity = (Main) getActivity();
-		final HttpResponse<? extends Artikel> result = mainActivity.getArtikelServiceBinder().sucheArtikelById(artikelId, ctx);
+		final HttpResponse<Artikel> result = mainActivity.getArtikelServiceBinder().sucheArtikelById(artikelId, ctx);
 
 		if (result.responseCode == HTTP_NOT_FOUND) {
 			final String msg = getString(R.string.a_artikel_not_found, artikelIdStr);
