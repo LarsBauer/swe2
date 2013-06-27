@@ -35,7 +35,7 @@ public class KundeStammdaten extends Fragment implements OnTouchListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         kunde = (Kunde) getArguments().get(KUNDE_KEY);
-        Log.d(LOG_TAG, kunde.toString());
+        //Log.d(LOG_TAG, kunde.toString());
 
         // Voraussetzung fuer onOptionsItemSelected()
         setHasOptionsMenu(true);
