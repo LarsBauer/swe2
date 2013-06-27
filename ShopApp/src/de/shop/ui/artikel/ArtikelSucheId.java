@@ -47,7 +47,7 @@ public class ArtikelSucheId extends Fragment implements OnClickListener, OnEdito
 		artikelIdTxt = (AutoCompleteTextView) view.findViewById(R.id.artikel_id_auto);
 		final ArrayAdapter<Long> adapter = new AutoCompleteIdAdapter(artikelIdTxt.getContext());
     	artikelIdTxt.setAdapter(adapter);
-    	//artikelIdTxt.setOnEditorActionListener(this);
+    	artikelIdTxt.setOnEditorActionListener(this);
 		// ArtikelSucheId (this) ist gleichzeitig der Listener, wenn der Suchen-Button angeklickt wird
 		// und implementiert deshalb die Methode onClick() unten
     	view.findViewById(R.id.btn_suchen_artikel).setOnClickListener(this);
