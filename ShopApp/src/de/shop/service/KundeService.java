@@ -62,7 +62,7 @@ public class KundeService extends Service {
 		 */
 		public HttpResponse<Kunde> sucheKundeById(Long id, final Context ctx) {
 			
-			// (evtl. mehrere) Parameter vom Typ "Long", Resultat vom Typ "AbstractKunde"
+			// (evtl. mehrere) Parameter vom Typ "Long", Resultat vom Typ "Kunde"
 			final AsyncTask<Long, Void, HttpResponse<Kunde>> sucheKundeByIdTask = new AsyncTask<Long, Void, HttpResponse<Kunde>>() {
 				@Override
 	    		protected void onPreExecute() {
@@ -75,7 +75,9 @@ public class KundeService extends Service {
 					final Long id = ids[0];
 		    		final String path = KUNDEN_PATH + "/" + id;
 		    		Log.v(LOG_TAG, "path = " + path);
-		    		final HttpResponse<Kunde> result = Mock.sucheKundeById(id);
+		    		final HttpResponse<Kunde> result = mock
+		    											? Mock.sucheKundeById(id)
+		    											: WebServiceClient.getJsonSingle(path, Kunde.class);
 
 					Log.d(LOG_TAG + ".AsyncTask", "doInBackground: " + result);
 					return result;
@@ -128,7 +130,9 @@ public class KundeService extends Service {
 					final String nachname = nachnamen[0];
 					final String path = NACHNAME_PATH + nachname;
 					Log.v(LOG_TAG, "path = " + path);
-		    		final HttpResponse<Kunde> result = Mock.sucheKundenByNachname(nachname);
+		    		final HttpResponse<Kunde> result = mock
+		    											? Mock.sucheKundenByNachname(nachname)
+		    											: WebServiceClient.getJsonList(path, Kunde.class);
 					Log.d(LOG_TAG + ".AsyncTask", "doInBackground: " + result);
 					return result;
 				}
@@ -229,7 +233,7 @@ public class KundeService extends Service {
 		/**
 		 */
 		public HttpResponse<Kunde> createKunde(Kunde kunde, final Context ctx) {
-			// (evtl. mehrere) Parameter vom Typ "AbstractKunde", Resultat vom Typ "void"
+			// (evtl. mehrere) Parameter vom Typ "Kunde", Resultat vom Typ "void"
 			final AsyncTask<Kunde, Void, HttpResponse<Kunde>> createKundeTask = new AsyncTask<Kunde, Void, HttpResponse<Kunde>>() {
 				@Override
 	    		protected void onPreExecute() {
@@ -274,7 +278,7 @@ public class KundeService extends Service {
 		/**
 		 */
 		public HttpResponse<Kunde> updateKunde(Kunde kunde, final Context ctx) {
-			// (evtl. mehrere) Parameter vom Typ "AbstractKunde", Resultat vom Typ "void"
+			// (evtl. mehrere) Parameter vom Typ "Kunde", Resultat vom Typ "void"
 			final AsyncTask<Kunde, Void, HttpResponse<Kunde>> updateKundeTask = new AsyncTask<Kunde, Void, HttpResponse<Kunde>>() {
 				@Override
 	    		protected void onPreExecute() {

@@ -8,7 +8,6 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -26,8 +25,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import de.shop.R;
+import de.shop.data.Artikel;
+import de.shop.data.Bestellposition;
 import de.shop.data.Kunde;
 import de.shop.data.Bestellung;
+import de.shop.service.ArtikelService.ArtikelServiceBinder;
 import de.shop.service.BestellungService.BestellungServiceBinder;
 import de.shop.service.KundeService.KundeServiceBinder;
 import de.shop.ui.main.Main;
@@ -44,10 +46,11 @@ public class KundeBestellungen extends Fragment implements OnItemClickListener, 
 	private int bestellungenListePos;
 	
 	private TextView txtBestellungId;
-	private TextView txtBestellungDatum;
+	private TextView txtBestellungBezeichnung;
 	
 	private KundeServiceBinder kundeServiceBinder;
 	private BestellungServiceBinder bestellungServiceBinder;
+	private ArtikelServiceBinder artikelServiceBinder;
 	
 	private GestureDetector gestureDetector;
 	
@@ -67,18 +70,20 @@ public class KundeBestellungen extends Fragment implements OnItemClickListener, 
 		final TextView kundeTxt = (TextView) view.findViewById(R.id.bestellungen_kunde_id);
 		kundeTxt.setText(getString(R.string.k_bestellungen_kunde_id, kunde.id));
 		txtBestellungId = (TextView) view.findViewById(R.id.bestellung_id);
-		txtBestellungDatum = (TextView) view.findViewById(R.id.datum);
+		txtBestellungBezeichnung= (TextView) view.findViewById(R.id.bestellung_bezeichnung);
 		
 		final Activity activity = getActivity();
 		if (Main.class.equals(activity.getClass())) {
 			Main main = (Main) activity;
 			kundeServiceBinder = main.getKundeServiceBinder();
 			bestellungServiceBinder = main.getBestellungServiceBinder();
+			artikelServiceBinder = main.getArtikelServiceBinder();
 		}
 		else if (KundenListe.class.equals(activity.getClass())) {
 			KundenListe kundenListe = (KundenListe) activity;
 			kundeServiceBinder = kundenListe.getKundeServiceBinder();
 			bestellungServiceBinder = kundenListe.getBestellungServiceBinder();
+			artikelServiceBinder = kundenListe.getArtikelServiceBinder();
 		}
 		else {
 			Log.e(LOG_TAG, "Activity " + activity.getClass().getSimpleName() + " nicht beruecksichtigt.");
@@ -172,9 +177,13 @@ public class KundeBestellungen extends Fragment implements OnItemClickListener, 
 			
 			// Werte der geladenen Bestellung visualisieren
 		}
+		final List<Bestellposition> bestellpositionen = bestellung.bestellpositionen;
+		String path = bestellpositionen.get(0).artikelUri;
+		String[] split = path.split("/");
+		Long id = Long.valueOf(split[split.length-1]);
+		Artikel artikel = artikelServiceBinder.sucheArtikelById(id, view.getContext()).resultObject;
 		
 		txtBestellungId.setText(String.valueOf(bestellung.id));
-		final String datumStr = bestellung.datum == null ? "" : DateFormat.getDateFormat(getActivity()).format(bestellung.datum);
-    	txtBestellungDatum.setText(datumStr);
+    	txtBestellungBezeichnung.setText(artikel.bezeichnung);
 	}
 }

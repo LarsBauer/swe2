@@ -118,22 +118,6 @@
 	        </RelativeLayout>
 	
 	    </TableRow>
-	    
-	    <TableRow>
-	    	
-	    	<TextView
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:text="@string/k_seit" />
-	    	
-	    	<TextView
-	        	style="@style/RechteSpalteText"
-	            android:id="@+id/seit"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:textIsSelectable="false" />
-	    	
-	   	</TableRow>
 
 	    <TableRow>
 	    

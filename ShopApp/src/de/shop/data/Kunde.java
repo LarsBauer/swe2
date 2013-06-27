@@ -11,7 +11,7 @@ public class Kunde implements JsonMappable, Serializable {
 
 	public Long id;
 	public int version;
-	public String name;
+	public String nachname;
 	public String vorname;
 	public String email;
 	public String geschlecht;
@@ -27,14 +27,14 @@ public class Kunde implements JsonMappable, Serializable {
 	public Kunde(Long id, String name) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.nachname = name;
 	}
 	
 	protected JsonObjectBuilder getJsonObjectBuilder() {
 		return jsonBuilderFactory.createObjectBuilder()
 				                 .add("id", id)
 			                     .add("version", version)
-			                     .add("name", name)
+			                     .add("nachname", nachname)
 			                     .add("vorname", vorname)
 			                     .add("email", email)
 			                     .add("geschlecht", geschlecht)
@@ -52,7 +52,7 @@ public class Kunde implements JsonMappable, Serializable {
 	public void fromJsonObject(JsonObject jsonObject) {
 		id = Long.valueOf(jsonObject.getJsonNumber("id").longValue());
 	    version = jsonObject.getInt("version");
-		name = jsonObject.getString("name");
+		nachname = jsonObject.getString("nachname");
 		vorname = jsonObject.getString("vorname");
 		email = jsonObject.getString("email");
 		geschlecht = jsonObject.getString("geschlecht");
@@ -95,7 +95,7 @@ public class Kunde implements JsonMappable, Serializable {
 
 	@Override
 	public String toString() {
-		return "AbstractKunde [id=" + id + ", name=" + name + ", vorname="
+		return "Kunde [id=" + id + ", nachname=" + nachname + ", vorname="
 				+ vorname + ", email=" + email + ", adresse=" + adresse
 				+ ", newsletter=" + newsletter + ", geschlecht=" + geschlecht
 				+ ", bestellungenUri=" + bestellungenUri + "]";

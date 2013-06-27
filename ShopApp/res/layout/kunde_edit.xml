@@ -149,22 +149,6 @@
 	    </TableRow>
 	    
 	    <TableRow>
-	    	
-	    	<TextView
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:text="@string/k_seit" />
-	    	
-	    	<DatePicker
-		        android:id="@+id/seit"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content" 
-		        android:calendarViewShown="false" />
-	    	
-	   	</TableRow>
-
-
-	    <TableRow>
 	    
 	    	<TextView
 	            android:layout_width="match_parent"

@@ -43,7 +43,7 @@ public class KundeEdit extends Fragment {
     	txtId.setText(String.valueOf(kunde.id));
     	
     	txtName = (EditText) view.findViewById(R.id.nachname_edt);
-    	txtName.setText(kunde.name);
+    	txtName.setText(kunde.nachname);
     }
     
 	@Override
@@ -94,7 +94,7 @@ public class KundeEdit extends Fragment {
 	}
 	
 	private void setKunde() {
-		kunde.name = txtName.getText().toString();
+		kunde.nachname = txtName.getText().toString();
 		Log.d(LOG_TAG, kunde.toString());
 	}
 }

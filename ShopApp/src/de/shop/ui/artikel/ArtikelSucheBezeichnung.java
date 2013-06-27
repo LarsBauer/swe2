@@ -1,13 +1,17 @@
-package de.shop.ui.kunde;
+package de.shop.ui.artikel;
 
 import static android.view.inputmethod.EditorInfo.IME_NULL;
-import static de.shop.util.Constants.KUNDEN_KEY;
+import static de.shop.util.Constants.ARTIKEL_KEY;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
+import de.shop.R;
+import de.shop.data.Artikel;
+import de.shop.service.HttpResponse;
+import de.shop.ui.main.Main;
+import de.shop.ui.main.Prefs;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
@@ -21,42 +25,36 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Filter;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import de.shop.R;
-import de.shop.data.Kunde;
-import de.shop.service.HttpResponse;
-import de.shop.ui.main.Main;
-import de.shop.ui.main.Prefs;
-import de.shop.util.InternalShopError;
 
-public class KundenSucheNachname extends Fragment implements OnClickListener, OnEditorActionListener {	
-	private static final String LOG_TAG = KundenSucheNachname.class.getSimpleName();
+public class ArtikelSucheBezeichnung extends Fragment implements OnClickListener, OnEditorActionListener {
+	private static final String LOG_TAG = ArtikelSucheBezeichnung.class.getSimpleName();
 	
-	private AutoCompleteTextView nachnameTxt;
+	private AutoCompleteTextView bezeichnungTxt;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		// attachToRoot = false, weil die Verwaltung des Fragments durch die Activity erfolgt
-		return inflater.inflate(R.layout.kunden_suche_nachname, container, false);
+		return inflater.inflate(R.layout.artikel_suche_bezeichnung, container, false);
 	}
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		nachnameTxt = (AutoCompleteTextView) view.findViewById(R.id.nachname_auto);
-		final ArrayAdapter<String> adapter = new AutoCompleteNachnameAdapter(nachnameTxt.getContext());
-		nachnameTxt.setAdapter(adapter);
-		nachnameTxt.setOnEditorActionListener(this);
+		bezeichnungTxt = (AutoCompleteTextView) view.findViewById(R.id.bezeichnung_auto);
+		final ArrayAdapter<String> adapter = new AutoCompleteNachnameAdapter(bezeichnungTxt.getContext());
+		bezeichnungTxt.setAdapter(adapter);
+		bezeichnungTxt.setOnEditorActionListener(this);
     	
 		// KundenSucheNachname (this) ist gleichzeitig der Listener, wenn der Suchen-Button angeklickt wird
 		// und implementiert deshalb die Methode onClick() unten
-    	view.findViewById(R.id.btn_suchen).setOnClickListener(this);
+    	view.findViewById(R.id.btn_suchen_artikel).setOnClickListener(this);
     	
 	    // Evtl. vorhandene Tabs der ACTIVITY loeschen
     	final ActionBar actionBar = getActivity().getActionBar();
@@ -68,7 +66,7 @@ public class KundenSucheNachname extends Fragment implements OnClickListener, On
 	// OnClickListener
 	public void onClick(View view) {
 		switch (view.getId()) {
-			case R.id.btn_suchen:
+			case R.id.btn_suchen_artikel:
 				suchen(view);
 				break;
 				
@@ -80,24 +78,24 @@ public class KundenSucheNachname extends Fragment implements OnClickListener, On
 	private void suchen(View view) {
 		final Context ctx = view.getContext();
 		
-		final String nachname = nachnameTxt.getText().toString();
-		if (TextUtils.isEmpty(nachname)) {
-			nachnameTxt.setError(getString(R.string.k_nachname_fehlt));
+		final String bezeichnung = bezeichnungTxt.getText().toString();
+		if (TextUtils.isEmpty(bezeichnung)) {
+			bezeichnungTxt.setError(getString(R.string.a_bezeichnung_fehlt));
     		return;
     	}
 		final Main mainActivity = (Main) getActivity();
-		final HttpResponse<Kunde> result = mainActivity.getKundeServiceBinder().sucheKundenByNachname(nachname, ctx);
+		final HttpResponse<Artikel> result = mainActivity.getArtikelServiceBinder().sucheArtikelByBezeichnung(bezeichnung, ctx);
 
 		if (result.responseCode == HTTP_NOT_FOUND) {
-			final String msg = getString(R.string.k_kunden_not_found, nachname);
-			nachnameTxt.setError(msg);
+			final String msg = getString(R.string.a_artikel_not_found, bezeichnung);
+			bezeichnungTxt.setError(msg);
 			return;
 		}
 		
 		Log.d(LOG_TAG, result.toString());
 
-		final Intent intent = new Intent(mainActivity, KundenListe.class);
-		intent.putExtra(KUNDEN_KEY, result.resultList);
+		final Intent intent = new Intent(mainActivity, ArtikelListe.class);
+		intent.putExtra(ARTIKEL_KEY, result.resultList);
 		startActivity(intent);
 	}
 	
@@ -126,7 +124,7 @@ public class KundenSucheNachname extends Fragment implements OnClickListener, On
 
 	@Override  // OnEditorActionListener
 	public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-		if (actionId == R.id.ime_suchen || actionId == IME_NULL) {
+		if (actionId == R.id.ime_suchen_artikel || actionId == IME_NULL) {
 			suchen(view);
 			return true;
 		}
@@ -162,49 +160,37 @@ public class KundenSucheNachname extends Fragment implements OnClickListener, On
     		Filter filter = new Filter() {
     			@Override
     			protected FilterResults performFiltering(CharSequence constraint) {
-    				List<String> nachnameList = null;
+    				List<String> bezeichnungList = null;
     				if (constraint != null) {
     					// Liste der IDs, die den bisher eingegebenen Praefix (= constraint) enthalten
-    					nachnameList = sucheNachnamen((String) constraint);
+    					bezeichnungList = sucheBezeichnungen((String) constraint);
     				}
-    				if (nachnameList == null) {
+    				if (bezeichnungList == null) {
     					// Leere Liste, falls keine IDs zum eingegebenen Praefix gefunden werden
-    					nachnameList = Collections.emptyList();
+    					bezeichnungList = Collections.emptyList();
     				}
      
     				final FilterResults filterResults = new FilterResults();
-    				filterResults.values = nachnameList;
-    				filterResults.count = nachnameList.size();
+    				filterResults.values = bezeichnungList;
+    				filterResults.count = bezeichnungList.size();
      
     				return filterResults;
     			}
     			
-    	    	private List<String> sucheNachnamen(String nachnamePrefix) {
+    	    	private List<String> sucheBezeichnungen(String bezeichnungPrefix) {
     	    		final Main mainActivity = (Main) getActivity();
-    				List<String> nachnamen = null;
-    				try {
-    					nachnamen = mainActivity.getKundeServiceBinder().sucheNachnamen(nachnamePrefix);
-    				}
-    				catch (InternalShopError e) {
-    					final Throwable t = e.getCause();
-    					if (t != null && t instanceof TimeoutException) {
-    						nachnamen = Collections.emptyList();
-    						Log.e(LOG_TAG, e.getMessage(), t);					
-    					}
-    					else {
-    						Log.e(LOG_TAG, e.getMessage(), e);
-    					}
-    				}
-    				return nachnamen;
+    				List<String> bezeichnungen = null;
+    				
+    				return bezeichnungen;
     	    	}
      
     			@Override
     			protected void publishResults(CharSequence contraint, FilterResults results) {
     				clear();
     				@SuppressWarnings("unchecked")
-					final List<String> nachnameList = (List<String>) results.values;
+					final List<String> bezeichnungList = (List<String>) results.values;
     				// Ermittelte IDs in die anzuzeigende Vorschlagsliste uebernehmen
-    				addAll(nachnameList);
+    				addAll(bezeichnungList);
 
     				if (results.count > 0) {
     					notifyDataSetChanged();
@@ -225,4 +211,3 @@ public class KundenSucheNachname extends Fragment implements OnClickListener, On
     	}
     }
 }
-

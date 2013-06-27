@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import de.shop.R;
 import de.shop.ShopApp;
+import de.shop.data.Artikel;
 import de.shop.data.Kunde;
 import de.shop.data.Bestellung;
 import de.shop.util.InternalShopError;
@@ -119,7 +120,7 @@ final class Mock {
    		for (JsonObject jsonObject : jsonObjectList) {
            	final Kunde kunde = new Kunde();
 			kunde.fromJsonObject(jsonObject);
-			kunde.name = nachname;
+			kunde.nachname = nachname;
    			kunden.add(kunde);
    		}
     	
@@ -230,7 +231,7 @@ final class Mock {
     }
     
     static HttpResponse<Kunde> createKunde(Kunde kunde) {
-    	kunde.id = Long.valueOf(kunde.name.length());  // Anzahl der Buchstaben des Nachnamens als emulierte neue ID
+    	kunde.id = Long.valueOf(kunde.nachname.length());  // Anzahl der Buchstaben des Nachnamens als emulierte neue ID
     	Log.d(LOG_TAG, "createKunde: " + kunde);
     	Log.d(LOG_TAG, "createKunde: " + kunde.toJsonObject());
     	final HttpResponse<Kunde> result = new HttpResponse<Kunde>(HTTP_CREATED, KUNDEN_PATH + "/1", kunde);
@@ -266,6 +267,16 @@ final class Mock {
 		
 		final JsonObject jsonObject = bestellung.toJsonObject();
 		final HttpResponse<Bestellung> result = new HttpResponse<Bestellung>(HTTP_OK, jsonObject.toString(), bestellung);
+		Log.d(LOG_TAG, result.resultObject.toString());
+		return result;
+	}
+    
+    static HttpResponse<Artikel> sucheArtikelById(Long id) {
+		final Artikel artikel = new Artikel();
+		artikel.id = id;
+		
+		final JsonObject jsonObject = artikel.toJsonObject();
+		final HttpResponse<Artikel> result = new HttpResponse<Artikel>(HTTP_OK, jsonObject.toString(), artikel);
 		Log.d(LOG_TAG, result.resultObject.toString());
 		return result;
 	}
