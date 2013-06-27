@@ -111,10 +111,10 @@ public class KundeBestellungen extends Fragment implements OnItemClickListener, 
 	        		                                                      values);
 	        // Items in der Liste duerfen angeklickt werden
 			listView.setAdapter(adapter);
-			listView.setOnItemClickListener(this);
+			//listView.setOnItemClickListener(this);
 			
 			// Die neueste Bestellung visualisieren
-			activateBestellung(0, view);
+			//activateBestellung(0, view);
 		}
 		
 		final OnGestureListener onGestureListener = new WischenListener(activity);
