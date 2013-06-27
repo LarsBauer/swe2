@@ -1,0 +1,6 @@
+﻿[{"id":300,"version":0,"bezeichnung":"T-Shirt","groesse":"L","preis":19.99,"erhaeltlich":true},
+{"id":301,"version":0,"bezeichnung":"Socken","groesse":"S","preis":4.99,"erhaeltlich":true},
+{"id":302,"version":0,"bezeichnung":"Hemd","groesse":"XS","preis":30.0,"erhaeltlich":true},
+{"id":303,"version":0,"bezeichnung":"Hosentraeger","groesse":"M","preis":12.5,"erhaeltlich":false},
+{"id":304,"version":0,"bezeichnung":"Muetze","groesse":"M","preis":10.0,"erhaeltlich":false},
+{"id":305,"version":0,"bezeichnung":"Unterwaesche","groesse":"XXL","preis":300.0,"erhaeltlich":true}]
